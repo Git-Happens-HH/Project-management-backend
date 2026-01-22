@@ -10,3 +10,8 @@ drag and drop toiminto tehtäville, käyttäjätunnukset ja kirjautuminen, kalen
 käyttäjille voi lisätä rooleja kuten scrum master/testaaja/devaaja/projektipäällikkö,
 käyttäjä voi katsoa mitä kaikkia tehtäviä jollain tietyllä käyttäjällä on työn alla,
 kaikki projektit voi nähdä yhdestä näkymästä
+
+Toteutusteknologiat:
+Front end React
+Back end Java
+Tietokanta PostgreSQL
