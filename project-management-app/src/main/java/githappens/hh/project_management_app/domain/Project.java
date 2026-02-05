@@ -18,7 +18,7 @@ public class Project {
     private String description;
     private LocalDateTime createdAt = LocalDateTime.now();
     // JSONIgnore properties
-    private List<User> projectMembers;
+    private List<AppUser> projectMembers;
     // JSONIgnore properties
     private List<TaskList> taskList;
 
@@ -26,7 +26,7 @@ public class Project {
     public Project() {
     }
 
-    public Project(String title, String description, LocalDateTime createdAt, List<User> projectMembers,
+    public Project(String title, String description, LocalDateTime createdAt, List<AppUser> projectMembers,
             List<TaskList> taskList) {
         this.title = title;
         this.description = description;
@@ -67,11 +67,11 @@ public class Project {
         this.createdAt = createdAt;
     }
 
-    public List<User> getProjectMembers() {
+    public List<AppUser> getProjectMembers() {
         return projectMembers;
     }
 
-    public void setProjectMembers(List<User> projectMembers) {
+    public void setProjectMembers(List<AppUser> projectMembers) {
         this.projectMembers = projectMembers;
     }
 

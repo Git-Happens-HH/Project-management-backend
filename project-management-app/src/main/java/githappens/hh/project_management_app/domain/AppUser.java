@@ -8,7 +8,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
 @Entity
-public class User {
+public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,10 +20,10 @@ public class User {
     private String passwordHash;
     private LocalDateTime registeredAt;
 
-    public User() {
+    public AppUser() {
     }
 
-    public User(String userName, String firstName, String lastName, String email, String passwordHash,
+    public AppUser(String userName, String firstName, String lastName, String email, String passwordHash,
             LocalDateTime registeredAt) {
         this.userName = userName;
         this.firstName = firstName;
