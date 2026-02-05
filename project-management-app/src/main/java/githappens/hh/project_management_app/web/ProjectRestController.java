@@ -23,9 +23,9 @@ public class ProjectRestController {
         return (List<Project>) projectRepository.findAll();
     }
 
-@GetMapping("api/projects/{projectId}")
-public @ResponseBody Optional<Project> getProjectById(@PathVariable Long projectId) {
-    return projectRepository.findById(projectId);
+    @GetMapping("/api/projects/{projectId}")
+    public @ResponseBody Optional<Project> getProjectById(@PathVariable Long projectId) {
+        return projectRepository.findById(projectId);
 
-}
+    }
 }

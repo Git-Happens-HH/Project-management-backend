@@ -15,8 +15,8 @@ public class TaskRestController {
         this.taskRepository = taskRepository;
     }
 
-@GetMapping("/api/{projectId}/{taskListId}/tasks")
-public Optional<Task> getAllTasks(@PathVariable Long projectId, @PathVariable Long taskListId) {
-    return taskRepository.findById(taskListId);
-}
+    @GetMapping("/api/{projectId}/{taskListId}/tasks")
+    public Optional<Task> getAllTasks(@PathVariable Long projectId, @PathVariable Long taskListId) {
+        return taskRepository.findById(taskListId);
+    }
 }
