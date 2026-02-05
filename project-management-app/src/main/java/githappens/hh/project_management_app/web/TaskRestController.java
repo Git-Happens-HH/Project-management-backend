@@ -1,5 +1,7 @@
 package githappens.hh.project_management_app.web;
 
+import java.util.Optional;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import githappens.hh.project_management_app.domain.Task;
@@ -14,7 +16,7 @@ public class TaskRestController {
     }
 
 @GetMapping("/api/{projectId}/{taskListId}/tasks")
-public List<Task> getAllTasks(@PathVariable Long projectId, @PathVariable Long taskListId) {
+public Optional<Task> getAllTasks(@PathVariable Long projectId, @PathVariable Long taskListId) {
     return taskRepository.findById(taskListId);
 }
 }

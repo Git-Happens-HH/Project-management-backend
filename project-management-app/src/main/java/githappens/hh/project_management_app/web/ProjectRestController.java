@@ -1,11 +1,13 @@
 package githappens.hh.project_management_app.web;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
+import java.util.Optional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import githappens.hh.project_management_app.domain.Project;
 import githappens.hh.project_management_app.domain.ProjectRepository;
 
 @RestController
@@ -21,9 +23,9 @@ public class ProjectRestController {
         return (List<Project>) projectRepository.findAll();
     }
 
-@GetMapping("api/projects/projectId")
-public @ResponseBody Project getProjectById(@PathVariable Long projectId) {
-    return projectRepository.findById(projectId)
+@GetMapping("api/projects/{projectId}")
+public @ResponseBody Optional<Project> getProjectById(@PathVariable Long projectId) {
+    return projectRepository.findById(projectId);
 
 }
 }

@@ -1,13 +1,14 @@
 package githappens.hh.project_management_app.web;
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.AppUserRepository;
-
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 
@@ -25,7 +26,7 @@ public class AppUserRestController {
     }
 
     @GetMapping("/api/users/{userId}")
-    public AppUser getUserById(@PathVariable Long userId) {
+    public Optional<AppUser> getUserById(@PathVariable Long userId) {
         return appUserRepository.findById(userId);
     }
 
