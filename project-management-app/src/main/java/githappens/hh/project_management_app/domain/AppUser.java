@@ -2,21 +2,40 @@ package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
-@Entity
+@Entity(name= "AppUsers")
 public class AppUser {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    @Column(name = "app_user_id", nullable = false, updatable = false)
+    private Long appUserId;
+
+    @NotBlank(message = "A unique username is required")
+    @Column(name = "username", nullable = false, unique = true, updatable = false) // usernames must be unique and cant be changed
     private String userName;
+
+    @NotBlank(message = "First name required")
+    @Column(name = "first_name", nullable = false)
     private String firstName;
+
+    @NotBlank(message = "Last name required")
+    @Column(name = "last_name", nullable = false)
     private String lastName;
+
+    @NotBlank(message = "Email already in use")
+    @Column(name = "email", nullable = false, unique = true) // emails must be unique
     private String email;
+
+
     private String passwordHash;
     private LocalDateTime registeredAt;
 
@@ -33,12 +52,12 @@ public class AppUser {
         this.registeredAt = registeredAt;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Long getAppUserId() {
+        return appUserId;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setAppUserId(Long userId) {
+        this.appUserId = userId;
     }
 
     public String getUserName() {
