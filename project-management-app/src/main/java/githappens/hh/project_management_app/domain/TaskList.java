@@ -44,7 +44,7 @@ public class TaskList {
         return project;
     }
 
-    public void setProjectIdLong(Project project) {
+    public void setProject(Project project) {
         this.project = project;
     }
 
