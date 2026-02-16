@@ -14,6 +14,7 @@ public class Comment {
     private Long commentId;
     private AppUser commenter;
     private String content;
+    private Long taskId;
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Comment() {
@@ -39,6 +40,14 @@ public class Comment {
 
     public void setCommenter(AppUser commenter) {
         this.commenter = commenter;
+    }
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public String getContent() {
