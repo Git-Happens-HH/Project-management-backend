@@ -15,43 +15,60 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
 
-@Entity(name= "task")
+@Entity(name = "task")
 public class Task {
 
     // taskId
-    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id", nullable = false, updatable = false)
     private Long taskId;
 
     // taskList
-    @ManyToOne(optional=false)
+    @ManyToOne(optional = false)
     @JsonIgnoreProperties("tasks")
     @JoinColumn(name = "task_list_id", nullable = false)
     private TaskList taskList;
 
+    // assignedUser
     @ManyToOne
-    @JsonIgnoreProperties("tasks")
+    @JsonIgnoreProperties("tasksAssigned")
     @JoinColumn(name = "app_user_id", nullable = true)
     private AppUser assignedUser;
 
-    // createdBy attribute to connect task to creator?
-
-    // positionNum ??
-
+    // title
+    @Column(name = "title", nullable = false, updatable = true)
     private String title;
 
+    // description
+    @Column(name = "description", nullable = true, updatable = true)
     private String description;
-    // Ignore json
+
+    // createdBy
+    @ManyToOne
+    @JsonIgnoreProperties("tasksCreated")
+    @JoinColumn(name = "app_user_id", nullable = false)
+    private AppUser createdBy;
+
+    // positionNumber
+    @Column(name = "position_number", nullable = true, updatable = true)
+    private int positionNumber;
+
+    @OneToMany(mappedBy = "comment_id", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("taskId")
     private List<Comment> comments;
 
     public Task() {
     }
 
-    public Task(TaskList taskList, AppUser assignedUser, String title, String description, List<Comment> comments) {
+    public Task(TaskList taskList, AppUser assignedUser, String title, String description, AppUser createdBy,
+            int positionNumber, List<Comment> comments) {
         this.taskList = taskList;
         this.assignedUser = assignedUser;
         this.title = title;
         this.description = description;
+        this.createdBy = createdBy;
+        this.positionNumber = positionNumber;
         this.comments = comments;
     }
 
@@ -95,6 +112,22 @@ public class Task {
         this.description = description;
     }
 
+    public AppUser getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(AppUser createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public int getPositionNumber() {
+        return positionNumber;
+    }
+
+    public void setPositionNumber(int positionNumber) {
+        this.positionNumber = positionNumber;
+    }
+
     public List<Comment> getComments() {
         return comments;
     }
@@ -105,8 +138,13 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task [taskList=" + taskList + ", assignedUser=" + assignedUser + ", title=" + title + ", description="
-                + description + "]";
+        return "Task [taskList=" + taskList + ", assignedUser=" + assignedUser + ", title="
+                + title + ", description=" + description + ", createdBy=" + createdBy + ", positionNumber="
+                + positionNumber + "]";
     }
+
+   
+
+    
 
 }

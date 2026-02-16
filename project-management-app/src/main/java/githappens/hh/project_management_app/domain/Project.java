@@ -5,22 +5,38 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.CascadeType;
 
 @Entity(name= "project")
 public class Project {
+
+    //projectId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_id", nullable = false, updatable = false)
     private Long projectId;
 
+    // title
+    @Column(name = "title", nullable = false, updatable = true)
     private String title;
+
+    // description
+    @Column(name = "description", nullable = true, updatable = true)
     private String description;
+
+    // createdAt
+    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
-    // JSONIgnore properties
+
+    // projectMembers
+    @OneToMany(mappedBy = "app_user_id", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("projects")
     private List<AppUser> projectMembers;
     
     @OneToMany(mappedBy = "project")

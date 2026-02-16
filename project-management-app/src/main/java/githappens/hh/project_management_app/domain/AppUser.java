@@ -15,14 +15,17 @@ import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
+import jakarta.persistence.CascadeType;
 
-@Entity(name= "app_user")
+@Entity(name = "app_user")
 public class AppUser {
 
-    // appUserId, userName, firstName, lastName, email, 
+    // appUserId, userName, firstName, lastName, email,
     // passwordHash, registeredAt, projects, tasks, comments
 
     // appUserId
@@ -32,7 +35,8 @@ public class AppUser {
     private Long appUserId;
 
     // userName
-    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique and cant be changed
+    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique and cant
+                                                                                    // be changed
     @NotBlank(message = "A unique username is required")
     private String userName;
 
@@ -47,15 +51,14 @@ public class AppUser {
     private String lastName;
 
     // email
-    @Column(name = "email", nullable = false, unique = true) // emails must be unique
+    @Column(name = "email", nullable = false, unique = true)
     @NotBlank(message = "Email already in use")
     private String email;
 
     // passwordHash
     @Column(name = "password_hash", nullable = false)
     @Size(min = 8, message = "Password must be at least 8 characters")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$",
-    message = "Password must contain an uppercase letter, a number, and a special character")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$", message = "Password must contain an uppercase letter, a number, and a special character")
     @NotBlank(message = "Password is required")
     private String passwordHash;
 
@@ -64,26 +67,29 @@ public class AppUser {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
     private LocalDateTime registeredAt;
 
-    // LISTS OF PROJECTS, TASKS AND COMMENTS 
+    // LISTS OF PROJECTS, TASKS AND COMMENTS
 
     // projects
 
     @ManyToMany
     // many-to-many relatonship requires a new join table
-    @JoinTable(
-    name = "user_projects",
-    joinColumns = @JoinColumn(name = "app_user_id"),
-    inverseJoinColumns = @JoinColumn(name = "project_id")
-)
-
+    @JoinTable(name = "user_projects", joinColumns = @JoinColumn(name = "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<Project> projects;
 
-    // tasks
-    private List<Task> tasks;
+    // tasksAssigned
+    @OneToMany(mappedBy = "task_id", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("assignedUser")
+    private List<Task> tasksAssigned;
 
-    // comments 
+    // tasksCreated
+    @OneToMany(mappedBy = "task_id", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("createdBy")
+    private List<Task> tasksCreated;
+
+    // comments
+    @OneToMany(mappedBy = "comment_id", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("commenter")
     private List<Comment> comments;
-
 
     public AppUser() {
     }

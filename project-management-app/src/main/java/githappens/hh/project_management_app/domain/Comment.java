@@ -27,7 +27,7 @@ public class Comment {
     @NotBlank(message = "Comment can't be empty")
     private String content;
 
-    //createdAt
+    // createdAt
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
