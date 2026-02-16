@@ -1,7 +1,6 @@
 package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -14,16 +13,17 @@ public class Comment {
     private Long commentId;
     private AppUser commenter;
     private String content;
-    private Long taskId;
+    private Task task;
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    public Comment() {
-    }
-
-    public Comment(AppUser commenter, String content, LocalDateTime createdAt) {
+    public Comment(AppUser commenter, String content, Task task, LocalDateTime createdAt) {
         this.commenter = commenter;
         this.content = content;
+        this.task = task;
         this.createdAt = createdAt;
+    }
+
+    public Comment() {
     }
 
     public Long getCommentId() {
@@ -42,20 +42,20 @@ public class Comment {
         this.commenter = commenter;
     }
 
-    public Long getTaskId() {
-        return taskId;
-    }
-
-    public void setTaskId(Long taskId) {
-        this.taskId = taskId;
-    }
-
     public String getContent() {
         return content;
     }
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -68,7 +68,8 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment [commenter=" + commenter + ", content=" + content + ", createdAt=" + createdAt + "]";
+        return "Comment [commenter=" + commenter + ", content=" + content + ", task=" + task + ", createdAt="
+                + createdAt + "]";
     }
 
 }

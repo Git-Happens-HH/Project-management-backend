@@ -7,6 +7,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
 List<Comment> findAllByOrderByCreatedAtDesc();
 
-List<Comment> findByTaskIdOrderByCreatedAtDesc(Long taskId);
+List<Comment> findByTask_TaskIdOrderByCreatedAtDesc(Long taskId);
 
 }
