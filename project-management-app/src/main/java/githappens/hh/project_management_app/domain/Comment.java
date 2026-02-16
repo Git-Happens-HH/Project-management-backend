@@ -2,18 +2,33 @@ package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.NotBlank;
 
-@Entity
+@Entity(name= "comment")
 public class Comment {
+
+    // commentId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "comment_id", nullable = false, updatable = false)
     private Long commentId;
+
+    // commenter
+    @Column(name = "commenter", nullable = false, updatable = false)
     private AppUser commenter;
+
+    // content
+    @Column(name = "content", updatable = true)
+    @NotBlank(message = "Comment can't be empty")
     private String content;
+
+    //createdAt
+    @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
     public Comment() {

@@ -3,22 +3,53 @@ package githappens.hh.project_management_app.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 
-@Entity
+@Entity(name= "task_list")
 public class TaskList {
 
+    // taskListId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_list_id", nullable = false, updatable = false)
     private Long taskListId;
+
+    // project
+    @ManyToOne
+    @JsonIgnoreProperties("taskList")
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    // title
+    @Column(name = "title", nullable = false)
+    @NotBlank(message = "Title required")
     private String title;
+
+    // positionNumber
+    @Column(name = "position_num")
     private int positionNumber; // Is this neccessary?
+
+    // createdAt
+    @Column(name = "created_at")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
     private LocalDateTime createdAt;
-    // JSON ignore
+
+    // tasks
+    @OneToMany(mappedBy = "task_list", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("taskList")
     private List<Task> tasks;
 
     public TaskList() {
@@ -89,8 +120,5 @@ public class TaskList {
         return "TaskList [project=" + project + ", title=" + title + ", positionNumber=" + positionNumber
                 + ", createdAt=" + createdAt + "]";
     }
-
-    
-    
 
 }

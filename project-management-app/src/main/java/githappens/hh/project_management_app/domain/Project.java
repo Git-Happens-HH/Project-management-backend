@@ -3,12 +3,15 @@ package githappens.hh.project_management_app.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
-@Entity
+@Entity(name= "project")
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +22,9 @@ public class Project {
     private LocalDateTime createdAt = LocalDateTime.now();
     // JSONIgnore properties
     private List<AppUser> projectMembers;
-    // JSONIgnore properties
+    
+    @OneToMany(mappedBy = "project")
+    @JsonIgnoreProperties("project")
     private List<TaskList> taskList;
 
 

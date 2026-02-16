@@ -2,20 +2,44 @@ package githappens.hh.project_management_app.domain;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 
-@Entity
+@Entity(name= "task")
 public class Task {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // taskId
+    
+    @Column(name = "task_id", nullable = false, updatable = false)
     private Long taskId;
+
+    // taskList
+    @ManyToOne(optional=false)
+    @JsonIgnoreProperties("tasks")
+    @JoinColumn(name = "task_list_id", nullable = false)
     private TaskList taskList;
+
+    @ManyToOne
+    @JsonIgnoreProperties("tasks")
+    @JoinColumn(name = "app_user_id", nullable = true)
     private AppUser assignedUser;
+
+    // createdBy attribute to connect task to creator?
+
+    // positionNum ??
+
     private String title;
+
     private String description;
     // Ignore json
     private List<Comment> comments;
