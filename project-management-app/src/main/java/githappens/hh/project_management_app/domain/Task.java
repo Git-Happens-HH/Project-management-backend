@@ -33,7 +33,7 @@ public class Task {
     // assignedUser
     @ManyToOne
     @JsonIgnoreProperties("tasksAssigned")
-    @JoinColumn(name = "app_user_id", nullable = true)
+    @JoinColumn(name = "app_user_id", nullable = true, updatable = true)
     private AppUser assignedUser;
 
     // title
@@ -54,7 +54,8 @@ public class Task {
     @Column(name = "position_number", nullable = true, updatable = true)
     private int positionNumber;
 
-    @OneToMany(mappedBy = "comment_id", cascade = CascadeType.ALL)
+    // comments
+    @OneToMany(mappedBy = "task_id", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("taskId")
     private List<Comment> comments;
 

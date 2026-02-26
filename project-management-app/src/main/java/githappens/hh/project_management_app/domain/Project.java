@@ -3,6 +3,7 @@ package githappens.hh.project_management_app.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Column;
@@ -38,9 +39,10 @@ public class Project {
     @OneToMany(mappedBy = "app_user_id", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("projects")
     private List<AppUser> projectMembers;
-    
-    @OneToMany(mappedBy = "project")
-    @JsonIgnoreProperties("project")
+
+    //taskList
+    @OneToMany(mappedBy = "task_list_id")
+    @JsonIgnore
     private List<TaskList> taskList;
 
 

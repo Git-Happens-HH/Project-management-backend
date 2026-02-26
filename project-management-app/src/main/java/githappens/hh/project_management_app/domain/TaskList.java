@@ -34,7 +34,7 @@ public class TaskList {
     private Project project;
 
     // title
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, updatable = true)
     @NotBlank(message = "Title required")
     private String title;
 
@@ -48,7 +48,7 @@ public class TaskList {
     private LocalDateTime createdAt;
 
     // tasks
-    @OneToMany(mappedBy = "task_list", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "task_list_id", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("taskList")
     private List<Task> tasks;
 

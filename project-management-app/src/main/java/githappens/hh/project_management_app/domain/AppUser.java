@@ -16,6 +16,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
@@ -67,10 +68,9 @@ public class AppUser {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
     private LocalDateTime registeredAt;
 
-    // LISTS OF PROJECTS, TASKS AND COMMENTS
+// LISTS OF PROJECTS, TASKS AND COMMENTS
 
     // projects
-
     @ManyToMany
     // many-to-many relatonship requires a new join table
     @JoinTable(name = "user_projects", joinColumns = @JoinColumn(name = "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
@@ -87,8 +87,8 @@ public class AppUser {
     private List<Task> tasksCreated;
 
     // comments
-    @OneToMany(mappedBy = "comment_id", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("commenter")
+    @OneToMany(mappedBy = "commenter", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Comment> comments;
 
     public AppUser() {

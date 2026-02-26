@@ -27,11 +27,39 @@ public class UserProject {
 
 // constructors
 
-        public UserProject() {
+    public UserProject() {
     }
-    
 
+    public UserProject(AppUser appUser, Project project) {
+        this.appUser = appUser;
+        this.project = project;
+        this.userProjectKeyId = new UserProjectKey(appUser.getAppUserId(), project.getProjectId());
+    }
 
+// getters and setters
 
+    public UserProjectKey getUserProjectKeyId() {
+        return userProjectKeyId;
+    }
+
+    public void setUserProjectKeyId(UserProjectKey userProjectKeyId) {
+        this.userProjectKeyId = userProjectKeyId;
+    }
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
 }

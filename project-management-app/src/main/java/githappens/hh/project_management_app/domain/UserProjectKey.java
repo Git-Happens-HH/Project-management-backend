@@ -8,7 +8,7 @@ import jakarta.persistence.Embeddable;
 @Embeddable
 public class UserProjectKey implements Serializable {
 
-// this class is for the join table "user_projects", since user and project have a M:N relationship
+// this class is the composite key for the join table "user_projects", since user and project have a M:N relationship
 
     // appUserId
     @Column(name = "app_user_id") 
@@ -21,6 +21,11 @@ public class UserProjectKey implements Serializable {
 // Constructor
 
     public UserProjectKey() {
+    }
+
+    public UserProjectKey(Long appUserId, Long projectId) {
+        this.appUserId = appUserId;
+        this.projectId = projectId;
     }
 
 // Getters and setters
