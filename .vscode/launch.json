@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ProjectManagementAppApplication<project-management-app>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "githappens.hh.project_management_app.ProjectManagementAppApplication",
+            "projectName": "project-management-app",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
