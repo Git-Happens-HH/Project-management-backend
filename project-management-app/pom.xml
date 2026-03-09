@@ -6,14 +6,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!--
-        Spring Boot parent hallitsee kaikkien dependencyjen versiot automaattisesti.
-        Siksi dependencyihin EI tarvitse lisätä erikseen versioita.
-    -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.1</version>
+        <version>3.3.5</version>
         <relativePath/>
     </parent>
 
@@ -24,7 +20,7 @@
     <description>Project management application</description>
 
     <properties>
-        <!-- Java versio -->
+        <!-- Java version -->
         <java.version>21</java.version>
     </properties>
 
@@ -32,13 +28,10 @@
 
         <!--
             SPRING WEB
-            Sisältää:
             - Spring MVC
             - Embedded Tomcat
-            - REST controllerit
+            - REST controllers
             - JSON (Jackson)
-
-            Tämä korvaa spring-boot-starter-webmvc dependencyt.
         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -47,12 +40,11 @@
 
         <!--
             THYMELEAF
-            Template engine HTML näkymille.
         -->
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
-        </dependency>
+        </dependency> -->
 
         <!--
             SPRING DATA JPA
@@ -65,7 +57,7 @@
 
         <!--
             SPRING DATA REST
-            Luo automaattiset REST endpointit repositoryille.
+            Creates automatic REST endpoints for repositories
         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -74,7 +66,6 @@
 
         <!--
             H2 DATABASE
-            In-memory tietokanta kehitystä varten.
         -->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -84,10 +75,6 @@
 
         <!--
             VALIDATION
-            @NotNull
-            @Size
-            @Email
-            jne.
         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -96,7 +83,6 @@
 
         <!--
             DEVTOOLS
-            Automaattinen restart kehityksessä.
         -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -107,21 +93,14 @@
 
         <!--
             SPRING SECURITY
-            Voidaan ottaa käyttöön myöhemmin.
-
-            Poistin sen käytöstä koska H2-console ei toimi
-            ilman lisäkonfiguraatiota jos security on päällä.
         -->
-        <!--
-        <dependency>
+        <!-- <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-        -->
+        </dependency> -->
 
         <!--
-            THYMELEAF + SPRING SECURITY integraatio
-            Tarvitaan vain jos security käytössä.
+            THYMELEAF + SPRING SECURITY
         -->
         <!--
         <dependency>
@@ -132,7 +111,6 @@
 
         <!--
             TEST DEPENDENCIES
-            Sisältää:
             - JUnit
             - Mockito
             - Spring Test
@@ -151,9 +129,6 @@
 
             <!--
                 Spring Boot Maven plugin
-                mahdollistaa:
-                mvn spring-boot:run
-                sekä jar buildin
             -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
