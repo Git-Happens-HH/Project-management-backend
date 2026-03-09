@@ -1,6 +1,7 @@
 package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -18,7 +19,6 @@ import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 import jakarta.persistence.CascadeType;
@@ -35,11 +35,11 @@ public class AppUser {
     @Column(name = "app_user_id", nullable = false, updatable = false)
     private Long appUserId;
 
-    // userName
+    // username
     @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique and cant
                                                                                     // be changed
     @NotBlank(message = "A unique username is required")
-    private String userName;
+    private String username;
 
     // firstName
     @Column(name = "first_name", nullable = false)
@@ -68,35 +68,41 @@ public class AppUser {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
     private LocalDateTime registeredAt;
 
-// LISTS OF PROJECTS, TASKS AND COMMENTS
+    // LISTS OF PROJECTS, TASKS AND COMMENTS
 
     // projects
     @ManyToMany
     // many-to-many relatonship requires a new join table
     @JoinTable(name = "user_projects", joinColumns = @JoinColumn(name = "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
     // tasksAssigned
     @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("assignedUser")
-    private List<Task> tasksAssigned;
+    private List<Task> tasksAssigned = new ArrayList<>();
 
     // tasksCreated
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("createdBy")
-    private List<Task> tasksCreated;
+    private List<Task> tasksCreated = new ArrayList<>();
 
     // comments
     @OneToMany(mappedBy = "commenter", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>(); 
+
+// constructors
 
     public AppUser() {
     }
 
-    public AppUser(String userName, String firstName, String lastName, String email, String passwordHash,
+    public AppUser(@NotBlank(message = "A unique username is required") String username,
+            @NotBlank(message = "First name required") String firstName,
+            @NotBlank(message = "Last name required") String lastName,
+            @NotBlank(message = "Email already in use") String email,
+            @Size(min = 8, message = "Password must be at least 8 characters") @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$", message = "Password must contain an uppercase letter, a number, and a special character") @NotBlank(message = "Password is required") String passwordHash,
             LocalDateTime registeredAt) {
-        this.userName = userName;
+        this.username = username;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -104,20 +110,23 @@ public class AppUser {
         this.registeredAt = registeredAt;
     }
 
+
+// getters and setters
+
     public Long getAppUserId() {
         return appUserId;
     }
 
-    public void setAppUserId(Long userId) {
-        this.appUserId = userId;
+    public void setAppUserId(Long appUserId) {
+        this.appUserId = appUserId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getFirstName() {
@@ -160,10 +169,45 @@ public class AppUser {
         this.registeredAt = registeredAt;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public List<Task> getTasksAssigned() {
+        return tasksAssigned;
+    }
+
+    public void setTasksAssigned(List<Task> tasksAssigned) {
+        this.tasksAssigned = tasksAssigned;
+    }
+
+    public List<Task> getTasksCreated() {
+        return tasksCreated;
+    }
+
+    public void setTasksCreated(List<Task> tasksCreated) {
+        this.tasksCreated = tasksCreated;
+    }
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
+    
+// to string
+
     @Override
     public String toString() {
-        return "User [userName=" + userName + ", firstName=" + firstName + ", lastName=" + lastName + ", email=" + email
-                + ", passwordHash=" + passwordHash + ", registeredAt=" + registeredAt + "]";
+        return "AppUser [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
+                + email + ", passwordHash=" + passwordHash + ", registeredAt=" + registeredAt + "]";
     }
+    
 
 }

@@ -1,6 +1,7 @@
 package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -48,20 +49,21 @@ public class TaskList {
     private LocalDateTime createdAt;
 
     // tasks
-    @OneToMany(mappedBy = "task_list_id", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("taskList")
-    private List<Task> tasks;
+    private List<Task> tasks = new ArrayList<>();
 
     public TaskList() {
     }
 
-    public TaskList(Project project, String title, int positionNumber, LocalDateTime createdAt, List<Task> tasks) {
+    public TaskList(Project project, String title, int positionNumber, LocalDateTime createdAt) {
         this.project = project;
         this.title = title;
         this.positionNumber = positionNumber;
         this.createdAt = createdAt;
-        this.tasks = tasks;
     }
+
+// GETTERS AND SETTERS 
 
     public Long getTaskListId() {
         return taskListId;
@@ -75,7 +77,7 @@ public class TaskList {
         return project;
     }
 
-    public void setProjectIdLong(Project project) {
+    public void setProject(Project project) {
         this.project = project;
     }
 
@@ -111,14 +113,13 @@ public class TaskList {
         this.tasks = tasks;
     }
 
-    public TaskList(List<Task> tasks) {
-        this.tasks = tasks;
-    }
+// TO STRING
 
-    @Override
+     @Override
     public String toString() {
-        return "TaskList [project=" + project + ", title=" + title + ", positionNumber=" + positionNumber
+        return "TaskList [project=" + project.getTitle() + ", title=" + title + ", positionNumber=" + positionNumber
                 + ", createdAt=" + createdAt + "]";
     }
+
 
 }

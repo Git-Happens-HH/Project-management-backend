@@ -1,5 +1,6 @@
 package githappens.hh.project_management_app.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
@@ -25,14 +26,20 @@ public class UserProject {
     @JoinColumn(name="project_id")
     Project project;
 
+    // shared to this user (true/false)
+    // if shared = false, this user is the owner of the project
+    @Column(name = "shared_to_this_user", updatable = false)
+    boolean sharedToThisUser;
+
 // constructors
 
     public UserProject() {
     }
 
-    public UserProject(AppUser appUser, Project project) {
+    public UserProject(AppUser appUser, Project project, boolean sharedToThisUser) {
         this.appUser = appUser;
         this.project = project;
+        this.sharedToThisUser = sharedToThisUser;
         this.userProjectKeyId = new UserProjectKey(appUser.getAppUserId(), project.getProjectId());
     }
 
@@ -61,5 +68,14 @@ public class UserProject {
     public void setProject(Project project) {
         this.project = project;
     }
+
+    public boolean getSharedToThisUser() {
+        return sharedToThisUser;
+    }
+
+    public void setSharedToThisUser(boolean shared_to_this_user) {
+        this.sharedToThisUser = sharedToThisUser;
+    }
+
 
 }

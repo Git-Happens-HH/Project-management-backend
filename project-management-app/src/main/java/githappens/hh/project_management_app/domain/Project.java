@@ -1,6 +1,7 @@
 package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -38,24 +39,22 @@ public class Project {
     // projectMembers
     @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("projects")
-    private List<AppUser> projectMembers;
+    private List<AppUser> projectMembers = new ArrayList<>();
 
     //taskList
     @OneToMany(mappedBy = "project")
     @JsonIgnore
-    private List<TaskList> taskList;
+    private List<TaskList> taskList = new ArrayList<>();
 
+// CONSTRUCTORS
 
     public Project() {
     }
 
-    public Project(String title, String description, LocalDateTime createdAt, List<AppUser> projectMembers,
-            List<TaskList> taskList) {
+    public Project(String title, String description, LocalDateTime createdAt) {
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
-        this.projectMembers = projectMembers;
-        this.taskList = taskList;
     }
 
     public Long getProjectId() {
@@ -105,6 +104,8 @@ public class Project {
     public void setTaskList(List<TaskList> taskList) {
         this.taskList = taskList;
     }
+
+// TO STRING
 
     @Override
     public String toString() {

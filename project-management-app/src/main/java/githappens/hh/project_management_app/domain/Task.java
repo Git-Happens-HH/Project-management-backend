@@ -1,5 +1,7 @@
 package githappens.hh.project_management_app.domain;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +13,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
 
@@ -33,7 +34,7 @@ public class Task {
     // assignedUser
     @ManyToOne
     @JsonIgnoreProperties("tasksAssigned")
-    @JoinColumn(name = "assigned_user_id", nullable = true, updatable = true)
+    @JoinColumn(name = "assigned_user", nullable = true, updatable = true)
     private AppUser assignedUser;
 
     // title
@@ -47,31 +48,40 @@ public class Task {
     // createdBy
     @ManyToOne
     @JsonIgnoreProperties("tasksCreated")
-    @JoinColumn(name = "created_by_user_id", nullable = false)
+    @JoinColumn(name = "created_by", nullable = false)
     private AppUser createdBy;
 
     // positionNumber
     @Column(name = "position_number", nullable = true, updatable = true)
     private int positionNumber;
 
+    @Column(name="deadline", nullable = false, updatable = true)
+    private LocalDateTime deadline;
+
     // comments
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("taskId")
-    private List<Comment> comments;
+    @JsonIgnoreProperties("task")
+    private List<Comment> comments = new ArrayList<>();
+
+
+// CONSTRUCTORS
 
     public Task() {
     }
 
-    public Task(TaskList taskList, AppUser assignedUser, String title, String description, AppUser createdBy,
-            int positionNumber, List<Comment> comments) {
+    public Task(TaskList taskList, AppUser assignedUser, String title, String description, AppUser createdBy, 
+            int positionNumber, LocalDateTime deadline) {
         this.taskList = taskList;
         this.assignedUser = assignedUser;
         this.title = title;
         this.description = description;
         this.createdBy = createdBy;
         this.positionNumber = positionNumber;
-        this.comments = comments;
+        this.deadline = deadline;
+
     }
+
+// GETTERS AND SETTERS
 
     public Long getTaskId() {
         return taskId;
@@ -137,15 +147,23 @@ public class Task {
         this.comments = comments;
     }
 
-    @Override
-    public String toString() {
-        return "Task [taskList=" + taskList + ", assignedUser=" + assignedUser + ", title="
-                + title + ", description=" + description + ", createdBy=" + createdBy + ", positionNumber="
-                + positionNumber + "]";
+    
+    public LocalDateTime getDeadline() {
+        return deadline;
     }
 
-   
 
-    
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
 
+// TO STRING
+
+    @Override
+    public String toString() {
+        return "Task [taskList=" + taskList.getTitle() + ", assignedUser=" 
+                + assignedUser.getFirstName() + " " + assignedUser.getLastName() 
+                + ", title=" + title + ", description=" + description + ", createdBy=" + createdBy + ", positionNumber="
+                + positionNumber + "deadline=" + deadline + "]";
+    }
 }

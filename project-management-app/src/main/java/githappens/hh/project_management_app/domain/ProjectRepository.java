@@ -7,18 +7,18 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     // find project by name
-    Optional<Project> findByName(String name);
+    Optional<Project> findByTitle(String title);
 
      // search project by name (with a keyword)
-    Iterable<Project> findByNameContainingIgnoreCase(String keyword);
+    Iterable<Project> findByTitleContainingIgnoreCase(String keyword);
 
     // find all projects of a given assigned user
-    Iterable<Project> findByAssignedUser(AppUser user);
+    // Iterable<Project> findByAssignedUser(AppUser user);
 
      // all projects in alphabetical order
-    Iterable<Project> findAllByOrderByNameAsc();
+    Iterable<Project> findAllByOrderByTitleAsc();
 
      // count an existing users projects
-    long countByAssignedUser(AppUser user);
+    // long countByAssignedUser(AppUser user);
 
 }

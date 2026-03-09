@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.NotBlank;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity(name= "comment")
 public class Comment {
@@ -22,11 +23,13 @@ public class Comment {
 
     // commenter
     @ManyToOne(optional=false)
+    @JsonIgnoreProperties("comments")
     @JoinColumn(name = "app_user_id")
     private AppUser commenter;
 
     // task
-    @ManyToOne(optional=false) // tarkista vielä onko oikein -Tuomas 5.3.
+    @ManyToOne(optional=false)
+    @JsonIgnoreProperties("comments")
     @JoinColumn(name = "task_id")
     private Task task;
 
@@ -42,8 +45,9 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(AppUser commenter, String content, LocalDateTime createdAt) {
+    public Comment(AppUser commenter, Task task, String content, LocalDateTime createdAt) {
         this.commenter = commenter;
+        this.task = task;
         this.content = content;
         this.createdAt = createdAt;
     }
@@ -64,6 +68,15 @@ public class Comment {
         this.commenter = commenter;
     }
 
+    public Task getTask() {
+        return task;
+    }
+
+    public void setTask(Task task) {
+        this.task = task;
+    }
+
+
     public String getContent() {
         return content;
     }
@@ -82,7 +95,8 @@ public class Comment {
 
     @Override
     public String toString() {
-        return "Comment [commenter=" + commenter + ", content=" + content + ", createdAt=" + createdAt + "]";
+        return "Comment [commenter=" + commenter.getFirstName() + " " + commenter.getLastName()
+        + ", task=" + task.getTitle() + ", content=" + content + ", createdAt=" + createdAt + "]";
     }
 
 }
