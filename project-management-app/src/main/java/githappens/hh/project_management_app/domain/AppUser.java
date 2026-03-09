@@ -77,12 +77,12 @@ public class AppUser {
     private List<Project> projects;
 
     // tasksAssigned
-    @OneToMany(mappedBy = "task_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("assignedUser")
     private List<Task> tasksAssigned;
 
     // tasksCreated
-    @OneToMany(mappedBy = "task_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("createdBy")
     private List<Task> tasksCreated;
 

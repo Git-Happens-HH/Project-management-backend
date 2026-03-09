@@ -23,8 +23,12 @@ public class Comment {
     // commenter
     @ManyToOne(optional=false)
     @JoinColumn(name = "app_user_id")
-    @Column(name = "commenter", nullable = false, updatable = false)
     private AppUser commenter;
+
+    // task
+    @ManyToOne(optional=false) // tarkista vielä onko oikein -Tuomas 5.3.
+    @JoinColumn(name = "task_id")
+    private Task task;
 
     // content
     @Column(name = "content", updatable = true)

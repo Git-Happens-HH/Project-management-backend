@@ -36,12 +36,12 @@ public class Project {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // projectMembers
-    @OneToMany(mappedBy = "app_user_id", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("projects")
     private List<AppUser> projectMembers;
 
     //taskList
-    @OneToMany(mappedBy = "task_list_id")
+    @OneToMany(mappedBy = "project")
     @JsonIgnore
     private List<TaskList> taskList;
 
