@@ -18,6 +18,7 @@ import githappens.hh.project_management_app.domain.Comment;
 import githappens.hh.project_management_app.domain.CommentRepository;
 import githappens.hh.project_management_app.domain.UserProject;
 import githappens.hh.project_management_app.domain.UserProjectRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class ProjectManagementAppApplication {
@@ -42,7 +43,8 @@ public class ProjectManagementAppApplication {
 			TaskListRepository taskListRepository,
 			TaskRepository taskRepository,
 			CommentRepository commentRepository,
-			UserProjectRepository userProjectRepository) {
+			UserProjectRepository userProjectRepository,
+			PasswordEncoder passwordEncoder) {
 		return args -> {
 			LocalDateTime now = LocalDateTime.now();
 
@@ -53,7 +55,7 @@ public class ProjectManagementAppApplication {
 			user1.setFirstName("Jukka");
 			user1.setLastName("Javalainen");
 			user1.setEmail("jukkis@example.com");
-			user1.setPasswordHash("Salasana@123");
+			user1.setPasswordHash(passwordEncoder.encode("Salasana@123"));
 			user1.setRegisteredAt(now);
 			user1.setProjects(new ArrayList<>());
 			user1.setTasksAssigned(new ArrayList<>());
@@ -66,7 +68,7 @@ public class ProjectManagementAppApplication {
 			user2.setFirstName("Paula");
 			user2.setLastName("Python");
 			user2.setEmail("paula.python@example.com");
-			user2.setPasswordHash("Salasana@123");
+			user2.setPasswordHash(passwordEncoder.encode("Salasana@123"));
 			user2.setRegisteredAt(now);
 			user2.setProjects(new ArrayList<>());
 			user2.setTasksAssigned(new ArrayList<>());
