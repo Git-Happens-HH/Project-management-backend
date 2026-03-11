@@ -80,19 +80,22 @@ public class ProjectManagementAppApplication {
 			user = userRepository.findByUsername("testuser").orElseThrow();
 
 			Project p1 = new Project();
-			p1.setTitle("Demo Project");
-			p1.setDescription("Seeded project");
+			p1.setTitle("Test Project: The Six Seven App Creation Team");
+			p1.setDescription("Random description");
 			p1.setCreatedAt(now);
 			projectRepository.save(p1);
 
-			// Link admin as project owner
+			// UserProject: Join table entry linking user to project with ownership tracking
+			// Parameters: (user, project, sharedToThisUser)
+			// sharedToThisUser = false means this user OWNS the project
+			// sharedToThisUser = true means the project is SHARED with this user (not owner)
 
 			UserProject up1 = new UserProject(admin, p1, false);
 			userProjectRepository.save(up1);
 
 			TaskList tl1 = new TaskList();
 			tl1.setProject(p1);
-			tl1.setTitle("Backlog");
+			tl1.setTitle("Backlog of the super cool test project");
 			tl1.setPositionNumber(1);
 			tl1.setCreatedAt(now);
 			taskListRepository.save(tl1);
@@ -101,7 +104,7 @@ public class ProjectManagementAppApplication {
 			t1.setTaskList(tl1);
 			t1.setAssignedUser(admin);
 			t1.setTitle("Initial task");
-			t1.setDescription("This task was created by seed data");
+			t1.setDescription("This task was created by test data");
 			t1.setCreatedBy(admin);
 			t1.setPositionNumber(1);
 			t1.setDeadline(now.plusDays(7));
@@ -109,18 +112,21 @@ public class ProjectManagementAppApplication {
 
 			Comment c1 = new Comment();
 			c1.setCommenter(admin);
-			c1.setContent("Seed comment");
+			c1.setContent("This is a comment in test project 1");
 			c1.setTask(t1);
 			c1.setCreatedAt(now);
 			commentRepository.save(c1);
 
 			Project p2 = new Project();
-			p2.setTitle("Website Redesign");
-			p2.setDescription("Second seeded project");
+			p2.setTitle("Website Redesign: Make YouTube great again");
+			p2.setDescription("Second test project description");
 			p2.setCreatedAt(now.plusHours(1));
 			projectRepository.save(p2);
 
-			// Link user as project owner and share with admin
+			// Multiple users can access the same project with different roles:
+			// up2: 'user' owns this project (sharedToThisUser = false)
+			// up3: 'admin' has it shared with them (sharedToThisUser = true)
+			// This allows collaboration while tracking who owns vs who has shared access
 
 			UserProject up2 = new UserProject(user, p2, false);
 			userProjectRepository.save(up2);
