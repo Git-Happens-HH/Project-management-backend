@@ -7,12 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     // used by spring security for authentication
-    Optional<AppUser> findByUserName(String username);
+    Optional<AppUser> findByUsername(String username);
 
     // search user by username or email
     List<AppUser> findByUsernameContainingIgnoreCase(String keyword);
-
-    // return users with a specific role (user or admin)
-    List<AppUser> findByRole(String role);
 
 }

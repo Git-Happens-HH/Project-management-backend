@@ -1,35 +1,97 @@
 package githappens.hh.project_management_app.domain;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 
-@Entity
+@Entity(name = "task")
 public class Task {
 
+    // taskId, taskList, assignedUser, title, description,
+    // createdBy, positionNumber (?), deadline, comments
+    
+
+    // taskId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_id", nullable = false, updatable = false)
     private Long taskId;
+
+    // taskList
+    @ManyToOne(optional = false)
+    @JsonIgnoreProperties("tasks")
+    @JoinColumn(name = "task_list_id", nullable = false)
     private TaskList taskList;
+
+    // assignedUser
+    @ManyToOne
+    @JsonIgnoreProperties("tasksAssigned")
+    @JoinColumn(name = "assigned_user", nullable = true, updatable = true)
     private AppUser assignedUser;
+
+    // title
+    @Column(name = "title", nullable = false, updatable = true)
     private String title;
+
+    // description
+    @Column(name = "description", nullable = true, updatable = true)
     private String description;
-    // Ignore json
-    private List<Comment> comments;
+
+    // createdBy
+    @ManyToOne
+    @JsonIgnoreProperties("tasksCreated")
+    @JoinColumn(name = "created_by", nullable = false)
+    private AppUser createdBy;
+
+    // positionNumber
+    @Column(name = "position_number", nullable = true, updatable = true)
+    private int positionNumber;
+
+    // deadline
+    @Column(name="deadline", nullable = false, updatable = true)
+    @FutureOrPresent(message = "Due date must be in the present or future")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm follows iso-standards, i.e html uses this format
+    private LocalDateTime deadline;
+
+    // comments
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("task")
+    private List<Comment> comments = new ArrayList<>();
+
+
+// CONSTRUCTORS
 
     public Task() {
     }
 
-    public Task(TaskList taskList, AppUser assignedUser, String title, String description, List<Comment> comments) {
+    public Task(TaskList taskList, AppUser assignedUser, String title, String description, AppUser createdBy, 
+            int positionNumber, LocalDateTime deadline) {
         this.taskList = taskList;
         this.assignedUser = assignedUser;
         this.title = title;
         this.description = description;
-        this.comments = comments;
+        this.createdBy = createdBy;
+        this.positionNumber = positionNumber;
+        this.deadline = deadline;
+
     }
+
+// GETTERS AND SETTERS
 
     public Long getTaskId() {
         return taskId;
@@ -71,6 +133,22 @@ public class Task {
         this.description = description;
     }
 
+    public AppUser getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(AppUser createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public int getPositionNumber() {
+        return positionNumber;
+    }
+
+    public void setPositionNumber(int positionNumber) {
+        this.positionNumber = positionNumber;
+    }
+
     public List<Comment> getComments() {
         return comments;
     }
@@ -79,10 +157,23 @@ public class Task {
         this.comments = comments;
     }
 
-    @Override
-    public String toString() {
-        return "Task [taskList=" + taskList + ", assignedUser=" + assignedUser + ", title=" + title + ", description="
-                + description + "]";
+    
+    public LocalDateTime getDeadline() {
+        return deadline;
     }
 
+
+    public void setDeadline(LocalDateTime deadline) {
+        this.deadline = deadline;
+    }
+
+// TO STRING
+
+    @Override
+    public String toString() {
+        return "Task [taskList=" + taskList.getTitle() + ", assignedUser=" 
+                + assignedUser.getFirstName() + " " + assignedUser.getLastName() 
+                + ", title=" + title + ", description=" + description + ", createdBy=" + createdBy + ", positionNumber="
+                + positionNumber + "deadline=" + deadline + "]";
+    }
 }

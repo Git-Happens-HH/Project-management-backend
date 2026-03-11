@@ -1,36 +1,73 @@
 package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 
-@Entity
+@Entity(name= "task_list")
 public class TaskList {
 
+    // tasklistId, project, title, positionNumber (?), createdAt, tasks
+
+    // taskListId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "task_list_id", nullable = false, updatable = false)
     private Long taskListId;
+
+    // project
+    @ManyToOne
+    @JsonIgnoreProperties("taskList")
+    @JoinColumn(name = "project_id", nullable = false)
     private Project project;
+
+    // title
+    @Column(name = "title", nullable = false, updatable = true)
+    @NotBlank(message = "Title required")
     private String title;
+
+    // positionNumber
+    @Column(name = "position_num")
     private int positionNumber; // Is this neccessary?
+
+    // createdAt
+    @Column(name = "created_at")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
     private LocalDateTime createdAt;
-    // JSON ignore
-    private List<Task> tasks;
+
+    // tasks
+    @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("taskList")
+    private List<Task> tasks = new ArrayList<>();
+
+// CONSTRUCTORS
 
     public TaskList() {
     }
 
-    public TaskList(Project project, String title, int positionNumber, LocalDateTime createdAt, List<Task> tasks) {
+    public TaskList(Project project, String title, int positionNumber, LocalDateTime createdAt) {
         this.project = project;
         this.title = title;
         this.positionNumber = positionNumber;
         this.createdAt = createdAt;
-        this.tasks = tasks;
     }
+
+// GETTERS AND SETTERS 
 
     public Long getTaskListId() {
         return taskListId;
@@ -80,17 +117,13 @@ public class TaskList {
         this.tasks = tasks;
     }
 
-    public TaskList(List<Task> tasks) {
-        this.tasks = tasks;
-    }
+// TO STRING
 
-    @Override
+     @Override
     public String toString() {
-        return "TaskList [project=" + project + ", title=" + title + ", positionNumber=" + positionNumber
+        return "TaskList [project=" + project.getTitle() + ", title=" + title + ", positionNumber=" + positionNumber
                 + ", createdAt=" + createdAt + "]";
     }
 
-    
-    
 
 }
