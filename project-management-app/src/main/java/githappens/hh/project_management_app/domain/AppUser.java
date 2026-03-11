@@ -36,14 +36,14 @@ public class AppUser {
     private Long appUserId;
 
     // username
-    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique and cant
+    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique and can't
                                                                                     // be changed
     @NotBlank(message = "A unique username is required")
     private String username;
 
     // firstName
     @Column(name = "first_name", nullable = false)
-    @NotBlank(message = "First name required")
+    @NotBlank(message = "First name required")-
     private String firstName;
 
     // lastName
@@ -73,7 +73,7 @@ public class AppUser {
     // projects
     @ManyToMany
     // many-to-many relatonship requires a new join table
-    @JoinTable(name = "user_projects", joinColumns = @JoinColumn(name = "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
+    @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
     private List<Project> projects = new ArrayList<>();
 
     // tasksAssigned

@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 
@@ -23,7 +24,7 @@ public class Project {
     // projectId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "task_id", nullable = false, updatable = false)
+    @Column(name = "project_id", nullable = false, updatable = false)
     private Long projectId;
 
     // title
@@ -38,10 +39,13 @@ public class Project {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // projectMembers
-    @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties("projects")
+    @ManyToMany(mappedBy = "projects")
     private List<AppUser> projectMembers = new ArrayList<>();
+
+    // projectMembers
+    // @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL)
+    // @JsonIgnoreProperties("projects")
+    // private List<AppUser> projectMembers = new ArrayList<>();
 
     //taskList
     @OneToMany(mappedBy = "project")
@@ -93,13 +97,13 @@ public class Project {
         this.createdAt = createdAt;
     }
 
-    public List<AppUser> getProjectMembers() {
-        return projectMembers;
-    }
+    // public List<AppUser> getProjectMembers() {
+    //     return projectMembers;
+    // }
 
-    public void setProjectMembers(List<AppUser> projectMembers) {
-        this.projectMembers = projectMembers;
-    }
+    // public void setProjectMembers(List<AppUser> projectMembers) {
+    //     this.projectMembers = projectMembers;
+    // }
 
     public List<TaskList> getTaskList() {
         return taskList;
