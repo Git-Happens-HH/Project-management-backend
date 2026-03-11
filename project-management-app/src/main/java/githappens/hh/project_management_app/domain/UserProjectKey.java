@@ -18,7 +18,7 @@ public class UserProjectKey implements Serializable {
     @Column(name = "project_id") 
     Long projectId;
 
-// Constructor
+// CONSTRUCTORS
 
     public UserProjectKey() {
     }
@@ -28,7 +28,7 @@ public class UserProjectKey implements Serializable {
         this.projectId = projectId;
     }
 
-// Getters and setters
+// GETTERS AND SETTERS
 
     public Long getAppUserId() {
         return appUserId;
@@ -46,7 +46,7 @@ public class UserProjectKey implements Serializable {
         this.projectId = projectId;
     }
 
-// Hash code
+// HASH CODE
 
     @Override
     public int hashCode() {
@@ -57,7 +57,7 @@ public class UserProjectKey implements Serializable {
         return result;
     }
 
-// Equals
+// EQUALS
 
     @Override
     public boolean equals(Object obj) {

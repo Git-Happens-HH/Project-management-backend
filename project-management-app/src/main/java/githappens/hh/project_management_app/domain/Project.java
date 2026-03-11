@@ -18,7 +18,9 @@ import jakarta.persistence.CascadeType;
 @Entity(name= "project")
 public class Project {
 
-    //projectId
+    // projectId, title, description, createdAt, projectMembers, taskList
+
+    // projectId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id", nullable = false, updatable = false)
@@ -56,6 +58,8 @@ public class Project {
         this.description = description;
         this.createdAt = createdAt;
     }
+
+// GETTERS AND SETTERS
 
     public Long getProjectId() {
         return projectId;

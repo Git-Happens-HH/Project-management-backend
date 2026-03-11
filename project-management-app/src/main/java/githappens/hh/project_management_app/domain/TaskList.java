@@ -22,6 +22,8 @@ import jakarta.persistence.CascadeType;
 @Entity(name= "task_list")
 public class TaskList {
 
+    // tasklistId, project, title, positionNumber (?), createdAt, tasks
+
     // taskListId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,6 +54,8 @@ public class TaskList {
     @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("taskList")
     private List<Task> tasks = new ArrayList<>();
+
+// CONSTRUCTORS
 
     public TaskList() {
     }

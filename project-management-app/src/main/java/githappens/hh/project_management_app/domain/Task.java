@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.persistence.Entity;
@@ -13,11 +15,16 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
 
 @Entity(name = "task")
 public class Task {
+
+    // taskId, taskList, assignedUser, title, description,
+    // createdBy, positionNumber (?), deadline, comments
+    
 
     // taskId
     @Id
@@ -55,7 +62,10 @@ public class Task {
     @Column(name = "position_number", nullable = true, updatable = true)
     private int positionNumber;
 
+    // deadline
     @Column(name="deadline", nullable = false, updatable = true)
+    @FutureOrPresent(message = "Due date must be in the present or future")
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm follows iso-standards, i.e html uses this format
     private LocalDateTime deadline;
 
     // comments

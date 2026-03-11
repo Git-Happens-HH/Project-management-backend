@@ -10,6 +10,8 @@ import jakarta.persistence.MapsId;
 @Entity(name="user_project")
 public class UserProject {
 
+    // userProject, appUser, project, sharedToThisUser
+
     // userProject
     @EmbeddedId
     UserProjectKey userProjectKeyId;
@@ -31,7 +33,7 @@ public class UserProject {
     @Column(name = "shared_to_this_user", updatable = false)
     boolean sharedToThisUser;
 
-// constructors
+// CONSTRUCTORS
 
     public UserProject() {
     }
@@ -43,7 +45,7 @@ public class UserProject {
         this.userProjectKeyId = new UserProjectKey(appUser.getAppUserId(), project.getProjectId());
     }
 
-// getters and setters
+// GETTERS AND SETTERS
 
     public UserProjectKey getUserProjectKeyId() {
         return userProjectKeyId;
@@ -73,9 +75,18 @@ public class UserProject {
         return sharedToThisUser;
     }
 
-    public void setSharedToThisUser(boolean shared_to_this_user) {
+    public void setSharedToThisUser(boolean sharedToThisUser) {
         this.sharedToThisUser = sharedToThisUser;
     }
 
+// TO STRING
+
+    @Override
+    public String toString() {
+        return "UserProject [appUser=" + appUser + ", project=" + project + ", sharedToThisUser=" + sharedToThisUser
+                + "]";
+    }
+
+    
 
 }

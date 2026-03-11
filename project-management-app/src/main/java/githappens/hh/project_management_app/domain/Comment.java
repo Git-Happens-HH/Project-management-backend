@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity(name= "comment")
 public class Comment {
 
+    //commentId, commenter, task, content, createdAt
+
     // commentId
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +44,8 @@ public class Comment {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+// CONSTRUCTORS
+
     public Comment() {
     }
 
@@ -51,6 +55,8 @@ public class Comment {
         this.content = content;
         this.createdAt = createdAt;
     }
+
+// GETTERS AND SETTERS
 
     public Long getCommentId() {
         return commentId;
@@ -92,6 +98,8 @@ public class Comment {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
+
+// TO STRING
 
     @Override
     public String toString() {

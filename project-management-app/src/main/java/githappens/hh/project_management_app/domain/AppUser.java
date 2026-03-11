@@ -91,7 +91,7 @@ public class AppUser {
     @JsonIgnore
     private List<Comment> comments = new ArrayList<>(); 
 
-// constructors
+// CONSTRUCTORS
 
     public AppUser() {
     }
@@ -111,7 +111,7 @@ public class AppUser {
     }
 
 
-// getters and setters
+// GETTERS AND SETTERS
 
     public Long getAppUserId() {
         return appUserId;
@@ -201,7 +201,7 @@ public class AppUser {
         this.comments = comments;
     }
     
-// to string
+// TO STRING
 
     @Override
     public String toString() {
