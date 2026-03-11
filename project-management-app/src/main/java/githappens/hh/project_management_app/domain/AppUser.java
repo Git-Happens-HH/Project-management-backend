@@ -43,7 +43,7 @@ public class AppUser {
 
     // firstName
     @Column(name = "first_name", nullable = false)
-    @NotBlank(message = "First name required")-
+    @NotBlank(message = "First name required")
     private String firstName;
 
     // lastName
