@@ -48,36 +48,36 @@ public class ProjectManagementAppApplication {
 
 			// USERS
 
-			AppUser admin = new AppUser();
-			admin.setUsername("testadmin");
-			admin.setFirstName("Admin");
-			admin.setLastName("User");
-			admin.setEmail("admin@example.com");
-			admin.setPasswordHash("Admin@123");
-			admin.setRegisteredAt(now);
-			admin.setProjects(new ArrayList<>());
-			admin.setTasksAssigned(new ArrayList<>());
-			admin.setTasksCreated(new ArrayList<>());
-			admin.setComments(new ArrayList<>());
-			userRepository.save(admin);
+			AppUser user1 = new AppUser();
+			user1.setUsername("jukka-poika42");
+			user1.setFirstName("Jukka");
+			user1.setLastName("Javalainen");
+			user1.setEmail("jukkis@example.com");
+			user1.setPasswordHash("Salasana@123");
+			user1.setRegisteredAt(now);
+			user1.setProjects(new ArrayList<>());
+			user1.setTasksAssigned(new ArrayList<>());
+			user1.setTasksCreated(new ArrayList<>());
+			user1.setComments(new ArrayList<>());
+			userRepository.save(user1);
 
-			AppUser user = new AppUser();
-			user.setUsername("testuser");
-			user.setFirstName("Regular");
-			user.setLastName("User");
-			user.setEmail("user@example.com");
-			user.setPasswordHash("User@123");
-			user.setRegisteredAt(now);
-			user.setProjects(new ArrayList<>());
-			user.setTasksAssigned(new ArrayList<>());
-			user.setTasksCreated(new ArrayList<>());
-			user.setComments(new ArrayList<>());
-			userRepository.save(user);
+			AppUser user2 = new AppUser();
+			user2.setUsername("p-python");
+			user2.setFirstName("Paula");
+			user2.setLastName("Python");
+			user2.setEmail("paula.python@example.com");
+			user2.setPasswordHash("Salasana@123");
+			user2.setRegisteredAt(now);
+			user2.setProjects(new ArrayList<>());
+			user2.setTasksAssigned(new ArrayList<>());
+			user2.setTasksCreated(new ArrayList<>());
+			user2.setComments(new ArrayList<>());
+			userRepository.save(user2);
 
 			// PROJECTS, TASKLISTS, TASKS, COMMENTS
 
-			admin = userRepository.findByUsername("testadmin").orElseThrow();
-			user = userRepository.findByUsername("testuser").orElseThrow();
+			user1 = userRepository.findByUsername("jukka-poika42").orElseThrow();
+			user2 = userRepository.findByUsername("p-python").orElseThrow();
 
 			Project p1 = new Project();
 			p1.setTitle("Test Project: The Six Seven App Creation Team");
@@ -90,7 +90,7 @@ public class ProjectManagementAppApplication {
 			// sharedToThisUser = false means this user OWNS the project
 			// sharedToThisUser = true means the project is SHARED with this user (not owner)
 
-			UserProject up1 = new UserProject(admin, p1, false);
+			UserProject up1 = new UserProject(user1, p1, false);
 			userProjectRepository.save(up1);
 
 			TaskList tl1 = new TaskList();
@@ -102,16 +102,16 @@ public class ProjectManagementAppApplication {
 
 			Task t1 = new Task();
 			t1.setTaskList(tl1);
-			t1.setAssignedUser(admin);
+			t1.setAssignedUser(user1);
 			t1.setTitle("Initial task");
 			t1.setDescription("This task was created by test data");
-			t1.setCreatedBy(admin);
+			t1.setCreatedBy(user1);
 			t1.setPositionNumber(1);
 			t1.setDeadline(now.plusDays(7));
 			taskRepository.save(t1);
 
 			Comment c1 = new Comment();
-			c1.setCommenter(admin);
+			c1.setCommenter(user1);
 			c1.setContent("This is a comment in test project 1");
 			c1.setTask(t1);
 			c1.setCreatedAt(now);
@@ -128,9 +128,9 @@ public class ProjectManagementAppApplication {
 			// up3: 'admin' has it shared with them (sharedToThisUser = true)
 			// This allows collaboration while tracking who owns vs who has shared access
 
-			UserProject up2 = new UserProject(user, p2, false);
+			UserProject up2 = new UserProject(user2, p2, false);
 			userProjectRepository.save(up2);
-			UserProject up3 = new UserProject(admin, p2, true);
+			UserProject up3 = new UserProject(user1, p2, true);
 			userProjectRepository.save(up3);
 
 			TaskList tl2 = new TaskList();
@@ -142,16 +142,16 @@ public class ProjectManagementAppApplication {
 
 			Task t2 = new Task();
 			t2.setTaskList(tl2);
-			t2.setAssignedUser(user);
+			t2.setAssignedUser(user2);
 			t2.setTitle("Create homepage mockup");
 			t2.setDescription("Prepare updated landing page design");
-			t2.setCreatedBy(user);
+			t2.setCreatedBy(user2);
 			t2.setPositionNumber(2);
 			t2.setDeadline(now.plusDays(14));
 			taskRepository.save(t2);
 
 			Comment c2 = new Comment();
-			c2.setCommenter(user);
+			c2.setCommenter(user2);
 			c2.setContent("Second seed comment");
 			c2.setTask(t2);
 			c2.setCreatedAt(now.plusHours(1));
