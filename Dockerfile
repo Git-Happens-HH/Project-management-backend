@@ -1,6 +1,6 @@
 FROM eclipse-temurin:25-jdk AS builder
 WORKDIR /opt/app
-COPY ./project-management-app/mvn/ .mvn
+COPY ./project-management-app/.mvn/ .mvn
 COPY ./project-management-app/mvnw ./project-management-app/pom.xml ./
 RUN chmod +x ./mvnw
 RUN ./mvnw dependency:go-offline
