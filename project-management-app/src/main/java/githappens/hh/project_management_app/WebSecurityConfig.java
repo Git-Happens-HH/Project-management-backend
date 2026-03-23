@@ -29,7 +29,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/css/**", "/h2-console/**").permitAll() // Enable css when logged out
+                        .requestMatchers("/h2-console/**", "/api/**").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/h2-console/**"))
