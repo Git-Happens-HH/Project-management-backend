@@ -19,6 +19,9 @@ import jakarta.validation.constraints.NotBlank;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
+
 import jakarta.validation.constraints.Size;
 import jakarta.validation.constraints.Pattern;
 import jakarta.persistence.CascadeType;
@@ -61,6 +64,7 @@ public class AppUser {
     @Size(min = 8, message = "Password must be at least 8 characters")
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$", message = "Password must contain an uppercase letter, a number, and a special character")
     @NotBlank(message = "Password is required")
+    @JsonProperty(access = Access.WRITE_ONLY)
     private String passwordHash;
 
     // registeredAt
@@ -153,6 +157,7 @@ public class AppUser {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getPasswordHash() {
         return passwordHash;
     }
