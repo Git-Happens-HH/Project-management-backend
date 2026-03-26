@@ -32,12 +32,12 @@ public class WebSecurityConfig {
                         .requestMatchers("/h2-console/**", "/api/**").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**"))
+                        .ignoringRequestMatchers("/h2-console/**", "/api/**"))
                 .headers(headers -> headers
                         .frameOptions(frame -> frame.disable()))
-                .formLogin(formlogin -> formlogin
+                .formLogin(formlogin -> formlogin.disable())
                         //.defaultSuccessUrl("/", true)
-                        .permitAll())
+                        //.permitAll())
                 .logout(logout -> logout
                         .permitAll());
         return http.build();
