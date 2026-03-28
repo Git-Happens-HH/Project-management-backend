@@ -85,6 +85,7 @@ public class ProjectManagementAppApplication {
 			p1.setTitle("Test Project: The Six Seven App Creation Team");
 			p1.setDescription("Random description");
 			p1.setCreatedAt(now);
+			p1.setIsShared(false);
 			projectRepository.save(p1);
 
 			// UserProject: Join table entry linking user to project with ownership tracking
@@ -123,6 +124,7 @@ public class ProjectManagementAppApplication {
 			p2.setTitle("Website Redesign: Make YouTube great again");
 			p2.setDescription("Second test project description");
 			p2.setCreatedAt(now.plusHours(1));
+			p2.setIsShared(true);
 			projectRepository.save(p2);
 
 			// Multiple users can access the same project with different roles:
