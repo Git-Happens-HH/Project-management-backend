@@ -25,7 +25,11 @@ public class CommentRestController {
     }
 
     @GetMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments")
-    public List<Comment> getComments(@PathVariable("task") Task task) {
+    public List<Comment> getComments(@PathVariable("taskId") Long taskId) {
+        Task task = taskRepository.findById(taskId).orElse(null);
+        if (task == null) {
+            return List.of();
+        }
         return commentRepository.findByTaskOrderByCreatedAtDesc(task);
     }
 
