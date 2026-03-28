@@ -39,6 +39,9 @@ public class Project {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "is_shared", nullable = false, updatable = true)
+    private boolean isShared;
+
     @ManyToMany(mappedBy = "projects")
     private List<AppUser> projectMembers = new ArrayList<>();
 
@@ -57,10 +60,11 @@ public class Project {
     public Project() {
     }
 
-    public Project(String title, String description, LocalDateTime createdAt) {
+    public Project(String title, String description, LocalDateTime createdAt, boolean isShared) {
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
+        this.isShared = isShared;
     }
 
 // GETTERS AND SETTERS
@@ -97,6 +101,15 @@ public class Project {
         this.createdAt = createdAt;
     }
 
+    public boolean getIsShared() {
+        return isShared;
+    }
+
+    public void setIsShared(boolean isShared) {
+        this.isShared = isShared;
+    }
+
+
     // public List<AppUser> getProjectMembers() {
     //     return projectMembers;
     // }
@@ -117,8 +130,10 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project [title=" + title + ", description=" + description + ", createdAt="
-                + createdAt + "]";
+        return "Project [title=" + title + ", description=" + description + ", createdAt=" + createdAt 
+            + ", isShared=" + isShared + "]";
     }
+
+    
 
 }
