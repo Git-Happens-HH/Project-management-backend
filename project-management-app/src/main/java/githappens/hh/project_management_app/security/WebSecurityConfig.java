@@ -56,7 +56,8 @@ public class WebSecurityConfig {
                 )
                 .authorizeHttpRequests(authorizeRequests -> 
                     authorizeRequests
-                            .requestMatchers("api//auth/**", "/api/**").permitAll()
+                            .requestMatchers("/login", "/register", "/h2-console/**", "/error").permitAll()
+                            .requestMatchers("/api/**").authenticated()
                             .anyRequest().authenticated()
                 );
                 http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
