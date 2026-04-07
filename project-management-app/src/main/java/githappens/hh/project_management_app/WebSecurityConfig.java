@@ -29,7 +29,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/h2-console/**", "/api/**").permitAll()
+                        .requestMatchers("/h2-console/**", "/api/**", "/websocket/**").permitAll()
                         .anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .headers(headers -> headers
