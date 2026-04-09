@@ -5,7 +5,12 @@ import githappens.hh.project_management_app.domain.AppUserRepository;
 import githappens.hh.project_management_app.security.JwtUtil;
 
 import org.springframework.security.authentication.AuthenticationManager;
+
+import java.time.LocalDateTime;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
@@ -48,9 +53,20 @@ public String registerAppUser(@RequestBody AppUser appUser) {
         appUser.getLastName(),
         appUser.getEmail(),
         encoder.encode(appUser.getPasswordHash()),
-        appUser.getRegisteredAt()
+        LocalDateTime.now()
     );
     AppUserRepository.save(newUser);
     return "User registered succesfully!";
+
+// generate JWT for the newly created user (use email as subject if your auth uses email)
+     // String subjectForToken = appUser.getEmail(); // or appUser.getUsername() depending how JwtUtil/userDetails are configured
+     //   String token = jwtUtils.generateToken(subjectForToken);
+
+     //return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+          //  "username", saved.getUserName() != null ? saved.getUserName() : saved.getUsername(),
+            // "email", saved.getEmail(),
+          // "token", token
+       // ));
+
     }
 }
