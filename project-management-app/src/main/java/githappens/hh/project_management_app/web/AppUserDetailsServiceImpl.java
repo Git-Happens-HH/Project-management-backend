@@ -25,15 +25,15 @@ public class AppUserDetailsServiceImpl implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        AppUser currUser = appUserRepository.findByUsername(username).orElse(null);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        AppUser currUser = appUserRepository.findByEmail(email).orElse(null);
 
     // empty list of authorities, since we don't have roles (yet)
          List<GrantedAuthority> authorities = new ArrayList<>();
        
         // Found user will be wrapped in a Spring Security 'User' object (username + password + role)
         return new org.springframework.security.core.userdetails.User(
-                currUser.getUsername(),
+                currUser.getEmail(),
                 currUser.getPasswordHash(),
                 authorities); // empty list so constructor passes
     }
