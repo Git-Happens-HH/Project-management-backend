@@ -1,5 +1,6 @@
 package githappens.hh.project_management_app.web;
 
+import githappens.hh.project_management_app.service.ProjectRealtimeService;
 import org.springframework.web.bind.annotation.RestController;
 import githappens.hh.project_management_app.domain.Project;
 import githappens.hh.project_management_app.domain.ProjectRepository;
@@ -18,10 +19,12 @@ import java.util.List;
 public class TaskListRestController {
     private final TaskListRepository taskListRepository;
     private final ProjectRepository projectRepository;
+    private final ProjectRealtimeService realtimeService;
 
-    public TaskListRestController(TaskListRepository taskListRepository, ProjectRepository projectRepository) {
+    public TaskListRestController(TaskListRepository taskListRepository, ProjectRepository projectRepository,  ProjectRealtimeService realtimeService) {
         this.taskListRepository = taskListRepository;
         this.projectRepository = projectRepository;
+        this.realtimeService =  realtimeService;
     }
 
     @GetMapping("/api/projects/{projectId}/tasklists")
@@ -38,12 +41,14 @@ public class TaskListRestController {
     public TaskList createTaskList(@PathVariable Long projectId, @RequestBody TaskList taskList) {
         Project project = projectRepository.findById(projectId).orElse(null);
         taskList.setProject(project);
+        realtimeService.broadcastTaskLists(projectId);
         return taskListRepository.save(taskList);
     }
     
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}")
     public void deleteTaskList(@PathVariable Long taskListId) {
         taskListRepository.deleteById(taskListId);
+        realtimeService.broadcastTaskLists(taskListId);
     }
 
 }
