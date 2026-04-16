@@ -7,6 +7,7 @@ import githappens.hh.project_management_app.security.JwtUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,20 +44,29 @@ public class AuthController {
 
 
 @PostMapping("/register")
-public String registerAppUser(@RequestBody AppUser appUser) {
-    if (AppUserRepository.existsByEmail(appUser.getEmail())) {
-        return "Error: Username is already taken!";
-    }
-    AppUser newUser = new AppUser(
-        appUser.getUsername(),
-        appUser.getFirstName(),
-        appUser.getLastName(),
-        appUser.getEmail(),
-        encoder.encode(appUser.getPasswordHash()),
-        LocalDateTime.now()
-    );
-    AppUserRepository.save(newUser);
-    return "User registered succesfully!";
+    public ResponseEntity<?> registerAppUser(@RequestBody AppUser appUser) {
+        if (AppUserRepository.existsByEmail(appUser.getEmail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email is already taken!");
+        }
+
+        String rawPassword = appUser.getPasswordHash();
+        if (rawPassword == null || rawPassword.isBlank()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: Password is required");
+        }
+
+        AppUser newUser = new AppUser(
+            appUser.getUsername(),
+            appUser.getFirstName(),
+            appUser.getLastName(),
+            appUser.getEmail(),
+            encoder.encode(rawPassword),
+            LocalDateTime.now()
+        );
+        AppUser saved = AppUserRepository.save(newUser);
+
+        // Generate JWT for the newly created user. Use email as subject since login uses email.
+        String token = jwtUtils.generateToken(saved.getEmail());
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of("token", token));
 
 // generate JWT for the newly created user (use email as subject if your auth uses email)
      // String subjectForToken = appUser.getEmail(); // or appUser.getUsername() depending how JwtUtil/userDetails are configured
