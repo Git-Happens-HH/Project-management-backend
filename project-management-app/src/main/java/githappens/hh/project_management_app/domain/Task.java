@@ -35,14 +35,8 @@ public class Task {
     // taskList
     @ManyToOne(optional = false)
     @JsonIgnoreProperties("tasks")
-    @JoinColumn(name = "task_list_id", nullable = false)
+    @JoinColumn(name = "task_list_id", nullable = true)
     private TaskList taskList;
-
-    // assignedUser
-    @ManyToOne
-    @JsonIgnoreProperties("tasksAssigned")
-    @JoinColumn(name = "assigned_user", nullable = true, updatable = true)
-    private AppUser assignedUser;
 
     // title
     @Column(name = "title", nullable = false, updatable = true)
@@ -55,12 +49,14 @@ public class Task {
     // createdBy
     @ManyToOne
     @JsonIgnoreProperties("tasksCreated")
-    @JoinColumn(name = "created_by", nullable = false)
+    @JoinColumn(name = "created_by", nullable = true)
     private AppUser createdBy;
 
-    // positionNumber
-    @Column(name = "position_number", nullable = true, updatable = true)
-    private int positionNumber;
+    // assignedUser
+    @ManyToOne
+    @JsonIgnoreProperties("tasksAssigned")
+    @JoinColumn(name = "assigned_user", nullable = true, updatable = true)
+    private AppUser assignedUser;
 
     // deadline
     @Column(name="deadline", nullable = false, updatable = true)
@@ -79,14 +75,12 @@ public class Task {
     public Task() {
     }
 
-    public Task(TaskList taskList, AppUser assignedUser, String title, String description, AppUser createdBy, 
-            int positionNumber, LocalDateTime deadline) {
+    public Task(TaskList taskList, String title, String description, AppUser createdBy, AppUser assignedUser, LocalDateTime deadline) {
         this.taskList = taskList;
-        this.assignedUser = assignedUser;
         this.title = title;
         this.description = description;
         this.createdBy = createdBy;
-        this.positionNumber = positionNumber;
+        this.assignedUser = assignedUser;
         this.deadline = deadline;
 
     }
@@ -141,14 +135,6 @@ public class Task {
         this.createdBy = createdBy;
     }
 
-    public int getPositionNumber() {
-        return positionNumber;
-    }
-
-    public void setPositionNumber(int positionNumber) {
-        this.positionNumber = positionNumber;
-    }
-
     public List<Comment> getComments() {
         return comments;
     }
@@ -173,7 +159,6 @@ public class Task {
     public String toString() {
         return "Task [taskList=" + taskList.getTitle() + ", assignedUser=" 
                 + assignedUser.getFirstName() + " " + assignedUser.getLastName() 
-                + ", title=" + title + ", description=" + description + ", createdBy=" + createdBy + ", positionNumber="
-                + positionNumber + "deadline=" + deadline + "]";
+                + ", title=" + title + ", description=" + description + ", createdBy=" + createdBy + "deadline=" + deadline + "]";
     }
 }
