@@ -12,16 +12,21 @@ import githappens.hh.project_management_app.domain.Task;
 import githappens.hh.project_management_app.domain.TaskList;
 import githappens.hh.project_management_app.domain.TaskListRepository;
 import githappens.hh.project_management_app.domain.TaskRepository;
+import githappens.hh.project_management_app.service.ProjectRealtimeService;
+
 import java.util.List;
 
 @RestController
 public class TaskRestController {
     private final TaskRepository taskRepository;
     private final TaskListRepository taskListRepository;
+    private final ProjectRealtimeService realtimeService;
 
-    public TaskRestController(TaskRepository taskRepository, TaskListRepository taskListRepository) {
+    public TaskRestController(TaskRepository taskRepository, TaskListRepository taskListRepository, 
+                                ProjectRealtimeService realtimeService) {
         this.taskRepository = taskRepository;
         this.taskListRepository = taskListRepository;
+        this.realtimeService = realtimeService;
     }
 
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
@@ -37,13 +42,17 @@ public class TaskRestController {
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
     public Task createTask(@PathVariable Long projectId, @PathVariable Long taskListId, @RequestBody Task task) {
         TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
-               
         task.setTaskList(taskList);
-        return taskRepository.save(task);
+        Task saved = taskRepository.save(task);
+        taskRepository.flush();
+        realtimeService.broadcastTaskLists(projectId);
+        return saved;
     }
 
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
-    public void deleteTask(@PathVariable Long taskId) {
+    public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
         taskRepository.deleteById(taskId);
+        taskRepository.flush();
+        realtimeService.broadcastTaskLists(projectId);
     }
 }
