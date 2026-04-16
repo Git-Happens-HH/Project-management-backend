@@ -56,7 +56,7 @@ public class AppUser {
 
     // email
     @Column(name = "email", nullable = false, unique = true)
-    @NotBlank(message = "Email already in use")
+    @NotBlank(message = "Email required")
     private String email;
 
     // passwordHash
@@ -103,7 +103,7 @@ public class AppUser {
     public AppUser(@NotBlank(message = "A unique username is required") String username,
             @NotBlank(message = "First name required") String firstName,
             @NotBlank(message = "Last name required") String lastName,
-            @NotBlank(message = "Email already in use") String email,
+            @NotBlank(message = "Email required") String email,
             @Size(min = 8, message = "Password must be at least 8 characters") @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$", message = "Password must contain an uppercase letter, a number, and a special character") @NotBlank(message = "Password is required") String passwordHash,
             LocalDateTime registeredAt) {
         this.username = username;
