@@ -20,16 +20,19 @@ public class AppUserRestController {
         this.appUserRepository = appUserRepository;
     }
 
+    // get all users
     @GetMapping("/api/users")
     public List<AppUser> getAllUsers() {
         return appUserRepository.findAll();
     }
 
+    // get user by id
     @GetMapping("/api/users/{userId}")
     public Optional<AppUser> getUserById(@PathVariable Long userId) {
         return appUserRepository.findById(userId);
     }
 
+    // get projects for user
     @GetMapping("/api/users/{userId}/projects")
     public Iterable<Project> getProjectsForUser(@PathVariable Long userId) {
         return appUserRepository.findById(userId)
@@ -37,8 +40,15 @@ public class AppUserRestController {
                 .orElse(List.of());
     }
 
+    // create user
     @PostMapping("/api/users")
     public AppUser createUser(@RequestBody AppUser user) {
+        if (appUserRepository.existsByUsername(user.getUsername())) {
+            throw new IllegalArgumentException("Username already in use");
+        }
+        if (appUserRepository.existsByEmail(user.getEmail())) {
+            throw new IllegalArgumentException("Email already in use");
+        }
         return appUserRepository.save(user);
     }
 
