@@ -48,9 +48,9 @@ public class TaskListRestController {
     }
     
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}")
-    public void deleteTaskList(@PathVariable Long taskListId) {
+    public void deleteTaskList(@PathVariable Long taskListId, @PathVariable Long projectId) {
         taskListRepository.deleteById(taskListId);
         taskListRepository.flush();
-        realtimeService.broadcastTaskLists(taskListId);
+        realtimeService.broadcastTaskLists(projectId);
     }
 }
