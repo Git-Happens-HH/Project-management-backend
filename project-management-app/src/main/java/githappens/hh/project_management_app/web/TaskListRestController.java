@@ -41,14 +41,16 @@ public class TaskListRestController {
     public TaskList createTaskList(@PathVariable Long projectId, @RequestBody TaskList taskList) {
         Project project = projectRepository.findById(projectId).orElse(null);
         taskList.setProject(project);
+        TaskList saved = taskListRepository.save(taskList);
+        taskListRepository.flush();
         realtimeService.broadcastTaskLists(projectId);
-        return taskListRepository.save(taskList);
+        return saved;
     }
     
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}")
     public void deleteTaskList(@PathVariable Long taskListId) {
         taskListRepository.deleteById(taskListId);
+        taskListRepository.flush();
         realtimeService.broadcastTaskLists(taskListId);
     }
-
 }
