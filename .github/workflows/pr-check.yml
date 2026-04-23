@@ -1,0 +1,60 @@
+name: PR Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  quality-and-security:
+    name: Build, Test, and Security Gates
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Build and test (quality gate)
+        run: mvn -B -f project-management-app/pom.xml clean verify
+
+      - name: OWASP Dependency-Check (fail on CVSS >= 7)
+        uses: dependency-check/Dependency-Check_Action@main
+        with:
+          project: project-management-app
+          path: .
+          format: HTML
+          out: reports
+          args: >
+            --scan project-management-app
+            --failOnCVSS 7
+
+      - name: Build container image for scan
+        run: docker build -t project-management-app:pr-${{ github.sha }} .
+
+      - name: Trivy container scan (fail on HIGH/CRITICAL)
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          image-ref: project-management-app:pr-${{ github.sha }}
+          format: table
+          exit-code: "1"
+          ignore-unfixed: true
+          vuln-type: os,library
+          severity: HIGH,CRITICAL
+
+      - name: Upload security report artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dependency-check-report
+          path: reports
+          if-no-files-found: warn

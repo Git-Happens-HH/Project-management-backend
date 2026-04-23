@@ -1,0 +1,15 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: project-management-app
+  labels:
+    app: project-management-app
+spec:
+  to:
+    kind: Service
+    name: project-management-app
+  port:
+    targetPort: http
+  tls:
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
