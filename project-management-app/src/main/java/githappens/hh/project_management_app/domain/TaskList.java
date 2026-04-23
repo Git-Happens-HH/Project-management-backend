@@ -22,7 +22,7 @@ import jakarta.persistence.CascadeType;
 @Entity(name= "task_list")
 public class TaskList {
 
-    // tasklistId, project, title, positionNumber (?), createdAt, tasks
+    // tasklistId, project, title, createdAt, tasks
 
     // taskListId
     @Id
@@ -41,10 +41,6 @@ public class TaskList {
     @NotBlank(message = "Title required")
     private String title;
 
-    // positionNumber
-    @Column(name = "position_num")
-    private int positionNumber; // Is this neccessary?
-
     // createdAt
     @Column(name = "created_at")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
@@ -60,10 +56,9 @@ public class TaskList {
     public TaskList() {
     }
 
-    public TaskList(Project project, String title, int positionNumber, LocalDateTime createdAt) {
+    public TaskList(Project project, String title, LocalDateTime createdAt) {
         this.project = project;
         this.title = title;
-        this.positionNumber = positionNumber;
         this.createdAt = createdAt;
     }
 
@@ -93,14 +88,6 @@ public class TaskList {
         this.title = title;
     }
 
-    public int getPositionNumber() {
-        return positionNumber;
-    }
-
-    public void setPositionNumber(int positionNumber) {
-        this.positionNumber = positionNumber;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -117,13 +104,17 @@ public class TaskList {
         this.tasks = tasks;
     }
 
+
 // TO STRING
 
-     @Override
+    @Override
     public String toString() {
-        return "TaskList [project=" + project.getTitle() + ", title=" + title + ", positionNumber=" + positionNumber
-                + ", createdAt=" + createdAt + "]";
+        return "TaskList [project=" + project + ", title=" + title + ", createdAt=" + createdAt + "]";
     }
+
+
+
+
 
 
 }
