@@ -98,4 +98,11 @@ jobs:
         run: ops/openshift/deploy.sh "${{ secrets.OPENSHIFT_NAMESPACE_PRODUCTION }}" "${{ steps.resolved.outputs.image_ref }}" "${{ env.APP_NAME }}"
 
       - name: Verify rollout and health
-        run: ops/openshift/verify-rollout.sh "${{ secrets.OPENSHIFT_NAMESPACE_PRODUCTION }}" "${{ env.APP_NAME }}"
+        shell: bash
+        run: |
+          HOST="${{ secrets.OPENSHIFT_ROUTE_HOST_PRODUCTION }}"
+          if [ -n "${HOST}" ]; then
+            ops/openshift/verify-rollout.sh "${{ secrets.OPENSHIFT_NAMESPACE_PRODUCTION }}" "${{ env.APP_NAME }}" "${HOST}"
+          else
+            ops/openshift/verify-rollout.sh "${{ secrets.OPENSHIFT_NAMESPACE_PRODUCTION }}" "${{ env.APP_NAME }}"
+          fi

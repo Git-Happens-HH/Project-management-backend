@@ -23,3 +23,7 @@ Backend
 
 ## Liitteet
 (kaaviiiot ja yms)
+
+## CI/CD Seminaarityo
+- [CI/CD-putken tuotantokelpoistaminen](docs/ci-cd-productionization.md)
+- [GitHub- ja ulkoiset asetusvaiheet](docs/github-and-external-setup-checklist.md)
