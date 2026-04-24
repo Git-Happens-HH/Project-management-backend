@@ -42,7 +42,7 @@ jobs:
         run: docker build -t project-management-app:pr-${{ github.sha }} .
 
       - name: Trivy container scan (fail on HIGH/CRITICAL)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.28.0
         with:
           image-ref: project-management-app:pr-${{ github.sha }}
           format: table
