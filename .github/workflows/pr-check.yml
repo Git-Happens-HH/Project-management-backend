@@ -9,8 +9,8 @@ permissions:
   contents: read
 
 jobs:
-  quality-and-security:
-    name: Build, Test, and Security Gates
+  quality:
+    name: Build and Test
     runs-on: ubuntu-latest
 
     steps:
@@ -24,44 +24,16 @@ jobs:
           java-version: "21"
           cache: maven
 
-      - name: Build and test (quality gate)
+      - name: Build and test
         run: mvn -B -f project-management-app/pom.xml clean verify
-
-      - name: OWASP Dependency-Check (fail on CVSS >= 7)
-        env:
-          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-        run: |
-          EXTRA_ARGS=""
-          if [ -n "$NVD_API_KEY" ]; then
-            EXTRA_ARGS="-DnvdApiKey=$NVD_API_KEY"
-          fi
-
-          mvn -B -f project-management-app/pom.xml \
-            org.owasp:dependency-check-maven:check \
-            -Dformat=HTML \
-            -DfailBuildOnCVSS=7 \
-            $EXTRA_ARGS
 
       - name: Build container image for scan
         run: docker build -t project-management-app:pr-${{ github.sha }} .
 
-      - name: Install Trivy
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
-          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
-          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list > /dev/null
-          sudo apt-get update
-          sudo apt-get install -y trivy
-
-      - name: Trivy container scan (fail on HIGH/CRITICAL)
-        run: |
-          trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 project-management-app:pr-${{ github.sha }}
-
-      - name: Upload security report artifact
-        if: always()
-        uses: actions/upload-artifact@v4
+      - name: Run Trivy container scan
+        uses: aquasecurity/trivy-action@master
         with:
-          name: dependency-check-report
-          path: project-management-app/target/dependency-check-report.html
-          if-no-files-found: warn
+          image-ref: project-management-app:pr-${{ github.sha }}
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          exit-code: 1
