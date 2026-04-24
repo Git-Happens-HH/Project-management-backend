@@ -6,7 +6,7 @@ Tässä seminaarityössä laitan kasaan ohjelmistoprojekti 2:n Spring Boot sovel
 Projektin tavoitteena on automatisoida build-, testaus-, turvallisuus- ja deploy-prosessit sekä parantaa julkaisuvarmuutta
 ja palautumiskykyä.
 
-Työssä on käytössä staging- ja production-deployt Openshiftissä, productionissa approval gate sekä rolloutin varmistus ja rollback-toiminto.
+Työssä on käytössä staging- ja production-deployt OpenShiftissä, productionissa approval gate sekä rolloutin varmistus ja rollback-toiminto.
 
 ## 2. Toteutusymparisto ja teknologiat
 
@@ -46,7 +46,7 @@ Toteutetut vaiheet:
 - Docker image build
 - Trivy image scan (HIGH/CRITICAL -> fail)
 
-PR-portin tarkoitus on varmistaa, etta mergeen menevä muutos on teknisesti ehjä ja ettei konttikuvassa ole kriittisia löytöjä.
+PR-portin tarkoitus on varmistaa, että mergeen menevä muutos on teknisesti ehjä ja ettei konttikuvassa ole kriittisia löytöjä.
 
 Esimerkki:
 
@@ -78,7 +78,7 @@ Triggerit:
 
 Perustelu muutokselle:
 - OWASP-skannaus oli raskas ja pidensi PR-putkea merkittävästi
-- erillisessa workflowssa turvallisuustarkistus on vakaampi ja helpompi seurata
+- erillisessä workflowssa turvallisuustarkistus on vakaampi ja helpompi seurata
 
 ### 4.3 Staging deploy
 
@@ -87,7 +87,7 @@ Workflow: .github/workflows/deploy-staging.yml
 Sisältö:
 - image build + push GHCR:aan
 - deploy OpenShiftiin
-- rolloutin ja healthin varmistus skriptilla
+- rolloutin ja healthin varmistus skriptillä
 
 ### 4.4 Production deploy + approval gate
 
@@ -142,7 +142,7 @@ Tälla mallilla julkaisu ei ole enaa yksittäisen kehittäjän käsityota, vaan 
 | Julkaisun toistettavuus | Vaihteleva | Dokumentoitu ja toistettava |
 
 Huomio:
-- OWASP Security Scan voi olla ensimmaisella ajolla hidas NVD-datan paivityksen takia.
+- OWASP Security Scan voi olla ensimmäisellä ajolla hidas NVD-datan päivityksen takia.
 - `NVD_API_KEY` nopeuttaa skannauksia merkittavasti.
 
 ## 7. Ongelmia ja niiden ratkaisut
@@ -151,7 +151,7 @@ Tyon aikana kohtasin useita CI/CD-ongelmia:
 - Action-versioiden yhteensopivuusongelmat
 - riippuvuus actioneista, jotka eivat toimineet odotetusti
 - Docker-pohjaisen OWASP-ajon pitkät jumit image pullissa ja datapäivityksissä
-- pitkät skannausajat ilman NVD API keyta
+- pitkät skannausajat ilman NVD API keytä
 
 Ratkaisuperiaate oli:
 - yksinkertaistettiin putkea
@@ -180,7 +180,7 @@ Tärkeimmat oppimani asiat:
 
 ### Oma osuus
 
-Suunnittelin ja toteutin putken rakenteen, workflowt, OpenShift-manifestit, operointiskriptit seka tarvittavat sovellusmuutokset. Lisäksi debuggasin käytännön CI-ajojen virheitä iteratiivisesti, kunnes putki eteni stabiiliin tilaan.
+Suunnittelin ja toteutin putken rakenteen, workflowt, OpenShift-manifestit, operointiskriptit sekä tarvittavat sovellusmuutokset. Lisäksi debuggasin käytännön CI-ajojen virheitä iteratiivisesti, kunnes putki eteni stabiiliin tilaan.
 
 ### Lähteet
 
@@ -192,10 +192,4 @@ Suunnittelin ja toteutin putken rakenteen, workflowt, OpenShift-manifestit, oper
 
 ## 11. Videolinkki
 
-Lisää tähan lopullinen video (n. 5 min):
-- PR-checkin fail/pass -kayttaytymisen
-- staging deployn onnistuminen
-- production approval gate
-- rollbackin tai sen demonstratiivinen ajo
-
-Videolinkki:
+-----
