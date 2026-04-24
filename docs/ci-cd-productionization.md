@@ -48,6 +48,15 @@ Toteutetut vaiheet:
 
 PR-portin tarkoitus on varmistaa, etta mergeen menevä muutos on teknisesti ehjä ja ettei konttikuvassa ole kriittisia löytöjä.
 
+Esimerkki:
+
+Pull request hylätään automaattisesti jos:
+- build epäonnistuu
+- testit failaavat
+- Trivy löytää HIGH tai CRITICAL haavoittuvuuden
+
+Tämä estää rikkinäisen tai haavoittuvan koodin päätymisen main-haaraan.
+
 ### 4.2 Erillinen security-scan workflow
 
 Workflow: .github/workflows/security-scan.yml
@@ -56,6 +65,12 @@ Toteutetut vaiheet:
 - OWASP Dependency-Check Maven-pluginilla (CVSS-raja)
 - Trivy container scan
 - Dependency-Check-raportin julkaisu artifactina
+
+Security scan kattaa kaksi tasoa:
+- Dependency taso (OWASP): tunnetut haavoittuvuudet kirjastoissa
+- Container taso (Trivy): OS + runtime + packaged dependencies
+
+Näin varmistetaan sekä sovelluksen että ympäristön turvallisuus.
 
 Triggerit:
 - manual workflow_dispatch
@@ -69,7 +84,7 @@ Perustelu muutokselle:
 
 Workflow: .github/workflows/deploy-staging.yml
 
-Sisaltö:
+Sisältö:
 - image build + push GHCR:aan
 - deploy OpenShiftiin
 - rolloutin ja healthin varmistus skriptilla
@@ -78,7 +93,7 @@ Sisaltö:
 
 Workflow: .github/workflows/deploy-production.yml
 
-Sisaltö:
+Sisältö:
 - trigger tagista (`v*.*.*`) tai manuaalisesti
 - deploy production namespaceen
 - GitHub environment `production` ja required reviewers
@@ -91,6 +106,12 @@ Sisaltö:
 - ops/openshift/deploy.sh
 - ops/openshift/verify-rollout.sh
 - ops/openshift/rollback.sh
+
+Rollback toteutetaan ajamalla:
+
+./rollback.sh <namespace> <app>
+
+Tämä palauttaa viimeisimmän toimivan version OpenShiftissa.
 
 ### 4.6 Sovelluksen valmius health-probeihin
 
@@ -111,7 +132,7 @@ Tälla mallilla julkaisu ei ole enaa yksittäisen kehittäjän käsityota, vaan 
 
 ## 6. Ennen vs jalkeen
 
-| Mittari | Ennen | Jalkeen |
+| Mittari | Ennen | Jälkeen |
 |---|---|---|
 | PR-laadunvarmistus | Ei yhtenäistä gatea | Build + test + Trivy automaattisesti |
 | Riippuvuusturvallisuus | Manuaalinen tai satunnainen | OWASP Security Scan erillisessa workflowssa |
@@ -153,9 +174,9 @@ Tärkeimmat oppimani asiat:
 - lisää image signing (esim. Cosign) ennen production deployta
 - ota käyttöön SARIF-raportit security-löydoksille
 - mittaa lead time ja MTTR automaattisesti (dashboard)
-- erottele dependency-checkin data-cache pysyvämmin CI-ymparistöön
+- erottele dependency-checkin data-cache pysyvämmin CI-ympäristöön
 
-## 10. Oma osuus ja lahteet
+## 10. Oma osuus ja lähteet
 
 ### Oma osuus
 
