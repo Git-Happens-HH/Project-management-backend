@@ -55,7 +55,7 @@ Pull request hylätään automaattisesti jos:
 - testit failaavat
 - Trivy löytää HIGH tai CRITICAL haavoittuvuuden
 
-Tämä estää rikkinäisen tai haavoittuvan koodin päätymisen main-haaraan.
+Tämä estää rikkinäisen tai haavoittuvan koodin päätymisen main-branchiin.
 
 ### 4.2 Erillinen security-scan workflow
 
@@ -122,20 +122,20 @@ Sovellukseen lisättiin tarvittavat muutokset:
 ## 5. Governance ja julkaisumalli
 
 Käyttöön otettiin seuraavat hallintakäytannot:
-- branch protection `main`-haaralle
+- branch protection `main`-branchille
 - merge vain PR:n kautta
 - pakollinen onnistunut status check ennen mergeä
 - vaaditut reviewerit production-julkaisuun
 - release tag -malli (`vMAJOR.MINOR.PATCH`)
 
-Tälla mallilla julkaisu ei ole enaa yksittäisen kehittäjän käsityota, vaan hallittu prosessi.
+Tälla mallilla julkaisu ei ole enää yksittäisen kehittäjän käsityota, vaan hallittu prosessi.
 
 ## 6. Ennen vs jalkeen
 
 | Mittari | Ennen | Jälkeen |
 |---|---|---|
 | PR-laadunvarmistus | Ei yhtenäistä gatea | Build + test + Trivy automaattisesti |
-| Riippuvuusturvallisuus | Manuaalinen tai satunnainen | OWASP Security Scan erillisessa workflowssa |
+| Riippuvuusturvallisuus | Manuaalinen tai satunnainen | OWASP Security Scan erillisessä workflowissa |
 | Staging-julkaisu | Pääosin manuaalinen | Automatisoitu workflow |
 | Production-julkaisu | Ei virallista approval gatea | GitHub environment approval gate |
 | Rollback | Ei vakioitua prosessia | Scriptattu rollback |
@@ -143,7 +143,7 @@ Tälla mallilla julkaisu ei ole enaa yksittäisen kehittäjän käsityota, vaan 
 
 Huomio:
 - OWASP Security Scan voi olla ensimmäisellä ajolla hidas NVD-datan päivityksen takia.
-- `NVD_API_KEY` nopeuttaa skannauksia merkittavasti.
+- `NVD_API_KEY` nopeuttaa skannauksia merkittävästi.
 
 ## 7. Ongelmia ja niiden ratkaisut
 
@@ -156,8 +156,8 @@ Tyon aikana kohtasin useita CI/CD-ongelmia:
 Ratkaisuperiaate oli:
 - yksinkertaistettiin putkea
 - poistettiin hauraat riippuvuudet
-- siirrettiin OWASP-scan erilliseen security-scan workflowyn Maven-pluginiin
-- lisättiin selkeat fail-kriteerit
+- siirrettiin OWASP-scan erilliseen security-scan workflowin Maven-pluginiin
+- lisättiin selkeät fail-kriteerit
 
 ## 8. Mitä opin
 
@@ -172,7 +172,7 @@ Tärkeimmat oppimani asiat:
 
 - lisää integroidut smoke-testit staging deployn jälkeen
 - lisää image signing (esim. Cosign) ennen production deployta
-- ota käyttöön SARIF-raportit security-löydoksille
+- ota käyttöön SARIF-raportit security-löydöksille
 - mittaa lead time ja MTTR automaattisesti (dashboard)
 - erottele dependency-checkin data-cache pysyvämmin CI-ympäristöön
 
@@ -180,7 +180,7 @@ Tärkeimmat oppimani asiat:
 
 ### Oma osuus
 
-Suunnittelin ja toteutin putken rakenteen, workflowt, OpenShift-manifestit, operointiskriptit sekä tarvittavat sovellusmuutokset. Lisäksi debuggasin käytännön CI-ajojen virheitä iteratiivisesti, kunnes putki eteni stabiiliin tilaan.
+Suunnittelin ja toteutin putken rakenteen, workflowit, OpenShift-manifestit, operointiskriptit sekä tarvittavat sovellusmuutokset. Lisäksi debuggasin käytännön CI-ajojen virheitä, kunnes putki vakautui.
 
 ### Lähteet
 
