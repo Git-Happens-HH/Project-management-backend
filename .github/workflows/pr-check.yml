@@ -36,13 +36,30 @@ jobs:
       - name: OWASP Dependency-Check (fail on CVSS >= 7)
         run: |
           mkdir -p reports
+          NVD_ARGS=""
+          if [ -n "${{ secrets.NVD_API_KEY }}" ]; then
+            NVD_ARGS="--nvdApiKey ${{ secrets.NVD_API_KEY }}"
+          fi
+          for attempt in 1 2 3; do
+            echo "Pulling owasp/dependency-check image (attempt ${attempt}/3)..."
+            if timeout 300 docker pull owasp/dependency-check:latest; then
+              break
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              echo "Docker image pull failed after 3 attempts."
+              exit 1
+            fi
+          done
           docker run --rm \
+            --pull never \
+            -u "$(id -u):$(id -g)" \
             -v "${{ github.workspace }}:/src" \
             -v "$HOME/.dependency-check:/usr/share/dependency-check/data" \
             owasp/dependency-check:latest \
             --scan /src/project-management-app \
             --format HTML \
             --out /src/reports \
+            $NVD_ARGS \
             --failOnCVSS 7
 
       - name: Build container image for scan
