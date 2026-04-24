@@ -27,6 +27,12 @@ jobs:
       - name: Build and test (quality gate)
         run: mvn -B -f project-management-app/pom.xml clean verify
 
+      - name: Cache OWASP Dependency-Check data
+        uses: actions/cache@v4
+        with:
+          path: ~/.dependency-check
+          key: dependency-check-${{ runner.os }}-v1
+
       - name: OWASP Dependency-Check (fail on CVSS >= 7)
         run: |
           mkdir -p reports
