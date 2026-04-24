@@ -41,15 +41,18 @@ jobs:
       - name: Build container image for scan
         run: docker build -t project-management-app:pr-${{ github.sha }} .
 
+      - name: Install Trivy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https gnupg lsb-release
+          wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
+          echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/trivy.list > /dev/null
+          sudo apt-get update
+          sudo apt-get install -y trivy
+
       - name: Trivy container scan (fail on HIGH/CRITICAL)
-        uses: aquasecurity/trivy-action@v0.28.0
-        with:
-          image-ref: project-management-app:pr-${{ github.sha }}
-          format: table
-          exit-code: "1"
-          ignore-unfixed: true
-          vuln-type: os,library
-          severity: HIGH,CRITICAL
+        run: |
+          trivy image --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 project-management-app:pr-${{ github.sha }}
 
       - name: Upload security report artifact
         if: always()
