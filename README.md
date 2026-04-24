@@ -29,3 +29,4 @@ Backend
 - [GitHub- ja ulkoiset asetusvaiheet](docs/github-and-external-setup-checklist.md)
 
 testi
+testi 2
