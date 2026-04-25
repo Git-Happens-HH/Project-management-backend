@@ -5,7 +5,7 @@
 
 ## 1. Johdanto
 
-### 1.1. Aihealueen esittely
+### 1.1. Aihealueen esittely 
 
 Ohjelmistokehityksen tärkeimpiä kulmakiviä on ohjelmiston testaus. Testauksella arvioidaan ohjelmiston laatua ja havaitaan ohjelmiston eri osissa piileviä vikoja. 
 Testauksessa on perinteisesti 3 testikerrosta:
@@ -38,13 +38,15 @@ Projektimme stack on seuraavanlainen:
 
 Front-end:
 - Typescript + React
+- Julkaistu Azure Static Web Appiin
 
 Back-end: 
 - Java + Maven + Spring Boot
+- Julkaistu Rahtiin
 
 Tietokannat:
 - H2-in-memory tietokanta (devaamiseen ja testaukseen) 
-- PostgreSQL-tietokanta (tuotantoympäristössä)
+- PostgreSQL-tietokanta (tuotantoympäristössä, Rahti-podi)
 
 
 ### 1.3. Tämän seminaarityön tavoitteet
@@ -123,7 +125,7 @@ Testin päätyttyä Testcontainers sammuttaa ja poistaa kontit, verkkoasetukset 
 
 ### Moby Ryukin nimi tulee Death Note -animesarjan hahmosta Ryuk
 <p align="left">
-  <img src="ryuk.png" alt="Piirretty kuva Death Note -sarjan Ryuk-hahmosta" width="300"><br>
+  <img src="pictures/ryuk.png" alt="Piirretty kuva Death Note -sarjan Ryuk-hahmosta" width="300"><br>
   <em>Kuva 1. Death Note: Ryuk (Cheu-Sae 2013, <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND 3.0</a>)</em>
 </p>
 
@@ -139,13 +141,14 @@ Muita huomionarvioisia seikkoja Ryukista:
 
 Tein tätä seminaarityötä varten Prokress-projektiimme [yksinkertaiset H2-testit, joilla testataan repositorykerroksen metodeita](https://github.com/Git-Happens-HH/Project-management-backend/tree/testcontainer/project-management-app/src/test/java/githappens/hh/project_management_app/RepositoryTests).
 
-Otetaan malliesimerkiksi TaskRepositoryTests.java. Sen takana oleva Task.java domain-entiteeteistä monimutkaisin, sillä se yhdistyy useaan muuhun entiteettiin: TaskList, AppUser ja Project. TaskRepositoryTests testaa Spring Data JPA:n tietokantakerrosta - tarkemmin sanoen repositorykerrosta. Siihen on injektoitu TaskRepository, ProjectRepository, AppUserRepository sekä TaskListRepository. JPA hoitaa SQL-generoinnin, entity mappingin ja custom queryjen teon (kuten findByTitle)
+Otetaan malliesimerkiksi TaskRepositoryTests.java. Sen takana oleva Task.java domain-entiteeteistä monimutkaisin, sillä se yhdistyy useaan muuhun entiteettiin: TaskList, AppUser ja Project. TaskRepositoryTests testaa Spring Data JPA:n tietokantakerrosta - tarkemmin sanoen repositorykerrosta. Siihen on injektoitu TaskRepository, ProjectRepository, AppUserRepository sekä TaskListRepository. JPA hoitaa SQL-generoinnin, entity mappingin ja custom queryjen teon (kuten findByTitle).
 
 TaskRepositoryTests hyödyntää useita Spring Boot Starter Tests -riippuvuuden tarjoamia teknologioita:
-- `@Test`-annotaatio tulee JUnit 5:sta. Ohjelma tunnistaa testimetodin annotaation avulla.
-- `@SpringBootTest` on Spring Bootin annotaatio, joka käynnistää koko Spring-sovelluksen contextin. Se lataa kaikki beanit, repositoryt, servicet, jne. Se simuloi "oikeaa sovellusta".
-- `@Transactional`-annotaatio tekee testiluokan tietokantamuutokset väliaikaisesti H2-tietokantaan, mutta testin jälkeen peruu (rollback) nämä muutokset automaattisesti. 
-(Spring, s.a)
+- `@Test`-annotaatio tulee JUnit 5:sta. Se määrittää, että kyseinen metodi on testi.
+- `@SpringBootTest` on Spring Bootin annotaatio, joka käynnistää koko Spring-sovelluksen contextin. Se lataa kaikki beanit, repositoryt, servicet, jne. Se ei siis käynnistä vain tiettyä kerrosta tai osaa sovelluksesta, vaan koko
+- `@Transactional`-annotaatio tekee testiluokan tietokantamuutokset transaktion sisäisesti H2-tietokantaan ja samalla pitää huolta tiedon eheydestä: esimerkiksi jos testin aika tapahtuu odottamaton virhe, se peruu (rollback) nämä muutokset automaattisesti. 
+- AssertJ tarjoaa assertiometodeja, kuten `assertThat(task.getTaskTitle().isNotNull())`
+(JUnit User Guide s.a, Spring, s.a, AssertJ, s.a)
 
 Alla on esimerkki yksinkertaisesta CRUD-toiminnon testistä, jossa testataan repositorykerroksen kykyä luoda ja tallentaa uusi task sujuvasti:
 ```java
@@ -175,9 +178,79 @@ Alla on esimerkki yksinkertaisesta CRUD-toiminnon testistä, jossa testataan rep
         assertThat(task1.getAssignedUser().getAppUserId()).isEqualTo(user1.getAppUserId());
     }
 ```
+Otin ylös tämän testimetodin suoritusajan, sekä Spring contextin käynnistysajan. 
 
-KIRJOITA YLÖS MYÖS TESTIEN NOPEUS YM PARAMETRIT
+Testi 1:
+![Kuvankaappaus createNewTask()-metodin suoritusajasta, joka oli 967 ms](pictures/image-1.png)
+![Kuvankaappaus runtimesta, joka oli 11831 ms](pictures/image-2.png)
 
+Testi 2:
+![Kuvankaappaus createNewTask()-metodin suoritusajasta, joka oli 532 ms](pictures/image-3.png)
+![Kuvankaappaus runtimesta, joka oli 9060 ms](pictures/image-4.png)
+
+Testi 3:
+![Kuvankaappaus createNewTask()-metodin suoritusajasta, joka oli 485 ms](pictures/image-5.png)
+![Kuvankaappaus runtimesta, joka oli 8756 ms](pictures/image-6.png)
+
+Testi 4:
+![Kuvankaappaus createNewTask()-metodin suoritusajasta, joka oli 810 ms](pictures/image-7.png)
+![Kuvankaappaus runtimesta, joka oli 9701 ms](pictures/image-8.png)
+
+Keskiarvo testin suoritusajalle oli 698.5 ms. 
+Keskiarvo Spring contextin ajoajalle oli 9837 ms (~9.8 s).
+Itse testien ajaminen on siis suhteellisen nopeaa, mutta sovelluskontekstin käynnistymisestä aiheutuva "overhead" on paljon suurempi. Toisaalta Spring context käynnistyy vain kerran testiluokkaa kohden, eli sen ajamista ei tarvitse joka testimetodin kohdalla odottaa, vaan pelkästään kerran per testiluokka.
+
+Otetaan myös esimerkiksi eräs custom queryn testi, joka on kirjoitettu samaiseen TaskRepositoryTest-luokkaan. Metodin ideana on löytää task titlen mukaan. Haku on case insensitive, ja palauttaa kaikki osumat, vaikka hakusana ei ole täydellinen. Esim. haku "<u>test</u>" palauttaa taskin, jonka title on "Another <u>Test</u> Task".
+
+```java
+ // CUSTOM QUERY: FIND BY TITLE ignore case
+    @Test
+    public void findByTitleContainingIgnoreCaseShouldReturnTasks() {
+
+        // luodaan uusi testikäyttäjä ja tallennetaan se
+        AppUser user5 = new AppUser("test5", "Test", "User", "test5@hh.com", "Test123!", LocalDateTime.now());
+        appUserRepository.save(user5);
+
+        // luodaan uusi testiprojekti ja tallennetaan se
+        Project project5 = new Project("Test Project5", "Description", LocalDateTime.now(), false);
+        projectRepository.save(project5);
+
+        // luodaan uusi testitasklist ja tallennetaan se
+        TaskList taskList5 = new TaskList(project5, "Test TaskList5", LocalDateTime.now());
+        taskListRepository.save(taskList5);
+
+         // luodaan uusi task 1 ja tallennetaan se
+        Task task1 = new Task(taskList5, "Test Task One", "Description1", user5, user5, LocalDateTime.now().plusDays(1));
+
+         // luodaan uusi task 2 ja tallennetaan se
+        Task task2 = new Task(taskList5, "Another Test Task", "Description2", user5, user5, LocalDateTime.now().plusDays(1));
+        taskRepository.save(task1);
+        taskRepository.save(task2);
+
+        // luodaan lista osumista, joka täytetään custom query metodin löytämillä taskeilla
+        List<Task> found = (List<Task>) taskRepository.findByTitleContainingIgnoreCase("test");
+
+        // tarkistetaan, että lista osumista on oikean kokoinen ja sisältää oikeat taskit
+        assertThat(found).hasSize(2);
+        assertThat(found).extracting(Task::getTitle).contains("Test Task One", "Another Test Task");
+    }
+```
+
+Alla on kuvankaappauksia kyseisen testimetodin suoritusajasta. Tällä kertaa emme dokumentoi sovelluskontekstin ajoaikaa, sillä voimme olettaa sen olevan aina samaa luokkaa - se ei mitenkään riipu testiluokasta.
+
+Testi 1:
+![Kuvankaappaus findByTitleContainingIgnoreCaseShouldReturnTask()-metodin suoritusajasta, joka oli 1.5 s](pictures/image.png)
+
+Testi 2:
+![Kuvankaappaus findByTitleContainingIgnoreCaseShouldReturnTask()-metodin suoritusajasta, joka oli 703 ms](pictures/image-10.png)
+
+Testi 3:
+![Kuvankaappaus findByTitleContainingIgnoreCaseShouldReturnTask()-metodin suoritusajasta, joka oli 753 ms](pictures/image-11.png)
+
+Testi 4:
+![Kuvankaappaus findByTitleContainingIgnoreCaseShouldReturnTask()-metodin suoritusajasta, joka oli 871 ms](pictures/image-12.png)
+
+Keskiarvo testien suoritusajalle oli 957 ms.
  
 
 ## 4. Testcontainersin toteutus 
@@ -221,6 +294,9 @@ https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.ht
 https://docs.junit.org/6.0.3/overview.html
 
 https://assertj.github.io/doc/
+
+https://docs.junit.org/6.0.3/writing-tests/annotations.html
+
 
 
 
