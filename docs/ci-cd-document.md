@@ -112,13 +112,13 @@ Rollback toteutetaan ajamalla:
 
 Tämä palauttaa viimeisimmän toimivan version OpenShiftissa.
 
-### 4.6 Sovelluksen valmius health-probeihin
+### 4.6 Sovelluksen Health Check -valmius Openshiftiä varten
 
-Sovellukseen lisättiin tarvittavat muutokset:
+Sovellukseen lisätty:
 - actuator health/info exposed profileen
 - security-configiin sallinnat health-endpointeille
 
-## 5. Governance ja julkaisumalli
+## 5. Tuotantoputken hallinta ja julkaisumalli
 
 Käyttöön otettiin seuraavat hallintakäytannot:
 - branch protection `main`-branchille
