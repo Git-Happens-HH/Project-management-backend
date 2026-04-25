@@ -2,7 +2,7 @@
 
 ## 1 Johdanto
 
-Tässä seminaarityössä toteutan CI/CD-putken Ohjelmistoprojekti 2:n projektityöllemme. Projektissa teemme Trellon kaltaisen projektinhallintatyökalun nimeltä Prokress.
+Tässä seminaarityössä toteutan CI/CD-putken Ohjelmistoprojekti 2:n projektityöllemme. Projektissa tiimimme kehittää projektinhallintatyökalua nimeltä Prokress.
 Projektin tavoitteena on automatisoida build-, testaus-, turvallisuus- ja deploy-prosessit sekä parantaa julkaisuvarmuutta ja palautumiskykyä.
 
 Työssä on käytössä staging- ja production-deployt OpenShiftissä, productionissa approval gate sekä rolloutin varmistus ja rollback-toiminto.
