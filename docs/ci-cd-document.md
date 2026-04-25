@@ -1,10 +1,9 @@
 # CI/CD-putken tuotantokelpoistaminen (Spring Boot + Docker + Rahti/OpenShift)
 
-## 1. Aihe ja tavoite
+## 1 Johdanto
 
-Tässä seminaarityössä laitan kasaan ohjelmistoprojekti 2:n Spring Boot sovelluksellemme tuotantokelpoisen CI/CD-putken.
-Projektin tavoitteena on automatisoida build-, testaus-, turvallisuus- ja deploy-prosessit sekä parantaa julkaisuvarmuutta
-ja palautumiskykyä.
+Tässä seminaarityössä toteutan CI/CD-putken Ohjelmistoprojekti 2:n projektityöllemme. Projektissa teemme Trellon kaltaisen projektinhallintatyökalun nimeltä Prokress.
+Projektin tavoitteena on automatisoida build-, testaus-, turvallisuus- ja deploy-prosessit sekä parantaa julkaisuvarmuutta ja palautumiskykyä.
 
 Työssä on käytössä staging- ja production-deployt OpenShiftissä, productionissa approval gate sekä rolloutin varmistus ja rollback-toiminto.
 
@@ -35,7 +34,7 @@ flowchart LR
   K --> L[Rollback if needed]
 ```
 
-## 4. Mitä toteutettiin koodiin
+## 4. CI/CD-putken koodi
 
 ### 4.1 PR-laatu- ja tietoturvaportti
 
@@ -147,24 +146,22 @@ Huomio:
 
 ## 7. Ongelmia ja niiden ratkaisut
 
-Tyon aikana kohtasin useita CI/CD-ongelmia:
-- Action-versioiden yhteensopivuusongelmat
-- riippuvuus actioneista, jotka eivat toimineet odotetusti
+Tyon aikana kohdattuja ongelmia:
+- Versioiden yhteensopivuusongelmat
 - Docker-pohjaisen OWASP-ajon pitkät jumit image pullissa ja datapäivityksissä
 - pitkät skannausajat ilman NVD API keytä
 
 Ratkaisuperiaate oli:
-- yksinkertaistettiin putkea
-- poistettiin hauraat riippuvuudet
-- siirrettiin OWASP-scan erilliseen security-scan workflowin Maven-pluginiin
-- lisättiin selkeät fail-kriteerit
+- CI/CD-putken yksinkertaistaminen
+- Hauraiden riippuvuuksien poisto
+- OWASP-scanin siirto erilliseen security-scan workflowin Maven-pluginiin
+- Selkeät fail-kriteerit
 
 ## 8. Mitä opin
 
-Tärkeimmat oppimani asiat:
 - tuotantokelpoinen CI/CD on ennen kaikkea riskienhallintaa
 - security gate tulee suunnitella niin, etta se on vakaa ja toistettava
-- deployment ei riitä ilman verifiointia (rollout + health)
+- deployment ei riitä ilman verifiointia 
 - rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
 - GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
 
@@ -176,13 +173,7 @@ Tärkeimmat oppimani asiat:
 - mittaa lead time ja MTTR automaattisesti (dashboard)
 - erottele dependency-checkin data-cache pysyvämmin CI-ympäristöön
 
-## 10. Oma osuus ja lähteet
-
-### Oma osuus
-
-Suunnittelin ja toteutin putken rakenteen, workflowit, OpenShift-manifestit, operointiskriptit sekä tarvittavat sovellusmuutokset. Lisäksi debuggasin käytännön CI-ajojen virheitä, kunnes putki vakautui.
-
-### Lähteet
+## 10. Lähteet
 
 - GitHub Actions documentation: https://docs.github.com/actions
 - OWASP Dependency-Check: https://jeremylong.github.io/DependencyCheck/
@@ -190,6 +181,6 @@ Suunnittelin ja toteutin putken rakenteen, workflowit, OpenShift-manifestit, ope
 - OpenShift docs: https://docs.openshift.com/
 - Spring Boot Actuator: https://docs.spring.io/spring-boot/reference/actuator/
 
-## 11. Videolinkki
+## 11. Video
 
------
+- Placeholder
