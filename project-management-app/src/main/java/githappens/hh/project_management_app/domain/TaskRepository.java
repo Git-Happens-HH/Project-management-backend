@@ -10,7 +10,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByTitle(String title);
 
     // search task by title (with a keyword)
-    Iterable<Task> findByTitleContainingIgnoreCase(String keyword);
+    List<Task> findByTitleContainingIgnoreCase(String keyword);
 
     // find task by id
     Optional<Task> findById(long taskId);
@@ -22,7 +22,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByDeadline(LocalDateTime deadline);
 
     // find all tasks of a given assigned user
-    Iterable<Task> findByAssignedUser(AppUser user);
+    List<Task> findByAssignedUser(AppUser user);
 
 
 }

@@ -3,14 +3,55 @@
 
 # Testcontainers Spring Boot -projektissa
 
+## Sisällysluettelo
+
+Huom. Otsikot eivät sisällä ääkkösiä, sillä muuten markdown-ankkurit (otsikoiden linkit) eivät toimi!
+
+### 1. Johdanto
+- [1.1 Aihealueen esittely](#11-aihealueen-esittely)  
+- [1.2 Kohdeprojektin esittely](#12-kohdeprojektin-esittely)  
+- [1.3 Taman seminaarityon tavoitteet](#13-taman-seminaarityon-tavoitteet)  
+
+### 2. Testcontainers
+- [2.1 Lyhyt esittely Testcontainers-kirjastosta](#21-lyhyt-esittely-testcontainers-kirjastosta)  
+- [2.2 Docker-teknologian rooli](#22-docker-teknologian-rooli)  
+- [2.3 Testin kaynnistys ja odotusstategia](#23-testin-kaynnistys-ja-odotusstategia)  
+- [2.4 Testin loppuunajaminen ja resurssien siivous](#24-testin-loppuunajaminen-ja-resurssien-siivous)  
+
+### 3. Projektin lahtotilanne
+- [3.1 Nykyisten testien teknologiat](#31-nykyisten-testien-teknologiat)  
+- [3.2 Nykyisten testien esimerkkikoodit ja suoritusajat](#32-nykyisten-testien-esimerkkikoodit-ja-suoritusajat)  
+
+### 4. Testcontainersin toteutus
+- [4.1 Esivalmistelut Testcontainersin kayttoonottoon](#41-esivalmistelut-testcontainersin-kayttoonottoon)  
+- [4.2 Testcontainers testiluokan kirjoittaminen](#42-testcontainers-testiluokan-kirjoittaminen)  
+- [4.3 Testien ajaminen](#43-testien-ajaminen)  
+
+### 5. H2 vs. PostgreSQL
+- [5 Vertailu](#5-vertailu-h2-testien-seka-testcontainers-testien-valilla)
+
+### 6. Haasteet ja opit
+- [7 Haasteet](#7-haasteet-ja-opit)
+
+### 7. Jatkokehitys
+- [8 Jatkokehitys](#8-jatkokehitys)
+
+### 8. Yhteenveto
+- [9 Yhteenveto](#9-yhteenveto)
+
+### 9. Lahteet
+- [10 Lähteet](#10-lahteet)
+
+------
+
 ## 1. Johdanto
 
-### 1.1. Aihealueen esittely 
+### 1.1 Aihealueen esittely 
 
 Ohjelmistokehityksen tärkeimpiä kulmakiviä on ohjelmiston testaus. Testauksella arvioidaan ohjelmiston laatua ja havaitaan ohjelmiston eri osissa piileviä vikoja. 
 Testauksessa on perinteisesti 3 testikerrosta:
 
-```
+
                  /\
                 /  \
                /    \
@@ -25,12 +66,12 @@ Testauksessa on perinteisesti 3 testikerrosta:
       /     YKSIKKÖTESTIT    \  
      /________________________\
 
-```
+
 Yksikkötestit ovat jo tulleet melkoisen tutuiksi eri ohjelmointikursseilta. Tässä seminaarityössä haluan perehtyä enemmän keskimmäiseen tasoon, eli integraatiotestaukseen. Valitsin tässä työssä tutkittavaksi teknologiaksi Testcontainers-kirjaston, jolla voin testata sovelluksen ja tietokannan välistä integraatiota. Testcontainers mahdollistaa tuotantoympäristöä vastaavan tietokannan käytön testeissä,
 mikä parantaa testien luotettavuutta ja realistisuutta verrattuna esimerkiksi H2-tietokantaan. (Testcontainers, s.a., Kurian 2025)
 
 
-### 1.2. Kohdeprojektin esittely
+### 1.2 Kohdeprojektin esittely
 
 Toteutan integraatiotestausta "Ohjelmistoprojekti II" -kurssin projektiimme [Prokress](https://github.com/orgs/Git-Happens-HH/repositories). Prokress on tehtävänhallintatyökalu, jossa tiimin jäsenet voivat yhdessä hallita tehtäviä Kanban-tyylisellä taululla. Tehtäviä voidaan lisätä, muokata, poistaa ja siirtää "drag & drop" -tyylisesti tehtävälistoilta toisille.
 
@@ -49,7 +90,7 @@ Tietokannat:
 - PostgreSQL-tietokanta (tuotantoympäristössä, Rahti-podi)
 
 
-### 1.3. Tämän seminaarityön tavoitteet
+### 1.3 Taman seminaarityon tavoitteet
 
 1. Ottaa Testcontainers käyttöön sovellukseen
 2. Integraatiotestien toteuttaminen repositorykerrokseen Testcontainersilla
@@ -59,7 +100,7 @@ Tietokannat:
 
 ## 2. Testcontainers
 
-### 2.1. Lyhyt esittely Testcontainers-kirjastosta
+### 2.1 Lyhyt esittely Testcontainers-kirjastosta
 
 [Testcontainers](https://testcontainers.com/getting-started/#what-is-testcontainers) on avoimen lähdekoodin kirjasto, joka tarjoaa helppokäyttöiset rajapinnat testien ja kehitysympäristön riipuvuuksien (kuten tietokantojen) käynnistämiseen [Docker-kontteina](https://docs.docker.com/get-started/docker-overview/). Testcontainers-kirjastoa käyttävät sekä monet pienemmät open source -projektit että suuret yritykset, kuten esimerkiksi Google, eBay, Skyscanner ja Wise. (Testcontainers, s.a)
 
@@ -92,13 +133,13 @@ Testcontainers tukee useita moduuleja eri teknologioille; mm. tietokantoja, vies
 
 Testcontainers käynnistää tarvittavat palvelut automaattisesti Docker-kontteina testien ajaksi ja poistaa ne testien jälkeen. Testcontainers siis mahdollistaa testien ajamisen ympäristössä, joka vastaa todellista tuotantoympäristöä paremmin kuin esimerkiksi mockit tai in-memory-ratkaisut (Testcontainers, s.a, Trandafir 2026). Toisaalta Testcontainers-estit ovat hitaampia suorittaa, kuin nopeat in-memory-tietokantatestit.
 
-### 2.2. Docker-teknologian rooli
+### 2.2 Docker-teknologian rooli
 
 Jotta Testcontainers voi tarjota realistisen tuotantoympäristön testiajon taustalle, käyttää se Docker-teknologiaa. Docker-teknologia erottaa sovelluksen infrastruktuurista. Dockerin avulla palvelu tai sovellus paketoidaan yhteen eristettyyn pakettiin (eli konttiin), jotta se toimii luotettavasti missä tahansa ympäristössä, riippumatta isäntäkoneesta. (Docker, s.a., Katamreddy 2024)
 
 Testcontainers-kirjasto tarvitsee toimiakseen Docker-API-yhteensopivan ajoympäristön, kuten Docker Desktopin tai Docker Enginen. Testcontainers toimii Dockerin asiakkaana (client), joka lähettää pyyntöjä Docker-taustaprosessille (daemon), joka suorittaa konttien rakentamisen ja ajamisen. (Docker, s.a.)
 
-### 2.3. Testin käynnistys ja odotusstategia
+### 2.3 Testin kaynnistys ja odotusstategia
 
 Kun testi aloitetaan, Testcontainers käynnistää tarvittavat palvelut (kuten PostgreSQL) Docker-kontteina. Nämä kontit voidaan itse konfiguroida, käyttää valmista moduulia tai tehdä komposiittiratkaisu. (Testcontainers, s.a.)
 
@@ -119,7 +160,7 @@ Yllä olevassa koodiesimerkissä ohjelma odottaa, että lokiviesti saapuu ("Serv
  - Ulkoinen TCP-portti: Tarkistaa kontun ulkopuolella, että isäntäkoneen ja kontin välinen porttimappaus toimii ja yhteys saadaan muodostettua niiden välille.
  - Docker-verkon luominen: Kehittäjä voi halutessaan myös luoda Docker-verkkoja, jotka yhdistää useita kontteja eri toisiinsa, jotta ne puhuvat toisilleen staattisilla verkkoaliaksilla.
 
-### 2.4. Testin päättäminen ja resurssien siivous
+### 2.4 Testin loppuunajaminen ja resurssien siivous
 
 Testin päätyttyä Testcontainers sammuttaa ja poistaa kontit, verkkoasetukset ja volyymit automaattisesti. Tämä prosessi toistetaan aina, riippumatta siitä, että onnistuiko, epäonnistuiko vai kaatuiko testi ajon aika. Tästä resurssienhallinnasta pitää huolta taustalla toimiva "Moby Ryuk"-niminen apukontti. Toinen nimi Moby Ryukille on "Resource Reaper". 
 
@@ -135,9 +176,9 @@ Muita huomionarvioisia seikkoja Ryukista:
 - Ryuk tukee vain Linux-kontteja
 - Ryukia ei suositella ottamaan pois käytöstä, ellei testiympäristössä ole muuta erillista tapaa siivota resursseja
 
-## 3. Projektin lähtötilanne
+## 3. Projektin lahtotilanne
 
-### 3.1. Nykyisten testien teknologiat
+### 3.1 Nykyisten testien teknologiat
 
 Tein tätä seminaarityötä varten Prokress-projektiimme [yksinkertaiset H2-testit, joilla testataan repositorykerroksen metodeita](https://github.com/Git-Happens-HH/Project-management-backend/tree/testcontainer/project-management-app/src/test/java/githappens/hh/project_management_app/RepositoryTests).
 
@@ -150,7 +191,7 @@ TaskRepositoryTests hyödyntää useita Spring Boot Starter Tests -riippuvuuden 
 - AssertJ tarjoaa assertiometodeja, kuten `assertThat(task.getTaskTitle().isNotNull())`
 (JUnit User Guide s.a, Spring, s.a, AssertJ, s.a)
 
-### 3.1. Nykyisten testien esimerkkikoodit ja suoritusajat
+### 3.2 Nykyisten testien esimerkkikoodit ja suoritusajat
 
 Alla on esimerkki yksinkertaisesta CRUD-toiminnon testistä, jossa testataan repositorykerroksen kykyä luoda ja tallentaa uusi task sujuvasti:
 ```java
@@ -257,24 +298,155 @@ Keskiarvo testien suoritusajalle oli 957 ms.
 
 ## 4. Testcontainersin toteutus 
 
-### 4.1. Esivalmistelut Testcontainersin käyttöönottoon
+### 4.1 Esivalmistelut Testcontainersin kayttoonottoon
 
-Testcontainers tarvitsee toimiakseen sopivan Docker-ympäristön. Valitsin ympäristöksi [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/). Tämä ympäristö sopii hyvin yhteen Windows-pöytäkoneeseeni. Jos Dockerin haluaisi Linux-palvelimelle, parempi vaihtoehto voisi olla [Docker Engine](https://docs.docker.com/engine/install). 
+Seuraavat asiat ovat välttämättömiä, jos haluaa käyttää Testcontainers-kirjastoa Spring Boot projektissaan:
+- Java 17+
+- IDE (kuten VS Code)
+- Docker-ympäristö
+
+Projektissa on valmiiksi sopiva Java-versio sekä käytössäni VS Code, joten esivalmisteluissa tarvitsen vain Docker-ympäristön.
+Valitsin Docker-ympäristöksi [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/). Tämä ympäristö sopii hyvin yhteen Windows-pöytäkoneeseeni. Jos Dockerin haluaisi Linux-palvelimelle, parempi vaihtoehto voisi olla [Docker Engine](https://docs.docker.com/engine/install).
+Seurasin Dockerin sivuilla olevia ohjeita asennukseen, ja loin Docker Desktopiin käyttäjätunnuksen. Ohjelma tulee näppärän graafisen käyttöliittymän kanssa.
+
+![alt text](pictures/dockerdesktop.png)
+
+Docker Desktop käyttää konttien ajamiseen [Windows SubSystem for Linux (WSL)](https://learn.microsoft.com/en-us/windows/wsl/about). WSL on kokonainen Linux-kernel, jonka Microsoft on kehittänyt. Käytännössä WSL mahdollistaa Linux-ympäristön ajamisen Windows-laitteella (Microsoft, s.a.). Docker Desktop vaatii minimissään WSL 2.1.5 version tällä kirjoitushetkellä (25.04.2026). Asennetun version voi tarkistaa kommennolla `wsl --version`. Omalla kohdalla Docker Desktop ilmoitti, että versioni on vanhentunut, ja tarjosi sen päivittämiselle komennon `wsl --update`.
+
+Maven-projektissa on valmiiksi tarvittavat Spring Boot riippuvuudet. Testcontainersia varten pitää lisätä sitä koskevia riippuvuuksia.
+Tarvittavien riippuvuuksien asentaminen riippuu hieman siitä, että mitä moduulia haluaa käyttää - vai tekeekö sen puhtaalta pöydältä. Haluan käyttää projektissamme [PostgreSQL-moduulia](https://java.testcontainers.org/modules/databases/postgres/). Projektissamme on jo valmiiksi lisätty pom.xml-tiedostoon PostgreSQL:n riippuvuus:
+```xml
+	<dependency>
+    		<groupId>org.postgresql</groupId>
+    		<artifactId>postgresql</artifactId>
+    		<scope>runtime</scope>
+		</dependency>
+```
+Sen lisäksi pitää tietenkin olla itse moduulin riippuvuus:
+```xml
+        <dependency>
+    <groupId>org.testcontainers</groupId>
+    <artifactId>postgresql</artifactId>
+    <version>1.20.4</version>
+    <scope>test</scope>
+</dependency>
+```
+Lisäksi haluan lisätä JUnit 5 tuen Testcontainersille:
+```xml
+<dependency>
+    <groupId>org.testcontainers</groupId>
+    <artifactId>junit-jupiter</artifactId>
+    <version>1.20.4</version>
+    <scope>test</scope>
+</dependency>
+```
+
+### 4.2 Testcontainers testiluokan kirjoittaminen
+
+Seuraavaksi oli aika luoda uusi testiluokka uusille Testcontainers-testeille. Käytin apuna [Testcontainersin ohjetta](https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/). Jätin vanhat H2-testit vertailun vuoksi talteen. Uuteen testiluokkaan TCTaskRepositoryTests tuli tuttu `@SpringBootTest`-annotaatio. 
+
+Luokan alussa alustin PostgreSQL-kontin instanssin käyttämällä postgres:16-alpine Docker imagea:
+```java
+   static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+            "postgres:16-alpine"
+    );
+```
+Lisäsin myös esimerkissä olevat `@BeforeAll`- and `@AfterAll`-annotoidut metodit, jotka käynnistävät ja sulkevat postgres-kontin joka testimetodin alussa sekä lopussa:
+```java
+ @BeforeAll
+    static void beforeAll() {
+        postgres.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
+```
+Lisäsin myös tämän metodin, joka kertoo dynaamisesti, mihin tietokantaan sen pitää yhdistää. 
+
+```java
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+```
+
+`@DynamicPropertySource`-annotaation avulla staattiseen metodiin voidaan lisätä konfiguraatio-ominaisuuksia (properties) Springin Environment-olioon dynaamisesti. Kun Testcontainers käynnistää PostgreSQL-kontin, se varaa sille satunnaisen portin isäntäkoneelta. Tämän vuoksi ei voi kiinteästi kirjoittaa [application.properties-tiedostoon](https://github.com/Git-Happens-HH/Project-management-backend/blob/testcontainer/project-management-app/src/main/resources/application.properties) tietokannan URL-osoitetta (kuten H2-tietokannan kanssa), vaan se haetaan suoraan kontilta testin alkaessa. (Spring s.a, Mohamadinia 2025, Trafandir 2026)
+
+Metodin argumentti `DynamicPropertyRegistry` on rajapinta, joka välitetään argumenttina `@DynamicPropertySource`-metodille. Sitä käytetään nimi-arvo-parien rekisteröimiseen Spring Environment-olioon. 
+
+Esimerkiksi:
+- Nimi (key): spring.datasource.url
+- Arvo (value): postgres::getJdbcUrl
+
+Nimi-arvo-parin rekisteröinti tapahtuu `add(String name, Supplier<Object> valueSupplier)`-metodilla. Supplier palauttaa arvon vasta, kun Spring tarvitsee sitä.
+Normaalisti nimi-arvo-pari määritellään application.properties-tiedostoon, kuten:
+- Nimi (key): spring.datasource.url
+- Arvo(value): jdbc:h2:mem:testdb
+
+Tuo toimii, kun tietokannalla on kiinteä, staattinen osoite. `DynamicPropertyRehistry`-metodi kuitenkin ottaa arvon dynaamisesti käynnissä olevasta Docker-kontista, jotta testit voidaan ajaa oikeaa tietokantaa vasten.
+(Spring s.a, Mohamadinia 2025)
+
+Testiluokkaan lisättiin myös metodi `@BeforeEach`, joka siivoaa tietokantaan luodut testidatat ennen seuraavan testin suoritusta:
+
+```java
+   @BeforeEach
+    void setUp() {
+        taskRepository.deleteAll();
+        taskListRepository.deleteAll();
+        projectRepository.deleteAll();
+        appUserRepository.deleteAll();
+    }
+```
+Itse testimetodit ovat sisällöltään samanlaiset kuin H2-testien toteutuksessa. Koko valmis testiluokka löytyy [täältä]().
+
+### 4.3 Testien ajaminen
+
+Sitten on aika ajaa valmis testiluokka! Docker Desktopista näkee Containers-välilehdeltä käynnissä olevat kontit:
+![Kuva Docker Desktopin käyttöliittymästä, joka näyttää käynnissä olevat kontit](pictures/kontit.png)
+
+Images-välilehdellä näkyy Ryuk sekä postgres:16-alpine:
+![Kuvakaappaus Docker Desktopin images-välilehdeltä, jossa näkyy Ryuk sekä postgres:16-alpine](pictures/images.png)
+
+Testi kaatui kuitenkin yllättävään virheeseen:
+
+```
+org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception executing SQL [select t1_0.task_id,t1_0.assigned_user,t1_0.created_by,t1_0.deadline,t1_0.description,t1_0.task_list_id,t1_0.title from task t1_0] [ERROR: relation "task" does not exist
+  Position: 121] [n/a]; SQL [n/a]
+```
+
+Relation "task" does not exist viittaa siihen, että tietokantakontti ei luonut tarvittavaa task-taulua. Kysyin tekoälykielimallilta Chat GPT:ltä apua. Se avuliaasti huomautti, että Hibernate ei luo taulua Postgres-konttiin automaattisesti, toisin kuin H2.
+
+Sain hyvän vinkin, että miten kannattaa toimia: kirjoittaa uusi rivi application.properties-tiedostoon, joka laittaa Hibernaten luomaan taulut. Sen suosituksesta en laittanut sitä suoraan application.properties-tiedostoon, jossa on nyt H2-asetuksia. Sekaannusten välttämiseksi tein uuden application-testcontainer.properties-tiedoston, johon rivi tuli:
+
+`spring.jpa.hibernate.ddl-auto=create`
+
+Lisäsin myös testiluokkaan annotaation, joka aktivoi tuon profiilin:
+
+`@ActiveProfiles("testcontainer")`
+
+Nyt testit menevät läpi:
+
+![Kuvankaappaus läpi menneistä TCTaskRepositoryTests-metodeista](pictures/Tctestspassed.png)
+
+
+## 5. H2 vs. Testcontainers
 
 
 
+Lisäksi:Käytännön esimerkit H2 testeistä, jotka epäonnistuvat PostgreSQL:llä?
 
-## 5. Käytännön esimerkit testeistä
 
-## 6. Vertailu H2-testien sekä Testcontainers-testien välillä
+## 6. Haasteet ja opit 
 
-## 7. Haasteet ja opit 
+## 7. Jatkokehitys
 
-## 8. Jatkokehitys
+## 8. Yhteenveto
 
-## 9. Yhteenveto
-
-## 10. Lähteet
+## 9. Lahteet
 
 https://www.baeldung.com/spring-boot-built-in-testcontainers
 
@@ -305,6 +477,15 @@ https://docs.junit.org/6.0.3/overview.html
 https://assertj.github.io/doc/
 
 https://docs.junit.org/6.0.3/writing-tests/annotations.html
+
+https://learn.microsoft.com/en-us/windows/wsl/about
+
+https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/dynamic-property-sources.html
+
+https://www.baeldung.com/spring-dynamicpropertysource
+
+
+
 
 
 

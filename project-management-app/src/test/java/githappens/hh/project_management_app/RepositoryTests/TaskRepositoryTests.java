@@ -119,7 +119,7 @@ public class TaskRepositoryTests {
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        List<Task> found = (List<Task>) taskRepository.findByTitleContainingIgnoreCase("test");
+        List<Task> found = taskRepository.findByTitleContainingIgnoreCase("test");
         assertThat(found).hasSize(2);
         assertThat(found).extracting(Task::getTitle).contains("Test Task One", "Another Test Task");
     }
@@ -152,7 +152,7 @@ public class TaskRepositoryTests {
         projectRepository.save(project7);
         TaskList taskList7 = new TaskList(project7, "Test TaskList7", LocalDateTime.now());
         taskListRepository.save(taskList7);
-        LocalDateTime deadline = LocalDateTime.of(2026, 4, 25, 12, 0, 0);
+        LocalDateTime deadline = LocalDateTime.of(2077, 4, 25, 12, 0);
         Task task = new Task(taskList7, "Task with deadline", "Testing deadline search", user7, user7, deadline);
         taskRepository.save(task);
         Optional<Task> found = taskRepository.findByDeadline(deadline);
