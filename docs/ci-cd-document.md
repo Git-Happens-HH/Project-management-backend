@@ -129,7 +129,7 @@ Käyttöön otettiin seuraavat hallintakäytannot:
 
 Tälla mallilla julkaisu ei ole enää yksittäisen kehittäjän käsityota, vaan hallittu prosessi.
 
-## 6. Ennen vs jalkeen
+## 6. Ennen vs jälkeen
 
 | Mittari | Ennen | Jälkeen |
 |---|---|---|
