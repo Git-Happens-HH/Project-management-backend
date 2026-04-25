@@ -137,7 +137,7 @@ Muita huomionarvioisia seikkoja Ryukista:
 
 ## 3. Projektin lähtötilanne
 
-### 1.1. Olemassaolevat testit
+### 3.1. Nykyisten testien teknologiat
 
 Tein tätä seminaarityötä varten Prokress-projektiimme [yksinkertaiset H2-testit, joilla testataan repositorykerroksen metodeita](https://github.com/Git-Happens-HH/Project-management-backend/tree/testcontainer/project-management-app/src/test/java/githappens/hh/project_management_app/RepositoryTests).
 
@@ -149,6 +149,8 @@ TaskRepositoryTests hyödyntää useita Spring Boot Starter Tests -riippuvuuden 
 - `@Transactional`-annotaatio tekee testiluokan tietokantamuutokset transaktion sisäisesti H2-tietokantaan ja samalla pitää huolta tiedon eheydestä: esimerkiksi jos testin aika tapahtuu odottamaton virhe, se peruu (rollback) nämä muutokset automaattisesti. 
 - AssertJ tarjoaa assertiometodeja, kuten `assertThat(task.getTaskTitle().isNotNull())`
 (JUnit User Guide s.a, Spring, s.a, AssertJ, s.a)
+
+### 3.1. Nykyisten testien esimerkkikoodit ja suoritusajat
 
 Alla on esimerkki yksinkertaisesta CRUD-toiminnon testistä, jossa testataan repositorykerroksen kykyä luoda ja tallentaa uusi task sujuvasti:
 ```java
@@ -254,6 +256,13 @@ Keskiarvo testien suoritusajalle oli 957 ms.
  
 
 ## 4. Testcontainersin toteutus 
+
+### 4.1. Esivalmistelut Testcontainersin käyttöönottoon
+
+Testcontainers tarvitsee toimiakseen sopivan Docker-ympäristön. Valitsin ympäristöksi [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/). Tämä ympäristö sopii hyvin yhteen Windows-pöytäkoneeseeni. Jos Dockerin haluaisi Linux-palvelimelle, parempi vaihtoehto voisi olla [Docker Engine](https://docs.docker.com/engine/install). 
+
+
+
 
 ## 5. Käytännön esimerkit testeistä
 
