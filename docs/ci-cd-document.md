@@ -161,6 +161,8 @@ Käytännössä tämä jakaa kuorman kahteen kerrokseen:
 
 Kuva: GitHub Actions -ajo, jossa Prokress ei läpäissyt OWASP Dependency-Checkiä.
 
+Tuloksen tulkinta: CI/CD-putki toimi oikein, koska security gate pysäytti julkaisun. Itse projekti ei kuitenkaan läpäissyt asetettuja turvakriteereitä, koska riippuvuuksista löytyi tunnettuja haavoittuvuuksia.
+
 ### 5.3 Staging deploy
 
 Tiedosto: deploy-staging.yml
@@ -223,6 +225,14 @@ jobs:
 ```
 
 Approval gate pienentää inhimillisen virheen riskiä: tuotantoon ei voi julkaista vahingossa pelkällä pushilla, vaan julkaisu vaatii erillisen hyväksynnän.
+
+Production deploy -vaiheen onnistunut ajo:
+
+![Deploy to Production onnistuneena](pictures/production-deploy.png)
+
+Kuva: GitHub Actionsin `Deploy to Production (Approval Gate)` -jobi onnistui, mukaan lukien rolloutin ja health-checkin verifiointi.
+
+Tuloksen tulkinta: production-putki testattiin onnistuneesti end-to-end, joten julkaisuprosessi (manual approval gate + deploy + verify) on toimiva. Tässä projektissa staging ja production käyttävät kuitenkin käytännössä samaa OpenShift-ympäristöä, joten testi validoi ensisijaisesti prosessin luotettavuuden eikä erillisen tuotantoinfrastruktuurin eristystä.
 
 ### 5.5 OpenShift-manifestit ja operointiskriptit
 
