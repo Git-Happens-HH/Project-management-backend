@@ -26,13 +26,3 @@ Backend
 
 ## CI/CD Seminaarityo
 - [CI/CD-putken tuotantokelpoistaminen](docs/ci-cd-document.md)
-
-testi
-testi 2
-testi 3
-testi 4
-testi 5
-testi 6
-testi 7
-testi 8.
-update 12
