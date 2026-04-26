@@ -2,12 +2,19 @@
 
 ## 1 Johdanto
 
-Tässä seminaarityössä toteutan CI/CD-putken Ohjelmistoprojekti 2:n projektityöllemme. Projektissa tiimimme kehittää projektinhallintatyökalua nimeltä Prokress.
+Tässä seminaarityössä kehitetään CI/CD-putki Ohjelmistoprojekti 2 -kurssin projektityölle.
+
+Projektissa tiimi kehittää projektinhallintatyökalua nimeltä Prokress, joka hyödyntää Kanban-taulua tehtävien hallintaan. Sovellus mahdollistaa tehtävien luomisen, muokkaamisen, poistamisen sekä siirtämisen sarakkeiden välillä drag-and-drop-toiminnallisuudella.
+
+Käyttäjät voivat luoda omia sekä jaettuja projekteja, määrittää tehtäville vastuuhenkilön ja kommentoida tehtäviä.
+
+## 2 Tavoitteet 
+
 Projektin tavoitteena on automatisoida build-, testaus-, turvallisuus- ja deploy-prosessit sekä parantaa julkaisuvarmuutta ja palautumiskykyä.
 
-Työssä on käytössä staging- ja production-deployt OpenShiftissä, productionissa approval gate sekä rolloutin varmistus ja rollback-toiminto.
+Putkessa hyödynnetään staging- ja production-ympäristöjä OpenShiftissä. Production-ympäristössä käyttöönotto edellyttää hyväksyntäporttia (approval gate), ja julkaisun yhteydessä varmistetaan onnistunut rollout sekä sovelluksen toimivuus. Tarvittaessa järjestelmä tukee myös nopeaa rollbackia aiempaan versioon.
 
-## 2. Toteutusymparisto ja teknologiat
+## 3. Toteutusymparistö ja teknologiat
 
 - Sovellus: Spring Boot (Java 21), Maven, PostgreSQL
 - CI/CD: GitHub Actions
@@ -16,7 +23,7 @@ Työssä on käytössä staging- ja production-deployt OpenShiftissä, productio
 - Security gate: OWASP Dependency-Check + Trivy
 - Operointi: rollout verify + rollback shell-skriptit
 
-## 3. Ratkaisun arkkitehtuuri
+## 4. Ratkaisun arkkitehtuuri
 
 ```mermaid
 flowchart LR
@@ -34,18 +41,18 @@ flowchart LR
   K --> L[Rollback if needed]
 ```
 
-## 4. CI/CD-putken koodi
+## 5. CI/CD-putken koodi
 
-### 4.1 PR-laatu- ja tietoturvaportti
+### 5.1 PR-laatu- ja tietoturvaportti
 
-Workflow: .github/workflows/pr-check.yml
+Tiedosto: pr-check.yml
 
 Toteutetut vaiheet:
 - Maven build ja testit (`mvn clean verify`)
 - Docker image build
 - Trivy image scan (HIGH/CRITICAL -> fail)
 
-PR-portin tarkoitus on varmistaa, että mergeen menevä muutos on teknisesti ehjä ja ettei konttikuvassa ole kriittisia löytöjä.
+PR-portti varmistaa, että mergeen menevä muutos on teknisesti toimiva ja ettei konttikuvassa ole kriittisiä haavoittuvuuksia.
 
 Esimerkki:
 
@@ -54,11 +61,11 @@ Pull request hylätään automaattisesti jos:
 - testit failaavat
 - Trivy löytää HIGH tai CRITICAL haavoittuvuuden
 
-Tämä estää rikkinäisen tai haavoittuvan koodin päätymisen main-branchiin.
+Tämä estää rikkinäisen tai haavoittuvan koodin päätymisen main-haaraan.
 
-### 4.2 Erillinen security-scan workflow
+### 5.2 Erillinen security-scan workflow
 
-Workflow: .github/workflows/security-scan.yml
+Tiedosto: security-scan.yml
 
 Toteutetut vaiheet:
 - OWASP Dependency-Check Maven-pluginilla (CVSS-raja)
@@ -69,35 +76,34 @@ Security scan kattaa kaksi tasoa:
 - Dependency taso (OWASP): tunnetut haavoittuvuudet kirjastoissa
 - Container taso (Trivy): OS + runtime + packaged dependencies
 
-Näin varmistetaan sekä sovelluksen että ympäristön turvallisuus.
+Näin varmistetaan sekä sovelluksen että ajoympäristön turvallisuus.
 
 Triggerit:
 - manual workflow_dispatch
 - ajastettu ajo (cron)
 
-Perustelu muutokselle:
-- OWASP-skannaus oli raskas ja pidensi PR-putkea merkittävästi
-- erillisessä workflowssa turvallisuustarkistus on vakaampi ja helpompi seurata
+Perustelu:
+OWASP-skannaus oli raskas ja hidasti PR-putkea merkittävästi, joten se siirrettiin erilliseen workflowhun. Tämä tekee putkesta nopeamman ja skannauksesta vakaamman.
 
-### 4.3 Staging deploy
+### 5.3 Staging deploy
 
-Workflow: .github/workflows/deploy-staging.yml
+Tiedosto: deploy-staging.yml
 
 Sisältö:
 - image build + push GHCR:aan
 - deploy OpenShiftiin
 - rolloutin ja healthin varmistus skriptillä
 
-### 4.4 Production deploy + approval gate
+### 5.4 Production deploy + approval gate
 
-Workflow: .github/workflows/deploy-production.yml
+Tiedosto: deploy-production.yml
 
 Sisältö:
 - trigger tagista (`v*.*.*`) tai manuaalisesti
 - deploy production namespaceen
 - GitHub environment `production` ja required reviewers
 
-### 4.5 OpenShift-manifestit ja operointiskriptit
+### 5.5 OpenShift-manifestit ja operointiskriptit
 
 - ops/openshift/deployment.yaml
 - ops/openshift/service.yaml
@@ -106,19 +112,20 @@ Sisältö:
 - ops/openshift/verify-rollout.sh
 - ops/openshift/rollback.sh
 
-Rollback toteutetaan ajamalla:
+Rollback suoritetaan komennolla:
 
 ./rollback.sh <namespace> <app>
 
 Tämä palauttaa viimeisimmän toimivan version OpenShiftissa.
 
-### 4.6 Sovelluksen Health Check -valmius Openshiftiä varten
+### 5.6 Sovelluksen Health Check -valmius Openshiftiä varten
 
-Sovellukseen lisätty:
-- actuator health/info exposed profileen
-- security-configiin sallinnat health-endpointeille
+SSovellukseen lisättiin:
 
-## 5. Tuotantoputken hallinta ja julkaisumalli
+- Actuator health/info -endpointit
+- sallinnat health-endpointeille security-konfiguraatiossa
+
+## 6. Tuotantoputken hallinta ja julkaisumalli
 
 Käyttöön otettiin seuraavat hallintakäytannot:
 - branch protection `main`-branchille
@@ -127,9 +134,9 @@ Käyttöön otettiin seuraavat hallintakäytannot:
 - vaaditut reviewerit production-julkaisuun
 - release tag -malli (`vMAJOR.MINOR.PATCH`)
 
-Tälla mallilla julkaisu ei ole enää yksittäisen kehittäjän käsityota, vaan hallittu prosessi.
+Tällä mallilla julkaisu on hallittu ja toistettava prosessi.
 
-## 6. Ennen vs jälkeen
+## 7. Ennen vs jälkeen
 
 | Mittari | Ennen | Jälkeen |
 |---|---|---|
@@ -144,7 +151,7 @@ Huomio:
 - OWASP Security Scan voi olla ensimmäisellä ajolla hidas NVD-datan päivityksen takia.
 - `NVD_API_KEY` nopeuttaa skannauksia merkittävästi.
 
-## 7. Ongelmia ja niiden ratkaisut
+## 8. Ongelmia ja niiden ratkaisut
 
 Tyon aikana kohdattuja ongelmia:
 - Versioiden yhteensopivuusongelmat
@@ -157,7 +164,7 @@ Ratkaisuperiaate oli:
 - OWASP-scanin siirto erilliseen security-scan workflowin Maven-pluginiin
 - Selkeät fail-kriteerit
 
-## 8. Mitä opin
+## 9. Mitä opin
 
 - tuotantokelpoinen CI/CD on ennen kaikkea riskienhallintaa
 - security gate tulee suunnitella niin, etta se on vakaa ja toistettava
@@ -165,15 +172,15 @@ Ratkaisuperiaate oli:
 - rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
 - GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
 
-## 9. Jatkokehitysideat
+## 10. Jatkokehitysideat
 
-- lisää integroidut smoke-testit staging deployn jälkeen
-- lisää image signing (esim. Cosign) ennen production deployta
-- ota käyttöön SARIF-raportit security-löydöksille
-- mittaa lead time ja MTTR automaattisesti (dashboard)
-- erottele dependency-checkin data-cache pysyvämmin CI-ympäristöön
+- smoke-testit stagingiin
+- image signing (Cosign)
+- SARIF-raportit
+- mittarit (lead time, MTTR)
+- dependency-checkin cache optimointi
 
-## 10. Lähteet
+## 11. Lähteet
 
 - GitHub Actions documentation: https://docs.github.com/actions
 - OWASP Dependency-Check: https://jeremylong.github.io/DependencyCheck/
@@ -181,6 +188,6 @@ Ratkaisuperiaate oli:
 - OpenShift docs: https://docs.openshift.com/
 - Spring Boot Actuator: https://docs.spring.io/spring-boot/reference/actuator/
 
-## 11. Video
+## 12. Video
 
 - Placeholder
