@@ -179,6 +179,18 @@ jobs:
 
 Staging toimii "viimeisenä testiasemana" ennen tuotantoa: julkaisu tehdään oikeaan klusteriin ja toimivuus tarkistetaan automaattisesti ennen kuin muutosta pidetään valmiina.
 
+Build and Push Image -vaiheen onnistunut ajo:
+
+![Build and Push Image onnistuneena](pictures/build_and_push_image.png)
+
+Kuva: GitHub Actionsin `Build and Push Image` -jobi, jossa konttikuva rakennetaan ja pusketaan GHCR:ään.
+
+Deploy to Staging -vaiheen onnistunut ajo:
+
+![Deploy to Staging onnistuneena](pictures/deploy_to_staging.png)
+
+Kuva: GitHub Actionsin `Deploy to Staging` -jobi, jossa image deployataan OpenShiftiin ja rollout verifioidaan.
+
 ### 5.4 Production deploy + approval gate
 
 Tiedosto: deploy-production.yml
