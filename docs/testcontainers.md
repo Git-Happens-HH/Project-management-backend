@@ -239,8 +239,8 @@ Testi 4:
 ![Kuvankaappaus createNewTask()-metodin suoritusajasta, joka oli 810 ms](pictures/image-7.png)
 ![Kuvankaappaus runtimesta, joka oli 9701 ms](pictures/image-8.png)
 
-Keskiarvo testin suoritusajalle oli 698.5 ms. 
-Keskiarvo Spring contextin ajoajalle oli 9837 ms (~9.8 s).
+Keskiarvo testin suoritusajalle oli 698.5 ms (~0,7 s).
+Keskiarvo Spring contextin ajoajalle oli 9837 ms (~9,8 s).
 Itse testien ajaminen on siis suhteellisen nopeaa, mutta sovelluskontekstin käynnistymisestä aiheutuva "overhead" on paljon suurempi. Toisaalta Spring context käynnistyy vain kerran testiluokkaa kohden, eli sen ajamista ei tarvitse joka testimetodin kohdalla odottaa, vaan pelkästään kerran per testiluokka.
 
 Otetaan myös esimerkiksi eräs custom queryn testi, joka on kirjoitettu samaiseen TaskRepositoryTest-luokkaan. Metodin ideana on löytää task titlen mukaan. Haku on case insensitive, ja palauttaa kaikki osumat, vaikka hakusana ei ole täydellinen. Esim. haku "<u>test</u>" palauttaa taskin, jonka title on "Another <u>Test</u> Task".
@@ -293,7 +293,7 @@ Testi 3:
 Testi 4:
 ![Kuvankaappaus findByTitleContainingIgnoreCaseShouldReturnTask()-metodin suoritusajasta, joka oli 871 ms](pictures/image-12.png)
 
-Keskiarvo testien suoritusajalle oli 957 ms.
+Keskiarvo testien suoritusajalle oli 957 ms (~1 s)
  
 
 ## 4. Testcontainersin toteutus 
@@ -401,7 +401,118 @@ Testiluokkaan lisättiin myös metodi `@BeforeEach`, joka siivoaa tietokantaan l
         appUserRepository.deleteAll();
     }
 ```
-Itse testimetodit ovat sisällöltään samanlaiset kuin H2-testien toteutuksessa. Koko valmis testiluokka löytyy [täältä]().
+Itse testimetodit ovat sisällöltään samanlaiset kuin H2-testien toteutuksessa. Koko valmis testiluokka: 
+
+```java
+package githappens.hh.project_management_app.RepositoryTests;
+
+import githappens.hh.project_management_app.domain.*;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.PostgreSQLContainer;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ActiveProfiles("testcontainer")
+@SpringBootTest
+class TCTaskRepositoryTests {
+
+    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>(
+            "postgres:16-alpine"
+    );
+
+    @BeforeAll
+    static void beforeAll() {
+        postgres.start();
+    }
+
+    @AfterAll
+    static void afterAll() {
+        postgres.stop();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+
+    @Autowired
+    private TaskRepository taskRepository;
+
+    @Autowired
+    private TaskListRepository taskListRepository;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private AppUserRepository appUserRepository;
+
+    @BeforeEach
+    void setUp() {
+        taskRepository.deleteAll();
+        taskListRepository.deleteAll();
+        projectRepository.deleteAll();
+        appUserRepository.deleteAll();
+    }
+
+    // CREATE TASK TEST
+    @Test
+    void createNewTask() {
+
+        AppUser user = new AppUser("test1", "Test", "User","test1@hh.com", "Test123!",LocalDateTime.now());
+        appUserRepository.save(user);
+
+        Project project = new Project( "Test Project", "Description",LocalDateTime.now(), false);
+        projectRepository.save(project);
+
+        TaskList taskList = new TaskList(project, "TaskList",LocalDateTime.now() );
+        taskListRepository.save(taskList);
+
+        Task task = new Task( taskList, "Test Task",  "Testing task creation",  user,  user,  LocalDateTime.now().plusDays(1));
+        taskRepository.save(task);
+
+        assertThat(task.getTaskId()).isNotNull();
+        assertThat(task.getTitle()).isEqualTo("Test Task");
+        assertThat(task.getDescription()).isEqualTo("Testing task creation");
+        assertThat(task.getAssignedUser().getAppUserId()).isEqualTo(user.getAppUserId());
+    }
+
+    // FIND BY TITLE (IGNORE CASE)
+    @Test
+    void findByTitleContainingIgnoreCaseShouldReturnTasks() {
+
+        AppUser user = new AppUser("test5", "Test", "User","test5@hh.com", "Test123!",LocalDateTime.now() );
+        appUserRepository.save(user);
+
+        Project project = new Project("Test Project","Description", LocalDateTime.now(),false);
+        projectRepository.save(project);
+
+        TaskList taskList = new TaskList(project,"TaskList",LocalDateTime.now());
+        taskListRepository.save(taskList);
+
+        Task task1 = new Task(taskList,"Test Task One","Description1", user, user, LocalDateTime.now().plusDays(1));
+        Task task2 = new Task(taskList,"Another Test Task","Description2", user, user, LocalDateTime.now().plusDays(1));
+        taskRepository.save(task1);
+        taskRepository.save(task2);
+
+        List<Task> found = taskRepository.findByTitleContainingIgnoreCase("test");
+
+        assertThat(found).hasSize(2);
+        assertThat(found).extracting(Task::getTitle).contains("Test Task One", "Another Test Task");
+    }
+}
+
+```
 
 ### 4.3 Testien ajaminen
 
@@ -418,7 +529,7 @@ org.springframework.dao.InvalidDataAccessResourceUsageException: JDBC exception 
   Position: 121] [n/a]; SQL [n/a]
 ```
 
-Relation "task" does not exist viittaa siihen, että tietokantakontti ei luonut tarvittavaa task-taulua. Kysyin tekoälykielimallilta Chat GPT:ltä apua. Se avuliaasti huomautti, että Hibernate ei luo taulua Postgres-konttiin automaattisesti, toisin kuin H2.
+Relation "task" does not exist viittaa siihen, että tietokantakontti ei luonut tarvittavaa task-taulua. Kysyin tekoälykielimallilta Chat GPT-5.3 apua. Se avuliaasti huomautti, että Hibernate ei luo taulua Postgres-konttiin automaattisesti, toisin kuin H2.
 
 Sain hyvän vinkin, että miten kannattaa toimia: kirjoittaa uusi rivi application.properties-tiedostoon, joka laittaa Hibernaten luomaan taulut. Sen suosituksesta en laittanut sitä suoraan application.properties-tiedostoon, jossa on nyt H2-asetuksia. Sekaannusten välttämiseksi tein uuden application-testcontainer.properties-tiedoston, johon rivi tuli:
 
@@ -432,12 +543,135 @@ Nyt testit menevät läpi:
 
 ![Kuvankaappaus läpi menneistä TCTaskRepositoryTests-metodeista](pictures/Tctestspassed.png)
 
+Jotta voidaan mitata koko testauksen ajoaikaa, pitää myös ottaa huomioon kontin käynnistykseen menevä aika. Lisäsin sen koodiin ja lokitan sen konsoliin:
+```java
+@BeforeAll
+static void beforeAll() {
+    long start = System.currentTimeMillis();
+    postgres.start();
+    long end = System.currentTimeMillis();
+    System.out.println("Kontin käynnistys kesti: " + (end - start) + " ms");
+}
+```
+
+![Kontin k�ynnistys kesti: 2255 ms](image-1.png) ![ajoaika 475 ms](image-2.png)
+
+![Kontin k�ynnistys kesti: 2241 ms](image-3.png) ![ajoaika 453 ms](image-4.png)
+
+![Kontin k�ynnistys kesti: 2234 ms](image-5.png) ![ajoaika 449 ms](image-6.png)
+
+![Kontin k�ynnistys kesti: 2234 ms](image-7.png) ![ajoaika 486 ms](image-8.png)
+
+Kontin käynnistykseen menevä aika oli keskiarvolta 2241 ms (~2 s).
+Testien ajoaika oli keskimäärin 465,75 ms (0,5 s) - H2-aikoihin verrattuna voidaan todeta, että vaikutusta Testcontainersilla ei ole.
+Sovelluskontekstin latausaikaa ei mitattu tällä kertaa samasta syystä. 
+
+Kontin käynnistykseen menevää "overheadia" voi vähentää esimerkiksi siinä tilanteessa, jos Testcontainers-testiluokkia on useita. Minun esimerkissäni on kaksi testiluokkaa (toinen esitellään raportissa [myöhemmin](#52-sama-testi-eri-tietokanta-eri-tulos)). Kuten lokituksesta näkee, kontti käynnistyy kerran kummallekin luokalle:
+![2 konttia!](image-9.png)
+Tässä mittaustuloksessa, jossa konttu käynnistyy kaksi kertaa, on kontin käynnistykseen menevä aika jo 3541 ms (~3,5 s). Overhead kasvaa eksponentiaalisesti, jos testiluokkia on useampia.
+
+[Testcontainersin dokumentaatiota](https://java.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers) seuraamalla voidaan luoda Singleton kantaluokka kontille. Singleton on ohjelmointisuunnittelumalli, joka varmistaa, että luokasta luodaan vain yksi olio koko ohjelman elinaikana.
+
+```java
+package githappens.hh.project_management_app.RepositoryTests;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import o
+
+abstract class AbstractPostgresBaseClass {
+
+    static final PostgreSQLContainer<?> postgres;
+
+    static {
+        postgres = new PostgreSQLContainer<>("postgres:16-alpine");
+        postgres.start();
+    }
+
+    @DynamicPropertySource
+    static void configureProperties(DynamicPropertyRegistry registry) {
+        registry.add("spring.datasource.url", postgres::getJdbcUrl);
+        registry.add("spring.datasource.username", postgres::getUsername);
+        registry.add("spring.datasource.password", postgres::getPassword);
+    }
+}
+```
+
+Muokkaan testiluokat perimään tämän kantaluokan:
+- `class TCTaskRepositoryTests extends AbstractPostgresBaseClass`
+- `public class ExamplePostgres extends AbstractPostgresBaseClass`
+
+
+Poistan kaiken, minkä testiluokka jo perii kantaluokasta:
+- static PostgreSQLContainer<?> postgres = ...
+- @BeforeAll static void beforeAll() ...
+- @AfterAll static void afterAll() ...
+- @DynamicPropertySource static void configureProperties() ...
+
+Ja näin kontti käynnistyy vain kerran, ja testiluokat jakavat sen intanssin! 
+
+![Kuvankaappaus konsolin lokituksesta, joka osoittaa kontin käynnistyneen vain kerran](image-10.png)
+
+| Testiluokkien määrä | Ilman singletonia | Singletonilla | Säästö |
+|---|---|---|---|
+| 2 luokkaa | ~4,5 s | ~2,2 s | ~2,2 s |
+| 10 luokkaa | ~22,4 s | ~2,2 s | ~20,2 s |
+| 20 luokkaa | ~44,8 s | ~2,2 s | ~42,6 s |
+
+*'Ilman singletonia' -sarakkeen arvot ovat laskennallisia (keskiarvo 
+yhdestä käynnistyskerrasta 2241 ms x luokkien määrä). Hyöty kasvaa lineaarisesti sen mukaan, mitä useampia luokkia on.
 
 ## 5. H2 vs. Testcontainers
 
+### 5.1 Tietokantojen vertailu keskenään
+
+placeholder höpötystä
+
+### 5.2 Sama testi, eri tietokanta, eri tulos
+
+Jędrzej Frankowskin (2024) kirjoittamassa [ohjeessa](https://www.baeldung.com/spring-boot-testcontainers-integration-test) (2024) ilmenee eräs mielenkiintoinen bugi, kun sama kysely suoritetaan H2:lla ja PostgreSQL:lla. Jotta voin tutustua tuohon virheeseen oman koodin kautta, pyysin Claude Sonnet 4.6-kielimallia kirjoittamaan kyseiset testit raportille tuttuun taskRepositorylle molempiin tietokantoihin. 
+
+Frankowskin raportoima buginen kysely on omassa esimerkissäni seuraavanlainen:
+
+```java
+// This code snippet has been generated using Claude Sonnet 4.6-language model
+@Modifying
+@Query(value = "UPDATE task t SET t.title = :newTitle WHERE t.title = :oldTitle", nativeQuery = true)
+int updateTaskTitleNativeBuggy(@Param("newTitle") String newTitle, @Param("oldTitle") String oldTitle);
+```
+Tämä kysely päivittää task-taulussa kaikkien niiden taskien title-kentän, joiden title vastaa :oldTitle parametria uuteen arvoon :newTitle. Erityistä huomiota tulee kiinnittää t-aliakseen, joka on asetettu task-taululle.
+
+Koko H2-testin toteutus kyselylle löytyy [täältä](), mutta upotetaan tähän kiinnostavin osuus:
+
+```java
+// This test class' code has been generated using Claude Sonnet 4.6-language model
+// Act — buggy native query: SET t.title = :newTitle (alias in SET clause)
+int updated = taskRepository.updateTaskTitleNativeBuggy("Fix login bug [DONE]", "Fix login bug");
+
+// Assert — H2 silently accepts the alias; test passes
+assertThat(taskRepository.findByTitleContainingIgnoreCase("Fix login bug [DONE]")).hasSize(2);
+assertThat(taskRepository.findByTitleContainingIgnoreCase("Write tests")).hasSize(1);
+```
+Kuten Clauden generoima kommentti toteaa, testi menee läpi tuolla kyselyllä. 
+
+Katsotaan seuraavaksi, että miten PostgreSQL käyttäytyy kyselyn kanssa. Tein täysin samanlaisen testiluokan sille.*
+
+(*Pienillä eroilla: vaihdoin jakarta.transaction.Transactional → org.springframework.transaction.annotation.Transactional.
+Spring Data JPA vaatii oman @Transactional-annotaationsa tunnistaakseen aktiivisen transaktion @Modifying-kyselyille. Jakartan versio ei toimi tässä kontekstissa; Spring ei tunnista sitä, eikä transaktiota avata, jolloin kysely ei koskaan päädy tietokannalle asti.) 
+
+Eli siis täysin sama kysely, joka meni mukisematta läpi H2-testistä, aiheuttaa PostgreSQL:ssä tämän virheen:
+```
+Caused by: org.postgresql.util.PSQLException: ERROR: column "t" of relation "task" does not exist
+  Position: 19
+```
+
+Tässä esimerkissä paljastuu, kuinka jokin kysely voi mennä läpi kehitysvaiheessa käytetyssä H2-tietokannassa, mutta aiheuttaisi päänvaivaa oikeaa tietokantaa vasten tuotantoympäristössä. Frankowski (2024) tämän pohjalta toteaa, että [JPQL](https://www.codingshuttle.com/spring-boot-handbook/jpql-and-native-queries/)-kyselyjen (Springin oma kyselykieli) käyttäminen on yleisesti turvallisempaa, koska Spring silloin huolehtii, että kysely käännetään oikein kullekin tietokannalle.
 
 
-Lisäksi:Käytännön esimerkit H2 testeistä, jotka epäonnistuvat PostgreSQL:llä?
+
+
+
+
+
 
 
 ## 6. Haasteet ja opit 
@@ -484,15 +718,11 @@ https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/
 
 https://www.baeldung.com/spring-dynamicpropertysource
 
+https://www.baeldung.com/spring-boot-testcontainers-integration-test
 
+https://java.testcontainers.org/test_framework_integration/junit_5/
 
-
-
-
-
-
-
-
+https://java.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers
 
 
 

@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 // find task by title
@@ -23,6 +26,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     // find all tasks of a given assigned user
     List<Task> findByAssignedUser(AppUser user);
+
+    @Modifying
+@Query(value = "UPDATE task t SET t.title = :newTitle WHERE t.title = :oldTitle",
+       nativeQuery = true)
+int updateTaskTitleNativeBuggy(@Param("newTitle") String newTitle,
+                               @Param("oldTitle") String oldTitle);
 
 
 }
