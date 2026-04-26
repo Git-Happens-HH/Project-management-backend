@@ -13,17 +13,19 @@ import githappens.hh.project_management_app.domain.Task;
 import githappens.hh.project_management_app.domain.TaskList;
 import githappens.hh.project_management_app.domain.TaskListRepository;
 import githappens.hh.project_management_app.domain.TaskRepository;
+import jakarta.transaction.Transactional;
 
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.InvalidDataAccessResourceUsageException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Transactional;
 
 // This test class' code has been generated using Claude Sonnet 4.6-language model
 
 @ActiveProfiles("testcontainer")
 @SpringBootTest
+@Transactional
 public class ExamplePostgres extends AbstractPostgresBaseClass {
 
     @Autowired
@@ -47,7 +49,6 @@ public class ExamplePostgres extends AbstractPostgresBaseClass {
     }
 
     @Test
-    @Transactional
     void aliasBugPostgreSQL() {
         // Arrange — same setup as the H2 test
         Project project = projectRepository.save(
@@ -68,16 +69,16 @@ public class ExamplePostgres extends AbstractPostgresBaseClass {
                 user, user, LocalDateTime.now().plusDays(7)));
         taskRepository.flush();
 
-         int updated = taskRepository.updateTaskTitleNativeBuggy(
-                "Fix login bug [DONE]", "Fix login bug");
-        assertThat(taskRepository.findByTitleContainingIgnoreCase("Fix login bug [DONE]")).hasSize(2);
-        assertThat(taskRepository.findByTitleContainingIgnoreCase("Write tests")).hasSize(1);
+        //  int updated = taskRepository.updateTaskTitleNativeBuggy(
+        //         "Fix login bug [DONE]", "Fix login bug");
+        // assertThat(taskRepository.findByTitleContainingIgnoreCase("Fix login bug [DONE]")).hasSize(2);
+        // assertThat(taskRepository.findByTitleContainingIgnoreCase("Write tests")).hasSize(1);
 
         // if we want the test to pass, comment above and uncomment this below:
 
-        // assertThatThrownBy(() ->
-        //         taskRepository.updateTaskTitleNativeBuggy(
-        //                 "Fix login bug [DONE]", "Fix login bug")
-        // ).isInstanceOf(InvalidDataAccessResourceUsageException.class);
+        assertThatThrownBy(() ->
+                taskRepository.updateTaskTitleNativeBuggy(
+                        "Fix login bug [DONE]", "Fix login bug")
+        ).isInstanceOf(InvalidDataAccessResourceUsageException.class);
     }
 }

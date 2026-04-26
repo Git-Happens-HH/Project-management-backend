@@ -1,6 +1,4 @@
 
-
-
 # Testcontainers Spring Boot -projektissa
 
 ## Sisällysluettelo
@@ -543,7 +541,7 @@ Lisäsin myös testiluokkaan annotaation, joka aktivoi tuon profiilin:
 
 Nyt testit menevät läpi:
 
-![Kuvankaappaus läpi menneistä TCTaskRepositoryTests-metodeista](pictures/Tctestspassed.png)
+![Kuvankaappaus läpi menneistä TCTaskRepositoryTests-metodeista](pictures/TCtestspassed.png)
 
 Jotta voidaan mitata koko testauksen ajoaikaa, pitää myös ottaa huomioon kontin käynnistykseen menevä aika. Lisäsin sen koodiin ja lokitan sen konsoliin:
 ```java
@@ -556,20 +554,20 @@ static void beforeAll() {
 }
 ```
 
-![Kontin k�ynnistys kesti: 2255 ms](image-1.png) ![ajoaika 475 ms](image-2.png)
+![Kontin k�ynnistys kesti: 2255 ms](pictures/kontti-1.png) ![ajoaika 475 ms](pictures/kontti-2.png)
 
-![Kontin k�ynnistys kesti: 2241 ms](image-3.png) ![ajoaika 453 ms](image-4.png)
+![Kontin k�ynnistys kesti: 2241 ms](pictures/kontti-3.png) ![ajoaika 453 ms](pictures/createnewtask-1.png)
 
-![Kontin k�ynnistys kesti: 2234 ms](image-5.png) ![ajoaika 449 ms](image-6.png)
+![Kontin k�ynnistys kesti: 2234 ms](pictures/kontti-4.png) ![ajoaika 449 ms](pictures/createnewtask-2.png.png)
 
-![Kontin k�ynnistys kesti: 2234 ms](image-7.png) ![ajoaika 486 ms](image-8.png)
+![Kontin k�ynnistys kesti: 2234 ms](pictures/kontti-5.png) ![ajoaika 486 ms](pictures/createnewtask-3.png.png)
 
 Kontin käynnistykseen menevä aika oli keskiarvolta 2241 ms (~2 s).
 Testien ajoaika oli keskimäärin 465,75 ms (0,5 s) - H2-aikoihin verrattuna voidaan todeta, että vaikutusta Testcontainersilla ei ole.
 Sovelluskontekstin latausaikaa ei mitattu tällä kertaa samasta syystä. 
 
 Kontin käynnistykseen menevää "overheadia" voi vähentää esimerkiksi siinä tilanteessa, jos Testcontainers-testiluokkia on useita. Minun esimerkissäni on kaksi testiluokkaa (toinen esitellään raportissa [myöhemmin](#52-sama-testi-eri-tietokanta-eri-tulos)). Kuten lokituksesta näkee, kontti käynnistyy kerran kummallekin luokalle:
-![2 konttia!](image-9.png)
+![2 konttia!](pictures/konttix2.png)
 Tässä mittaustuloksessa, jossa konttu käynnistyy kaksi kertaa, on kontin käynnistykseen menevä aika jo 3541 ms (~3,5 s). Overhead kasvaa eksponentiaalisesti, jos testiluokkia on useampia.
 
 [Testcontainersin dokumentaatiota](https://java.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers) seuraamalla voidaan luoda Singleton kantaluokka kontille. Singleton on ohjelmointisuunnittelumalli, joka varmistaa, että luokasta luodaan vain yksi olio koko ohjelman elinaikana.
@@ -697,6 +695,8 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "t" of relation "tas
 ```
 
 Tässä esimerkissä paljastuu, kuinka jokin kysely voi mennä läpi kehitysvaiheessa käytetyssä H2-tietokannassa, mutta aiheuttaisi päänvaivaa oikeaa tietokantaa vasten tuotantoympäristössä. Frankowski (2024) tämän pohjalta toteaa, että [JPQL](https://www.codingshuttle.com/spring-boot-handbook/jpql-and-native-queries/)-kyselyjen (Springin oma kyselykieli) käyttäminen on yleisesti turvallisempaa, koska Spring silloin huolehtii, että kysely käännetään oikein kullekin tietokannalle.
+
+(Vaihdoin testiluokkaa hieman tämän demonstraation jälkeen, sillä [projektin CI/CD-putki](https://github.com/Git-Happens-HH/Project-management-backend/blob/main/docs/ci-cd-document.md) vaatii testien läpäisyn mergeä varten)
 
 ## 6. Haasteet ja opit 
 
