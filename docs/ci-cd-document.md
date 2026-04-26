@@ -153,6 +153,10 @@ Käytännössä tämä jakaa kuorman kahteen kerrokseen:
 - PR-vaihe: nopea, estää selvät regressiot ja kriittiset image-riskit.
 - Ajastettu/manuaalinen vaihe: syvempi dependency-analyysi raportointia varten.
 
+![Projekti ei läpäissyt OWASP-scannia](pictures/owasp-scan.png)
+
+Kuva: GitHub Actions -ajo, jossa Prokress ei läpäissyt OWASP Dependency-Checkiä.
+
 ### 5.3 Staging deploy
 
 Tiedosto: deploy-staging.yml
