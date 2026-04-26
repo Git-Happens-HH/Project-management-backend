@@ -153,6 +153,10 @@ Käytännössä tämä jakaa kuorman kahteen kerrokseen:
 - PR-vaihe: nopea, estää selvät regressiot ja kriittiset image-riskit.
 - Ajastettu/manuaalinen vaihe: syvempi dependency-analyysi raportointia varten.
 
+![Projekti ei läpäissyt OWASP-scannia](pictures/owasp-scan.png)
+
+Kuva: GitHub Actions -ajo, jossa Prokress ei läpäissyt OWASP Dependency-Checkiä.
+
 ### 5.3 Staging deploy
 
 Tiedosto: deploy-staging.yml
@@ -178,6 +182,18 @@ jobs:
 ```
 
 Staging toimii "viimeisenä testiasemana" ennen tuotantoa: julkaisu tehdään oikeaan klusteriin ja toimivuus tarkistetaan automaattisesti ennen kuin muutosta pidetään valmiina.
+
+Build and Push Image -vaiheen onnistunut ajo:
+
+![Build and Push Image onnistuneena](pictures/build_and_push_image.png)
+
+Kuva: GitHub Actionsin `Build and Push Image` -jobi, jossa konttikuva rakennetaan ja pusketaan GHCR:ään.
+
+Deploy to Staging -vaiheen onnistunut ajo:
+
+![Deploy to Staging onnistuneena](pictures/deploy_to_staging.png)
+
+Kuva: GitHub Actionsin `Deploy to Staging` -jobi, jossa image deployataan OpenShiftiin ja rollout verifioidaan.
 
 ### 5.4 Production deploy + approval gate
 
@@ -248,6 +264,32 @@ Putki hyödyntää GitHub Secrets -muuttujia, joita ei kovakoodata workflowihin:
 
 Tällä vältetään arkaluontoisen tiedon päätyminen repositorioon ja mahdollistetaan ympäristökohtainen konfigurointi ilman koodimuutoksia.
 
+### 5.8 Toteutunut staging-häiriö ja korjaavat muutokset
+
+Projektissa tuli vastaan ketjuvirhe staging-julkaisussa. Alkuvaiheessa oireena oli rolloutin jumittuminen viestiin "old replicas are pending termination", mutta juurisyy paljastui vasta podien eventeista.
+
+Havaitut virheet:
+
+- `ImagePullBackOff`
+- `ErrImagePull`
+- `FailedToRetrieveImagePullSecret`
+- `CreateContainerConfigError`
+
+Juurisyyt:
+
+1. GHCR-imagen haku epäonnistui (`invalid username/password: unauthorized`), koska image pull -secretin tunnukset eivät olleet kunnossa.
+2. Uudessa podissa ilmeni `CreateContainerConfigError`, koska sovellus odotti salaisuutta `project-management-app-secrets`, jota ei ollut olemassa target-namespacessa.
+
+Korjaus:
+
+1. Deploymentiin lisättiin `imagePullSecrets`-määrittely (`ghcr-pull-secret`).
+2. Namespaceen luotiin toimiva `ghcr-pull-secret` (registry `ghcr.io`, GitHub-käyttäjä, PAT jossa `read:packages`).
+3. Namespaceen luotiin puuttuva `project-management-app-secrets`, jossa avaimet:
+  - `POSTGRESQL_DATABASE`
+  - `POSTGRESQL_USER`
+  - `POSTGRESQL_PASSWORD`
+4. Staging- ja production-workflowihin lisättiin concurrency-lukitus estämään päällekkäiset deploy-ajot samaan ympäristöön.
+
 ## 6. Tuotantoputken hallinta ja julkaisumalli
 
 Käyttöön otettiin seuraavat hallintakäytannot:
@@ -282,6 +324,9 @@ Huomio:
 | Skannauksen kesto vaihteli paljon | NVD-datan päivitys ilman API-avainta | `NVD_API_KEY` käyttöön + välimuisti dependency-check datalle |
 | Julkaisun onnistuminen jäi epäselväksi | Deploy tehtiin, mutta runtime-terveyttä ei varmistettu | `verify-rollout.sh` + `/actuator/health` tarkistus |
 | Tuotantojulkaisun riski liian korkea | Ei erillistä hyväksyntäporttia | GitHub Environment `production` + required reviewers |
+| Rollout jumittui (`old replicas are pending termination`) | Päällekkäiset deploy-ajot samaan namespaceen | Workflow concurrency + vain yksi aktiivinen deploy per ympäristö |
+| Podi ei saanut imagea GHCR:stä (`ImagePullBackOff`) | Väärä/puutteellinen image pull -autentikointi | `ghcr-pull-secret` luotiin uudelleen toimivalla PAT:lla |
+| Podi jäi tilaan `CreateContainerConfigError` | Puuttuva sovellussalaisuus `project-management-app-secrets` | Salaisuus luotiin ja siihen lisättiin PostgreSQL-avaimet |
 
 Keskeinen oppi: tuotantokelpoinen putki ei ole vain "automaattinen deploy", vaan kontrollien ketju, jossa jokainen vaihe tuottaa todisteen julkaistavuudesta.
 
