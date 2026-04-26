@@ -38,9 +38,28 @@ if [ -z "${ROUTE_HOST}" ]; then
 fi
 
 if [ -n "${ROUTE_HOST}" ]; then
+  HEALTH_CHECK_MAX_ATTEMPTS="${HEALTH_CHECK_MAX_ATTEMPTS:-12}"
+  HEALTH_CHECK_SLEEP_SECONDS="${HEALTH_CHECK_SLEEP_SECONDS:-10}"
+  HEALTH_CHECK_TIMEOUT_SECONDS="${HEALTH_CHECK_TIMEOUT_SECONDS:-20}"
+
   echo "[verify] Running health check against https://${ROUTE_HOST}/actuator/health"
-  curl --fail --silent --show-error --max-time 20 "https://${ROUTE_HOST}/actuator/health" >/dev/null
-  echo "[verify] Health check passed"
+
+  attempt=1
+  while [ "${attempt}" -le "${HEALTH_CHECK_MAX_ATTEMPTS}" ]; do
+    if curl --fail --silent --show-error --max-time "${HEALTH_CHECK_TIMEOUT_SECONDS}" "https://${ROUTE_HOST}/actuator/health" >/dev/null; then
+      echo "[verify] Health check passed"
+      exit 0
+    fi
+
+    echo "[verify] Health check attempt ${attempt}/${HEALTH_CHECK_MAX_ATTEMPTS} failed; retrying in ${HEALTH_CHECK_SLEEP_SECONDS}s"
+    attempt=$((attempt + 1))
+    sleep "${HEALTH_CHECK_SLEEP_SECONDS}"
+  done
+
+  echo "[verify] Health check failed after ${HEALTH_CHECK_MAX_ATTEMPTS} attempts"
+  oc get pods -l "app=${APP_NAME}" -o wide || true
+  oc get route "${APP_NAME}" -o wide || true
+  exit 1
 else
   echo "[verify] Route not found; skipped external health check"
 fi
