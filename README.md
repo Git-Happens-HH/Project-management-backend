@@ -25,8 +25,7 @@ Backend
 (kaaviiiot ja yms)
 
 ## CI/CD Seminaarityo
-- [CI/CD-putken tuotantokelpoistaminen](docs/ci-cd-productionization.md)
-- [GitHub- ja ulkoiset asetusvaiheet](docs/github-and-external-setup-checklist.md)
+- [CI/CD-putken tuotantokelpoistaminen](docs/ci-cd-document.md)
 
 testi
 testi 2
@@ -36,4 +35,4 @@ testi 5
 testi 6
 testi 7
 testi 8.
-update 9
+update 10

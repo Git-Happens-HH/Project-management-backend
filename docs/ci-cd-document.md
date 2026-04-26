@@ -8,11 +8,30 @@ Projektissa tiimi kehittää projektinhallintatyökalua nimeltä Prokress, joka 
 
 Käyttäjät voivat luoda omia sekä jaettuja projekteja, määrittää tehtäville vastuuhenkilön ja kommentoida tehtäviä.
 
+Työn fokus on backend-julkaisuketjussa (Spring Boot + Docker + OpenShift), koska se sisältää eniten operatiivista riskiä: build-epäonnistumiset, riippuvuushaavoittuvuudet, rollout-ongelmat ja tuotantokatkokset.
+
+### 1.1 Rajaus ja tutkimuskysymykset
+
+Työ rajataan seuraaviin kysymyksiin:
+
+1. Miten estetään rikkinäisen tai haavoittuvan muutoksen pääsy tuotantoon?
+2. Miten varmistetaan, että julkaisu on toistettava eri ympäristöissä?
+3. Miten palautuminen tehdään nopeasti, jos julkaisu epäonnistuu?
+4. Miten putken suorituskyky pidetään järkevänä ilman, että turvallisuus heikkenee?
+
 ## 2 Tavoitteet 
 
 Projektin tavoitteena on automatisoida build-, testaus-, turvallisuus- ja deploy-prosessit sekä parantaa julkaisuvarmuutta ja palautumiskykyä.
 
 Putkessa hyödynnetään staging- ja production-ympäristöjä OpenShiftissä. Production-ympäristössä käyttöönotto edellyttää hyväksyntäporttia (approval gate), ja julkaisun yhteydessä varmistetaan onnistunut rollout sekä sovelluksen toimivuus. Tarvittaessa järjestelmä tukee myös nopeaa rollbackia aiempaan versioon.
+
+Hyväksymiskriteerit tälle työlle:
+
+- PR ei mene läpi, jos build/test failaa.
+- PR ei mene läpi, jos Trivy löytää HIGH/CRITICAL löydöksen.
+- Staging-deploy vahvistetaan rollout- ja health-checkillä.
+- Production-deploy vaatii GitHub Environment -hyväksynnän.
+- Rollback voidaan suorittaa yhdellä komennolla ja sen onnistuminen voidaan todentaa.
 
 ## 3. Toteutusymparistö ja teknologiat
 
@@ -41,6 +60,15 @@ flowchart LR
   K --> L[Rollback if needed]
 ```
 
+### 4.1 Triggeri- ja vastuumatriisi
+
+| Workflow | Triggeri | Päätarkoitus | Lopputulos |
+|---|---|---|---|
+| `pr-check.yml` | Pull Request -> `main` | Laatu- ja tietoturvaportti PR:lle | Merge estyy virhetilanteessa |
+| `security-scan.yml` | `workflow_dispatch` + cron | Syvempi riippuvuus- ja image-skannaus | Raportti artifactina |
+| `deploy-staging.yml` | Push -> `main` + manuaalinen | Staging-julkaisu ja validointi | Toimiva staging-versio |
+| `deploy-production.yml` | Tag `v*.*.*` + manuaalinen | Hallittu tuotantojulkaisu approval gatella | Tuotantoversio tai estetty julkaisu |
+
 ## 5. CI/CD-putken koodi
 
 ### 5.1 PR-laatu- ja tietoturvaportti
@@ -53,6 +81,21 @@ Toteutetut vaiheet:
 - Trivy image scan (HIGH/CRITICAL -> fail)
 
 PR-portti varmistaa, että mergeen menevä muutos on teknisesti toimiva ja ettei konttikuvassa ole kriittisiä haavoittuvuuksia.
+
+Keskeinen toteutusidea:
+
+```yaml
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  quality:
+    steps:
+      - run: mvn -B -f project-management-app/pom.xml clean verify
+      - run: docker build -t project-management-app:pr-${{ github.sha }} .
+      - uses: aquasecurity/trivy-action@master
+```
 
 Esimerkki:
 
@@ -85,6 +128,25 @@ Triggerit:
 Perustelu:
 OWASP-skannaus oli raskas ja hidasti PR-putkea merkittävästi, joten se siirrettiin erilliseen workflowhun. Tämä tekee putkesta nopeamman ja skannauksesta vakaamman.
 
+Keskeinen toteutusidea:
+
+```yaml
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 2 * * 1"
+
+steps:
+  - run: mvn -B -f project-management-app/pom.xml org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=7
+  - run: docker build -t project-management-app:security-${{ github.sha }} .
+  - uses: aquasecurity/trivy-action@master
+```
+
+Käytännössä tämä jakaa kuorman kahteen kerrokseen:
+
+- PR-vaihe: nopea, estää selvät regressiot ja kriittiset image-riskit.
+- Ajastettu/manuaalinen vaihe: syvempi dependency-analyysi raportointia varten.
+
 ### 5.3 Staging deploy
 
 Tiedosto: deploy-staging.yml
@@ -94,6 +156,23 @@ Sisältö:
 - deploy OpenShiftiin
 - rolloutin ja healthin varmistus skriptillä
 
+Keskeinen toteutusidea:
+
+```yaml
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-push:
+    outputs:
+      image_ref: ${{ steps.image.outputs.image_ref }}
+  deploy-staging:
+    needs: build-and-push
+```
+
+Staging toimii "viimeisenä testiasemana" ennen tuotantoa: julkaisu tehdään oikeaan klusteriin ja toimivuus tarkistetaan automaattisesti ennen kuin muutosta pidetään valmiina.
+
 ### 5.4 Production deploy + approval gate
 
 Tiedosto: deploy-production.yml
@@ -102,6 +181,22 @@ Sisältö:
 - trigger tagista (`v*.*.*`) tai manuaalisesti
 - deploy production namespaceen
 - GitHub environment `production` ja required reviewers
+
+Keskeinen toteutusidea:
+
+```yaml
+on:
+  push:
+    tags: ["v*.*.*"]
+  workflow_dispatch:
+
+jobs:
+  deploy-production:
+    environment:
+      name: production
+```
+
+Approval gate pienentää inhimillisen virheen riskiä: tuotantoon ei voi julkaista vahingossa pelkällä pushilla, vaan julkaisu vaatii erillisen hyväksynnän.
 
 ### 5.5 OpenShift-manifestit ja operointiskriptit
 
@@ -118,12 +213,34 @@ Rollback suoritetaan komennolla:
 
 Tämä palauttaa viimeisimmän toimivan version OpenShiftissa.
 
+Skriptien vastuut:
+
+- `deploy.sh`: valitsee projektin, applyaa manifestit, asettaa imagetagin ja käynnistää rolloutin.
+- `verify-rollout.sh`: odottaa rolloutin valmistumisen ja tekee tarvittaessa ulkoisen health-checkin (`/actuator/health`).
+- `rollback.sh`: palauttaa edellisen revision ja odottaa rollbackin valmistumisen.
+
 ### 5.6 Sovelluksen Health Check -valmius Openshiftiä varten
 
-SSovellukseen lisättiin:
+Sovellukseen lisättiin:
 
 - Actuator health/info -endpointit
 - sallinnat health-endpointeille security-konfiguraatiossa
+
+Tämä oli kriittinen osa putkea, koska deploy ilman todellista health-varmistusta ei takaa, että sovellus on oikeasti käyttökelpoinen.
+
+### 5.7 Salaisuuksien ja asetusten hallinta
+
+Putki hyödyntää GitHub Secrets -muuttujia, joita ei kovakoodata workflowihin:
+
+- `OPENSHIFT_SERVER`
+- `OPENSHIFT_TOKEN`
+- `OPENSHIFT_NAMESPACE_STAGING`
+- `OPENSHIFT_NAMESPACE_PRODUCTION`
+- `OPENSHIFT_ROUTE_HOST_STAGING`
+- `OPENSHIFT_ROUTE_HOST_PRODUCTION`
+- `NVD_API_KEY`
+
+Tällä vältetään arkaluontoisen tiedon päätyminen repositorioon ja mahdollistetaan ympäristökohtainen konfigurointi ilman koodimuutoksia.
 
 ## 6. Tuotantoputken hallinta ja julkaisumalli
 
@@ -153,18 +270,28 @@ Huomio:
 
 ## 8. Ongelmia ja niiden ratkaisut
 
-Tyon aikana kohdattuja ongelmia:
-- Versioiden yhteensopivuusongelmat
-- Docker-pohjaisen OWASP-ajon pitkät jumit image pullissa ja datapäivityksissä
-- pitkät skannausajat ilman NVD API keytä
+| Ongelma | Juuri-syy | Ratkaisu |
+|---|---|---|
+| PR-putki hidastui liikaa | OWASP-skannaus liian raskas jokaisessa PR-ajossa | OWASP siirrettiin erilliseen `security-scan.yml` workflowhin |
+| Skannauksen kesto vaihteli paljon | NVD-datan päivitys ilman API-avainta | `NVD_API_KEY` käyttöön + välimuisti dependency-check datalle |
+| Julkaisun onnistuminen jäi epäselväksi | Deploy tehtiin, mutta runtime-terveyttä ei varmistettu | `verify-rollout.sh` + `/actuator/health` tarkistus |
+| Tuotantojulkaisun riski liian korkea | Ei erillistä hyväksyntäporttia | GitHub Environment `production` + required reviewers |
 
-Ratkaisuperiaate oli:
-- CI/CD-putken yksinkertaistaminen
-- Hauraiden riippuvuuksien poisto
-- OWASP-scanin siirto erilliseen security-scan workflowin Maven-pluginiin
-- Selkeät fail-kriteerit
+Keskeinen oppi: tuotantokelpoinen putki ei ole vain "automaattinen deploy", vaan kontrollien ketju, jossa jokainen vaihe tuottaa todisteen julkaistavuudesta.
 
-## 9. Mitä opin
+## 9 Käytännön häiriötilanne-esimerkki
+
+Seuraava skenaario kuvaa realistisen tilanteen:
+
+1. Uusi release-tag (`v1.4.0`) käynnistää production-workflown.
+2. Deploy onnistuu teknisesti, mutta health-check epäonnistuu (esim. väärä konfiguraatio).
+3. `verify-rollout.sh` palauttaa virheen, jolloin workflow epäonnistuu näkyvästi.
+4. Tiimi ajaa rollbackin komennolla `./rollback.sh <namespace> <app>`.
+5. Rollbackin jälkeen `oc rollout status` vahvistaa palautumisen.
+
+Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun, harjoiteltavan toimenpiteen.
+
+## 10. Mitä opin
 
 - tuotantokelpoinen CI/CD on ennen kaikkea riskienhallintaa
 - security gate tulee suunnitella niin, etta se on vakaa ja toistettava
@@ -172,7 +299,7 @@ Ratkaisuperiaate oli:
 - rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
 - GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
 
-## 10. Jatkokehitysideat
+## 11. Jatkokehitysideat
 
 - smoke-testit stagingiin
 - image signing (Cosign)
@@ -180,7 +307,7 @@ Ratkaisuperiaate oli:
 - mittarit (lead time, MTTR)
 - dependency-checkin cache optimointi
 
-## 11. Lähteet
+## 12. Lähteet
 
 - GitHub Actions documentation: https://docs.github.com/actions
 - OWASP Dependency-Check: https://jeremylong.github.io/DependencyCheck/
@@ -188,6 +315,6 @@ Ratkaisuperiaate oli:
 - OpenShift docs: https://docs.openshift.com/
 - Spring Boot Actuator: https://docs.spring.io/spring-boot/reference/actuator/
 
-## 12. Video
+## 13. Video
 
 - Placeholder
