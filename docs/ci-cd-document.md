@@ -269,6 +269,10 @@ Putki hyödyntää GitHub Secrets -muuttujia, joita ei kovakoodata workflowihin:
 
 Tällä vältetään arkaluontoisen tiedon päätyminen repositorioon ja mahdollistetaan ympäristökohtainen konfigurointi ilman koodimuutoksia.
 
+![Lisätyt salaisuudet](pictures/secrets.png)
+
+Kuva: Lisätyt enviroment- sekä repository secretit. 
+
 ### 5.8 Toteutunut staging-häiriö ja korjaavat muutokset
 
 Projektissa tuli vastaan ketjuvirhe staging-julkaisussa. Alkuvaiheessa oireena oli rolloutin jumittuminen viestiin "old replicas are pending termination", mutta juurisyy paljastui vasta podien eventeista.
