@@ -106,6 +106,12 @@ Pull request hylätään automaattisesti jos:
 
 Tämä estää rikkinäisen tai haavoittuvan koodin päätymisen main-haaraan.
 
+PR scan -ajon onnistuminen käytännössä:
+
+![PR Check workflow onnistuneena](pictures/pr-scan-success.png)
+
+Kuva: GitHub Actions -ajo, jossa Build and Test -jobi meni läpi ja Trivy-skannaus suoritettiin onnistuneesti.
+
 ### 5.2 Erillinen security-scan workflow
 
 Tiedosto: security-scan.yml
