@@ -20,27 +20,29 @@ Huom. Otsikot eivät sisällä ääkkösiä, sillä muuten markdown-ankkurit (ot
 
 ### 3. Projektin lahtotilanne
 - [3.1 Nykyisten testien teknologiat](#31-nykyisten-testien-teknologiat)  
-- [3.2 Nykyisten testien esimerkkikoodit ja suoritusajat](#32-nykyisten-testien-esimerkkikoodit-ja-suoritusajat)  
+- [3.2 H2-testien esimerkkikoodit ja suoritusajat](#32-h2-testien-esimerkkikoodit-ja-suoritusajat)  
 
 ### 4. Testcontainersin toteutus
 - [4.1 Esivalmistelut Testcontainersin kayttoonottoon](#41-esivalmistelut-testcontainersin-kayttoonottoon)  
 - [4.2 Testcontainers testiluokan kirjoittaminen](#42-testcontainers-testiluokan-kirjoittaminen)  
-- [4.3 Testien ajaminen](#43-testien-ajaminen)  
+- [4.3 Testcontainers testien ajaminen ja suoritusajat](#43-testcontainers-testien-ajaminen-ja-suoritusajat)  
 
-### 5. H2 vs. PostgreSQL
-- [5 Vertailu](#5-vertailu-h2-testien-seka-testcontainers-testien-valilla)
+### 5. H2 vs. Testcontainers + PostgreSQL
+- [5.1 Tietokantojen vertailu keskenään](#51-tietokantojen-vertailu-keskenaan)
+- [5.2 Sama testi, eri tietokanta, eri tulos](#52-sama-testi-eri-tietokanta-eri-tulos)
 
 ### 6. Haasteet ja opit
-- [7 Haasteet](#7-haasteet-ja-opit)
+- [6.1 Keskeiset havainnot ja kokemukset](#61-keskeiset-havainnot-ja-kokemukset)
 
 ### 7. Jatkokehitys
-- [8 Jatkokehitys](#8-jatkokehitys)
+- [7.1 Ideoita tulevaisuuteen](#71-ideoita-tulevaisuuteen)
+- [7.2 BONUS: Testcontainersin yhdistäminen CI/CD-putkeen](#72-bonus-testcontainersin-yhdistaminen-cicd-putkeen)
 
 ### 8. Yhteenveto
-- [9 Yhteenveto](#9-yhteenveto)
+- [8.1 Summa summarum](#81-summa-summarum)
 
 ### 9. Lahteet
-- [10 Lähteet](#10-lahteet)
+- [9.1 Lahdeluettelo](#91-lahdeluettelo)
 
 ------
 
@@ -191,7 +193,7 @@ TaskRepositoryTests hyödyntää useita Spring Boot Starter Tests -riippuvuuden 
 - AssertJ tarjoaa assertiometodeja, kuten `assertThat(task.getTaskTitle().isNotNull())`
 (JUnit User Guide s.a, Spring, s.a, AssertJ, s.a)
 
-### 3.2 Nykyisten testien esimerkkikoodit ja suoritusajat
+### 3.2 H2-testien esimerkkikoodit ja suoritusajat
 
 Alla on esimerkki yksinkertaisesta CRUD-toiminnon testistä, jossa testataan repositorykerroksen kykyä luoda ja tallentaa uusi task sujuvasti:
 ```java
@@ -514,7 +516,7 @@ class TCTaskRepositoryTests {
 
 ```
 
-### 4.3 Testien ajaminen
+### 4.3 Testcontainers testien ajaminen ja suoritusajat
 
 Sitten on aika ajaa valmis testiluokka! Docker Desktopista näkee Containers-välilehdeltä käynnissä olevat kontit:
 ![Kuva Docker Desktopin käyttöliittymästä, joka näyttää käynnissä olevat kontit](pictures/kontit.png)
@@ -620,15 +622,45 @@ Ja näin kontti käynnistyy vain kerran, ja testiluokat jakavat sen intanssin!
 *'Ilman singletonia' -sarakkeen arvot ovat laskennallisia (keskiarvo 
 yhdestä käynnistyskerrasta 2241 ms x luokkien määrä). Hyöty kasvaa lineaarisesti sen mukaan, mitä useampia luokkia on.
 
-## 5. H2 vs. Testcontainers
+## 5. H2 vs. Testcontainers + PostgreSQL
 
 ### 5.1 Tietokantojen vertailu keskenään
 
-placeholder höpötystä
+H2-tietokannan ja PostgreSQL-tietokannan toimintamekanismi ja arkkitehtuuri ovat erilaiset.
+- H2-tietokanta on avoimen lähdekoodin Java-pohjainen sulautetttu tietokanta(embedded database), joka toimii sovelluksen sisällä ilman erillistä palvelinasennusta. Se tukee sekä sulautettua palvelintilaa että in-memory-tilaa, jossa data ei ole siis pysyvää (non-persistent) (SaaSHub s.a., H2database s.a).
+- PostgreSQL on avoimen lähdekoodin objektireelatiokanta, joka toimii asiakas-palvelin-arkkitehtuurilla. Se mahdollistaa monimutkaisemmat ja ehdistyneemmätkin tietokantaoperaatiot ja -kyselyt. PostgreSQL on ACID-yhteensopiva (Atomicity, Consistency, Isolation, Durability), joka takaa datan eheyden. Data tallennetaan fyysiselle levylle ja on pysyvää (persistent). (SaaSHub s.a, )
+
+SaaSHub listaa sivuillaan H2- sekä PostgreSQL-tietokantojen hyötyjä että haittoja:
+
+H2 hyödyt:
+- Nopea testaus ilman palvelinta
+- Erittäin kevyt ja vaatii minimaalisen määrän resursseja
+- Helppokäyttöinen käyttöliittymä webbisivulla
+
+H2 haitat:
+- Rajoitettu skaalautuvuus
+- Puuttuvat edistyneemmät ominaisuudet
+- Menetetty data, jos tietokantaa ei ole konfiguroitu oikein
+
+PostgreSQL hyödyt:
+- Vankka tietokanta
+- Luotettava monimutkaisiin vaatimuksiin
+- Tukee edistyneempiä ominaisuuksia
+- ACID-yhteensopiva
+- Testcontainerin avulla voi testata PostgreSQL-instanssia vasten (=vastaa tuotantoympäristöä)
+
+PostgreSQL haitat:
+- Monimutkaisempi ottaa käyttöön 
+- Raskas resurssien kulutus (CPU ja muisti)
+- Jyrkempi oppimiskäyrä
+- Vaatii lisätyökaluja (Testcontainers, Docker Desktop) testaukseen
+- Testcontainersissa testausta hidastaa konttien käynnistys
+
+Tästä voi päätellä, että H2 kannattaa yleensä jättää vain devausvaiheeseen. Testcontainers on erinomainen kirjasto integraatiotestien tekemiseen. Kun halutaan tehdä integraatiotestejä, on suositeltavampaa tehdä sitä ympäristössä, joka vastaa mahdollisimman läheisesti tuotantoympäristöä, jotta vältytään yllättäviltä ongelmilta. Yhtä käytännön ongelmaa käsittelenkin seuraavassa aliluvussa.
 
 ### 5.2 Sama testi, eri tietokanta, eri tulos
 
-Jędrzej Frankowskin (2024) kirjoittamassa [ohjeessa](https://www.baeldung.com/spring-boot-testcontainers-integration-test) (2024) ilmenee eräs mielenkiintoinen bugi, kun sama kysely suoritetaan H2:lla ja PostgreSQL:lla. Jotta voin tutustua tuohon virheeseen oman koodin kautta, pyysin Claude Sonnet 4.6-kielimallia kirjoittamaan kyseiset testit raportille tuttuun taskRepositorylle molempiin tietokantoihin. 
+Jędrzej Frankowskin (2024) kirjoittamassa [ohjeessa](https://www.baeldung.com/spring-boot-testcontainers-integration-test) (2024) ilmenee eräs mielenkiintoinen bugi, kun sama kysely suoritetaan H2:lla verrattuna PostgreSQL:lla. Jotta voin tutustua tuohon virheeseen oman koodin kautta, pyysin Claude Sonnet 4.6-kielimallia kirjoittamaan kyseiset testit raportille tuttuun taskRepositorylle molempiin tietokantoihin. 
 
 Frankowskin raportoima buginen kysely on omassa esimerkissäni seuraavanlainen:
 
@@ -666,21 +698,35 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "t" of relation "tas
 
 Tässä esimerkissä paljastuu, kuinka jokin kysely voi mennä läpi kehitysvaiheessa käytetyssä H2-tietokannassa, mutta aiheuttaisi päänvaivaa oikeaa tietokantaa vasten tuotantoympäristössä. Frankowski (2024) tämän pohjalta toteaa, että [JPQL](https://www.codingshuttle.com/spring-boot-handbook/jpql-and-native-queries/)-kyselyjen (Springin oma kyselykieli) käyttäminen on yleisesti turvallisempaa, koska Spring silloin huolehtii, että kysely käännetään oikein kullekin tietokannalle.
 
-
-
-
-
-
-
-
-
 ## 6. Haasteet ja opit 
+
+### 6.1 Keskeiset havainnot ja kokemukset
+
+Testcontainers-kirjastoon huolella tutustuminen ja sen käyttöönotto Prokress-projektissa tarjosi arvokkaita oppeja ja toi esiin integraatiotestauksesta puolia, joita ei ollut edellisillä kursseilla edes tullut ajatelleeksi. En ollut koskaan tehnyt testausta H2-tietokannan ulkopuolella; tämä kokeilu todisti minulle, että in-memory-tietokannat voivat antaa joskus väärän turvallisuudentunteen, ja korosti tarvetta testata sovellusta tuotantovastaavassa ympäristössä.
+
+Teknisellä tasolla haasteita tuli kiitettävän vähän vastaan. Toki lähteiden esimerkkikoodin soveltaminen omaan projektiin tuo aina omanlaisia haasteitaan, etenkin, jos esimerkkikoodissa käytetään jotakin vanhentunutta tapaa tehdä asioista. Tarve konfiguroida Hibernate luomaan tietokantataulut automaattisesti käyttämällä `ddl-auto=create`-asetusta tuli myös yllätyksenä, sekä jotkut muut pienet seikat koodissa, mutta samalla oppi Javasta, Springistä, Hibernatesta ja JPA:sta sellaisia asioita, joita ei muuten olisi ajatellutkaan. Singleton ja Docker olivat vain termeinä tuttuja, mutta tässä pääsi syventymään niihin enemmnä ja heti soveltamaan tätä vastikään opittua tietoa.Suorituskyvyn osalta havaittiin konttien käynnistymisen aiheuttama viive (overhead), jota onnistuttiin kuitenkin optimoimaan em. Singleton-suunnittelumallilla käyttämällä, jolloin useat testiluokat jakoivat saman kontti-instanssin. 
 
 ## 7. Jatkokehitys
 
+### 7.1 Ideoita tulevaisuuteen
+
+### 7.2 BONUS: Testcontainersin yhdistäminen CI/CD-putkeen
+
 ## 8. Yhteenveto
 
+### 8.1 Summa summarum
+
+Integraatiotestaus on merkittävä kerros testipyramidissa. Integraatiotestit varmistavat eri moduulien, rajapintojen ja ulkoisten järjestelmien yhteentoimivuuden sovelluksessa. Seminaarityössä tutustutaan Testcontainers-kirjastoon, sen käyttöönottoon sekä devaus- ja tuotantotietokantojen eroavaisuuksiin. Testcontainers on kirjasto, jolla voidaan ajaa testit oikeaa tietokantaa vasten. Seminaarityössä käytetään PostgreSQL-moduulia esimerkkinä.
+
+Testit ja muu koodi toteutetaan Spring Boot -pohjaiseen Prokress-sovellukseen, jonka kontekstiin koodi on kirjoitettu. Tuotannossa Prokressilla on käytössä PostgreSQL-tietokanta. Lähtöpisteessä projektissa oli H2 in-memory tietokannalla toteutetut repositorytestit. H2-testit ovat nopeita ja sopivia devaukseen, mutta eivät välttämättä tarjoa yhtä laadukasta ja vankkaa integraatiotestausta verrattuna tuotantoympäristöä vastaavaan tietokantaan. PostgreSQL on raskaampi, mutta sillä testaamalla voidaan olla varmempia testitulosten luotettavuudesta sekä realistisuudesta. Tästä näytetään seminaarityössä käytännön esimerkki kyselystä, joka menee H2-tietokantatestistä läpi, mutta ei Testcontainersin PostgreSQL-testistä.
+
+Testcontainersin takana on valtavasti teknologiaa. Testcontainersin kyvyn ajaa testejä oikeaa tietokantaa vasten mahdollistaa Docker. Testin käynnistyessä tietokantainstanssi ajetaan Docker-konttina, joka mahdollistaa sen eristyneisyyden sekä riippumattomuuden isäntäkoneesta. Automaattisen resurssienhallinnan testien koko elinikinä hoitaa 'Moby Ryuk' -apukontti. Tietokantainstanssin käynnistäminen ennen testiä aiheuttaa pienen lisäviiveen testaukseen, jota pystyttiin kuitenkin hallitsemaan Singleton-sunnittelumallilla.
+
+Kaikki asiat huomioon otettuna voidaan todeta, että Testcontainers on varteenotettava työkalu ohjelmistotestauksessa, johon kehittäjien ja testaajien kannattaa tutustua. 
+
 ## 9. Lahteet
+
+### 9.1 Lahdeluettelo
 
 https://www.baeldung.com/spring-boot-built-in-testcontainers
 
@@ -724,55 +770,8 @@ https://java.testcontainers.org/test_framework_integration/junit_5/
 
 https://java.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers
 
+https://www.saashub.com/compare-postgresql-vs-h2-database
 
-
-# MARKDOWN OHJEET:
-
-
-# OTSIKOT:
-
-# Pääotsikko
-## Väliotsikko
-### Pienempi otsikko
-
-_____________________________________________
-
-
-# KOODI:
-
-1. Yksi rivi:
-`System.out.println("Hello");` 
-
-2. Useampi rivi: 
-
-```java
-System.out.println("Hello");
-```
-
-______________________________________________
-
-# LINKKI:
-
-[Projekti](https://github.com/Git-Happens-HH/Project-management-backend/tree/testcontainer)
-
-________________________________________________
-
-# PREVIEW:
-
-VS-codessa:
-
-ctrl+shift+v
-
-______________________________________________
-
-
-
-
-
-
-
-
-
-
+https://h2database.com/html/features.html
 
 
