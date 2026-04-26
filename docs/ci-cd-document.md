@@ -71,6 +71,10 @@ flowchart LR
 
 ## 5. CI/CD-putken koodi
 
+![CI/CD-putken koodirakenne](pictures/codestructure.png)
+
+Kuva: CI/CD-putken koodirakenne Prokressin backendissä.
+
 ### 5.1 PR-laatu- ja tietoturvaportti
 
 Tiedosto: pr-check.yml
