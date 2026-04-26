@@ -71,7 +71,7 @@ flowchart LR
 
 ## 5. CI/CD-putken koodi
 
-![CI/CD-putken koodirakenne](pictures/codestructure.png)
+![CI/CD-putken koodirakenne](pictures/code_structure.png)
 
 Kuva: CI/CD-putken koodirakenne Prokressin backendissä.
 
