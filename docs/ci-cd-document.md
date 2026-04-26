@@ -372,6 +372,11 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 - deployment ei riitä ilman verifiointia 
 - rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
 - GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
+- failaava security-scan voi olla onnistunut lopputulos, jos putki estää haavoittuvan buildin etenemisen
+- CI/CD-putken toimivuus riippuu myös ympäristön salaisuuksista (image pull secret + sovelluksen env-secretit), ei pelkästään workflow-koodista
+- oire ei aina ole juurisyy: rollout-jumi voi johtua taustalla image pull- tai secret-konfiguraatiosta
+- kun staging ja production ovat samassa infrastruktuurissa, testaus validoi ennen kaikkea prosessin (gate + deploy + verify), ei ympäristöerottelua
+- deploymentin ja podien eventien järjestelmällinen lukeminen nopeuttaa juurisyyn löytymistä merkittävästi
 
 ## 11. Jatkokehitysideat
 
@@ -388,6 +393,12 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 - Trivy documentation: https://trivy.dev/latest/
 - OpenShift docs: https://docs.openshift.com/
 - Spring Boot Actuator: https://docs.spring.io/spring-boot/reference/actuator/
+- GitHub Packages / Working with the Container registry: https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+- Managing your personal access tokens: https://docs.github.com/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+- Sonatype OSS Index auth required announcement: https://ossindex.sonatype.org/doc/auth-required
+- Kubernetes Secrets: https://kubernetes.io/docs/concepts/configuration/secret/
+- OpenShift Image pull secrets: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
+- OpenShift Deployments and rollout status: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
 
 ## 13. Video
 
