@@ -4,13 +4,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 // find task by title
     Optional<Task> findByTitle(String title);
 
     // search task by title (with a keyword)
-    Iterable<Task> findByTitleContainingIgnoreCase(String keyword);
+    List<Task> findByTitleContainingIgnoreCase(String keyword);
 
     // find task by id
     Optional<Task> findById(long taskId);
@@ -22,7 +25,13 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     Optional<Task> findByDeadline(LocalDateTime deadline);
 
     // find all tasks of a given assigned user
-    Iterable<Task> findByAssignedUser(AppUser user);
+    List<Task> findByAssignedUser(AppUser user);
+
+    @Modifying
+@Query(value = "UPDATE task t SET t.title = :newTitle WHERE t.title = :oldTitle",
+       nativeQuery = true)
+int updateTaskTitleNativeBuggy(@Param("newTitle") String newTitle,
+                               @Param("oldTitle") String oldTitle);
 
 
 }
