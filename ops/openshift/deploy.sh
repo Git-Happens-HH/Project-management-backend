@@ -23,5 +23,4 @@ oc apply -f "${SCRIPT_DIR}/deployment.yaml"
 echo "[deploy] Setting image ${IMAGE}"
 oc set image "deployment/${APP_NAME}" "${APP_NAME}=${IMAGE}" --record=true
 
-echo "[deploy] Triggering rollout"
-oc rollout restart "deployment/${APP_NAME}"
+echo "[deploy] Image updated; rollout is triggered by deployment change"
