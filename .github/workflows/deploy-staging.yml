@@ -72,6 +72,8 @@ jobs:
         run: chmod +x ops/openshift/*.sh
 
       - name: Deploy
+        env:
+          FORCE_DELETE_TERMINATING_PODS: "true"
         run: ops/openshift/deploy.sh "${{ secrets.OPENSHIFT_NAMESPACE_STAGING }}" "${{ needs.build-and-push.outputs.image_ref }}" "${{ env.APP_NAME }}"
 
       - name: Verify rollout and health
