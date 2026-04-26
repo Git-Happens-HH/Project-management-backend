@@ -71,6 +71,10 @@ flowchart LR
 
 ## 5. CI/CD-putken koodi
 
+![CI/CD-putken koodirakenne](pictures/code_structure.png)
+
+Kuva: CI/CD-putken koodirakenne Prokressin backendissä.
+
 ### 5.1 PR-laatu- ja tietoturvaportti
 
 Tiedosto: pr-check.yml
@@ -157,6 +161,8 @@ Käytännössä tämä jakaa kuorman kahteen kerrokseen:
 
 Kuva: GitHub Actions -ajo, jossa Prokress ei läpäissyt OWASP Dependency-Checkiä.
 
+Tuloksen tulkinta: CI/CD-putki toimi oikein, koska security gate pysäytti julkaisun. Itse projekti ei kuitenkaan läpäissyt asetettuja turvakriteereitä, koska riippuvuuksista löytyi tunnettuja haavoittuvuuksia.
+
 ### 5.3 Staging deploy
 
 Tiedosto: deploy-staging.yml
@@ -220,6 +226,14 @@ jobs:
 
 Approval gate pienentää inhimillisen virheen riskiä: tuotantoon ei voi julkaista vahingossa pelkällä pushilla, vaan julkaisu vaatii erillisen hyväksynnän.
 
+Production deploy -vaiheen onnistunut ajo:
+
+![Deploy to Production onnistuneena](pictures/production-deploy.png)
+
+Kuva: GitHub Actionsin `Deploy to Production (Approval Gate)` -jobi onnistui, mukaan lukien rolloutin ja health-checkin verifiointi.
+
+Tuloksen tulkinta: production-putki testattiin onnistuneesti end-to-end, joten julkaisuprosessi (manual approval gate + deploy + verify) on toimiva. Tässä projektissa staging ja production käyttävät kuitenkin käytännössä samaa OpenShift-ympäristöä, joten testi validoi ensisijaisesti prosessin luotettavuuden eikä erillisen tuotantoinfrastruktuurin eristystä.
+
 ### 5.5 OpenShift-manifestit ja operointiskriptit
 
 - ops/openshift/deployment.yaml
@@ -231,9 +245,14 @@ Approval gate pienentää inhimillisen virheen riskiä: tuotantoon ei voi julkai
 
 Rollback suoritetaan komennolla:
 
-./rollback.sh <namespace> <app>
+./ops/openshift/rollback.sh prokress-backend project-management-app
 
 Tämä palauttaa viimeisimmän toimivan version OpenShiftissa.
+
+![Rollback testaus](pictures/rollbacktest.png)
+
+Kuva: Rollback scriptin toimivuus testattu Git Bashilla.
+
 
 Skriptien vastuut:
 
@@ -263,6 +282,10 @@ Putki hyödyntää GitHub Secrets -muuttujia, joita ei kovakoodata workflowihin:
 - `NVD_API_KEY`
 
 Tällä vältetään arkaluontoisen tiedon päätyminen repositorioon ja mahdollistetaan ympäristökohtainen konfigurointi ilman koodimuutoksia.
+
+![Lisätyt salaisuudet](pictures/secrets.png)
+
+Kuva: Lisätyt enviroment- sekä repository secretit. 
 
 ### 5.8 Toteutunut staging-häiriö ja korjaavat muutokset
 
@@ -349,6 +372,11 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 - deployment ei riitä ilman verifiointia 
 - rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
 - GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
+- failaava security-scan voi olla onnistunut lopputulos, jos putki estää haavoittuvan buildin etenemisen
+- CI/CD-putken toimivuus riippuu myös ympäristön salaisuuksista (image pull secret + sovelluksen env-secretit), ei pelkästään workflow-koodista
+- oire ei aina ole juurisyy: rollout-jumi voi johtua taustalla image pull- tai secret-konfiguraatiosta
+- kun staging ja production ovat samassa infrastruktuurissa, testaus validoi ennen kaikkea prosessin (gate + deploy + verify), ei ympäristöerottelua
+- deploymentin ja podien eventien järjestelmällinen lukeminen nopeuttaa juurisyyn löytymistä merkittävästi
 
 ## 11. Jatkokehitysideat
 
@@ -365,6 +393,12 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 - Trivy documentation: https://trivy.dev/latest/
 - OpenShift docs: https://docs.openshift.com/
 - Spring Boot Actuator: https://docs.spring.io/spring-boot/reference/actuator/
+- GitHub Packages / Working with the Container registry: https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+- Managing your personal access tokens: https://docs.github.com/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+- Sonatype OSS Index auth required announcement: https://ossindex.sonatype.org/doc/auth-required
+- Kubernetes Secrets: https://kubernetes.io/docs/concepts/configuration/secret/
+- OpenShift Image pull secrets: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
+- OpenShift Deployments and rollout status: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
 
 ## 13. Video
 
