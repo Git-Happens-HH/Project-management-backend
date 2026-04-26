@@ -231,9 +231,14 @@ Approval gate pienentää inhimillisen virheen riskiä: tuotantoon ei voi julkai
 
 Rollback suoritetaan komennolla:
 
-./rollback.sh <namespace> <app>
+./ops/openshift/rollback.sh prokress-backend project-management-app
 
 Tämä palauttaa viimeisimmän toimivan version OpenShiftissa.
+
+![Rollback testaus](pictures/rollbacktest.png)
+
+Kuva: Rollback scriptin toimivuus testattu Git Bashilla.
+
 
 Skriptien vastuut:
 
