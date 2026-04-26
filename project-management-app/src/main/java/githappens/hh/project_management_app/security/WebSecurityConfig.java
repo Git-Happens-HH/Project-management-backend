@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                     authorizeRequests
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             .requestMatchers("/login", "/register", "/h2-console/**", "/error").permitAll()
+                            .requestMatchers("/actuator/health/**", "/actuator/info").permitAll()
                             .requestMatchers("/ws/**").permitAll()
                             .requestMatchers("/topic/**", "/app/**").permitAll()
                             .requestMatchers("/api/**").authenticated()
