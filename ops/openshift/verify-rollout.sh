@@ -13,7 +13,17 @@ ROUTE_HOST="${3:-}"
 oc project "${NAMESPACE}"
 
 echo "[verify] Waiting for rollout to complete"
-oc rollout status "deployment/${APP_NAME}" --timeout=300s
+if ! oc rollout status "deployment/${APP_NAME}" --timeout=600s; then
+  echo "[verify] Rollout failed or timed out; collecting diagnostics"
+  oc get deployment "${APP_NAME}" -o wide || true
+  oc describe deployment "${APP_NAME}" || true
+  oc get rs -l "app=${APP_NAME}" -o wide || true
+  oc get pods -l "app=${APP_NAME}" -o wide || true
+  oc describe pods -l "app=${APP_NAME}" || true
+  echo "[verify] Recent namespace events"
+  oc get events --sort-by=.metadata.creationTimestamp | tail -n 30 || true
+  exit 1
+fi
 
 echo "[verify] Checking pod readiness"
 oc get pods -l "app=${APP_NAME}" -o wide
