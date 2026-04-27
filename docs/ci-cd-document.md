@@ -2,49 +2,49 @@
 
 ## Sisällysluettelo
 
-1. [Johdanto](#1-johdanto)
-   1. [Rajaus ja tutkimuskysymykset](#11-rajaus-ja-tutkimuskysymykset)
+1. [Johdanto](#1-johdanto)  
+   1.1 [Rajaus ja tutkimuskysymykset](#11-rajaus-ja-tutkimuskysymykset)  
 
-2. [Tavoitteet](#2-tavoitteet)
+2. [Tavoitteet](#2-tavoitteet)  
 
-3. [Toteutusympäristö ja teknologiat](#3-toteutusymparisto-ja-teknologiat)
+3. [Toteutusympäristö ja teknologiat](#3-toteutusymparisto-ja-teknologiat)  
 
-4. [Ratkaisun arkkitehtuuri](#4-ratkaisun-arkkitehtuuri)
-   1. [Triggeri- ja vastuumatriisi](#41-triggeri--ja-vastuumatriisi)
+4. [Ratkaisun arkkitehtuuri](#4-ratkaisun-arkkitehtuuri)  
+   4.1 [Triggeri- ja vastuumatriisi](#41-triggeri--ja-vastuumatriisi)  
 
-5. [CI/CD-putken koodi](#5-cicd-putken-koodi)
-   1. [PR-laatu- ja tietoturvaportti](#51-pr-laatu--ja-tietoturvaportti)
-   2. [Erillinen security-scan workflow](#52-erillinen-security-scan-workflow)
-   3. [Staging deploy](#53-staging-deploy)
-   4. [Production deploy + approval gate](#54-production-deploy--approval-gate)
-   5. [OpenShift-manifestit ja operointiskriptit](#55-openshift-manifestit-ja-operointiskriptit)
-   6. [Sovelluksen Health Check -valmius OpenShiftiä varten](#56-sovelluksen-health-check--valmius-openshiftiä-varten)
-   7. [Salaisuuksien ja asetusten hallinta](#57-salaisuuksien-ja-asetusten-hallinta)
-   8. [Toteutunut staging-häiriö ja korjaavat muutokset](#58-toteutunut-staging-hairio-ja-korjaavat-muutokset)
+5. [CI/CD-putken koodi](#5-cicd-putken-koodi)  
+   5.1 [PR-laatu- ja tietoturvaportti](#51-pr-laatu--ja-tietoturvaportti)  
+   5.2 [Erillinen security-scan workflow](#52-erillinen-security-scan-workflow)  
+   5.3 [Staging deploy](#53-staging-deploy)  
+   5.4 [Production deploy + approval gate](#54-production-deploy--approval-gate)  
+   5.5 [OpenShift-manifestit ja operointiskriptit](#55-openshift-manifestit-ja-operointiskriptit)  
+   5.6 [Sovelluksen Health Check -valmius OpenShiftiä varten](#56-sovelluksen-health-check--valmius-openshiftiä-varten)  
+   5.7 [Salaisuuksien ja asetusten hallinta](#57-salaisuuksien-ja-asetusten-hallinta)  
+   5.8 [Toteutunut staging-häiriö ja korjaavat muutokset](#58-toteutunut-staging-hairio-ja-korjaavat-muutokset)  
 
-6. [Tuotantoputken hallinta ja julkaisumalli](#6-tuotantoputken-hallinta-ja-julkaisumalli)
+6. [Tuotantoputken hallinta ja julkaisumalli](#6-tuotantoputken-hallinta-ja-julkaisumalli)  
 
-7. [Ennen vs jälkeen](#7-ennen-vs-jalkeen)
-   1. [Julkaisuaika-mittaus: Ennen](#71-julkaisuaika-mittaus-ennen-manuaalinen-prosessi)
-   2. [Julkaisuaika-mittaus: Jälkeen](#72-julkaisuaika-mittaus-jalkeen-automatisoitu-prosessi)
+7. [Ennen vs jälkeen](#7-ennen-vs-jalkeen)  
+   7.1 [Julkaisuaika-mittaus: Ennen](#71-julkaisuaika-mittaus-ennen-manuaalinen-prosessi)  
+   7.2 [Julkaisuaika-mittaus: Jälkeen](#72-julkaisuaika-mittaus-jalkeen-automatisoitu-prosessi)  
 
-8. [Ongelmia ja niiden ratkaisut](#8-ongelmia-ja-niiden-ratkaisut)
+8. [Ongelmia ja niiden ratkaisut](#8-ongelmia-ja-niiden-ratkaisut)  
 
-9. [Käytännön häiriötilanne-esimerkki](#9-kaytannon-hairiotilanne-esimerkki)
+9. [Käytännön häiriötilanne-esimerkki](#9-kaytannon-hairiotilanne-esimerkki)  
 
-10. [Testcontainers-integraatio CI/CD-putkeen](#10-testcontainers-integraatio-cicd-putkeen)
+10. [Testcontainers-integraatio CI/CD-putkeen](#10-testcontainers-integraatio-cicd-putkeen)  
 
-11. [Mitä opin](#11-mita-opin)
+11. [Mitä opin](#11-mita-opin)  
 
-12. [Jatkokehitysideat](#12-jatkokehitysideat)
+12. [Jatkokehitysideat](#12-jatkokehitysideat)  
 
-13. [Yhteenveto](#13-yhteenveto)
+13. [Yhteenveto](#13-yhteenveto)  
 
-14. [Lähteet](#14-lahteet)
+14. [Lähteet](#14-lahteet)  
 
-15. [Video](#15-video)
+15. [Video](#15-video)  
 
-## 1 Johdanto
+## 1 Johdanto <a id="1-johdanto"></a>
 
 Tässä seminaarityössä kehitetään CI/CD-putki Ohjelmistoprojekti 2 -kurssin projektityölle.
 
@@ -54,7 +54,7 @@ Käyttäjät voivat luoda omia sekä jaettuja projekteja, määrittää tehtävi
 
 Työn fokus on backend-julkaisuketjussa (Spring Boot + Docker + OpenShift), koska se sisältää eniten operatiivista riskiä: build-epäonnistumiset, riippuvuushaavoittuvuudet, rollout-ongelmat ja tuotantokatkokset.
 
-### 1.1 Rajaus ja tutkimuskysymykset
+### 1.1 Rajaus ja tutkimuskysymykset <a id="11-rajaus-ja-tutkimuskysymykset"></a>
 
 Työ rajataan seuraaviin kysymyksiin:
 
@@ -63,7 +63,7 @@ Työ rajataan seuraaviin kysymyksiin:
 3. Miten palautuminen tehdään nopeasti, jos julkaisu epäonnistuu?
 4. Miten putken suorituskyky pidetään järkevänä ilman, että turvallisuus heikkenee?
 
-## 2 Tavoitteet 
+## 2 Tavoitteet <a id="2-tavoitteet"></a>
 
 Projektin tavoitteena on automatisoida build-, testaus-, turvallisuus- ja deploy-prosessit sekä parantaa julkaisuvarmuutta ja palautumiskykyä.
 
@@ -77,7 +77,7 @@ Hyväksymiskriteerit tälle työlle:
 - Production-deploy vaatii GitHub Environment -hyväksynnän.
 - Rollback voidaan suorittaa yhdellä komennolla ja sen onnistuminen voidaan todentaa.
 
-## 3. Toteutusympäristö ja teknologiat
+## 3 Toteutusympäristö ja teknologiat <a id="3-toteutusymparisto-ja-teknologiat"></a>
 
 - Sovellus: Spring Boot (Java 21), Maven, PostgreSQL
 - CI/CD: GitHub Actions
@@ -86,7 +86,7 @@ Hyväksymiskriteerit tälle työlle:
 - Security gate: OWASP Dependency-Check + Trivy
 - Operointi: rollout verify + rollback shell-skriptit
 
-## 4. Ratkaisun arkkitehtuuri
+## 4 Ratkaisun arkkitehtuuri <a id="4-ratkaisun-arkkitehtuuri"></a>
 
 ```mermaid
 flowchart LR
@@ -104,7 +104,7 @@ flowchart LR
   K --> L[Rollback if needed]
 ```
 
-### 4.1 Triggeri- ja vastuumatriisi
+### 4.1 Triggeri- ja vastuumatriisi <a id="41-triggeri--ja-vastuumatriisi"></a>
 
 | Workflow | Triggeri | Päätarkoitus | Lopputulos |
 |---|---|---|---|
@@ -113,13 +113,13 @@ flowchart LR
 | `deploy-staging.yml` | Push -> `main` + manuaalinen | Staging-julkaisu ja validointi | Toimiva staging-versio |
 | `deploy-production.yml` | Tag `v*.*.*` + manuaalinen | Hallittu tuotantojulkaisu approval gatella | Tuotantoversio tai estetty julkaisu |
 
-## 5. CI/CD-putken koodi
+## 5 CI/CD-putken koodi <a id="5-cicd-putken-koodi"></a>
 
 ![CI/CD-putken koodirakenne](pictures/code_structure.png)
 
 Kuva: CI/CD-putken koodirakenne Prokressin backendissä.
 
-### 5.1 PR-laatu- ja tietoturvaportti
+### 5.1 PR-laatu- ja tietoturvaportti <a id="51-pr-laatu--ja-tietoturvaportti"></a>
 
 Tiedosto: [pr-check.yml](../.github/workflows/pr-check.yml)
 
@@ -160,7 +160,7 @@ PR scan -ajon onnistuminen käytännössä:
 
 Kuva: GitHub Actions -ajo, jossa Build and Test -jobi meni läpi ja Trivy-skannaus suoritettiin onnistuneesti.
 
-### 5.2 Erillinen security-scan workflow
+### 5.2 Erillinen security-scan workflow <a id="52-erillinen-security-scan-workflow"></a>
 
 Tiedosto: [security-scan.yml](../.github/workflows/security-scan.yml)
 
@@ -207,7 +207,7 @@ Kuva: GitHub Actions -ajo, jossa Prokress ei läpäissyt OWASP Dependency-Checki
 
 Tuloksen tulkinta: CI/CD-putki toimi oikein, koska security gate pysäytti julkaisun. Itse projekti ei kuitenkaan läpäissyt asetettuja turvakriteereitä, koska riippuvuuksista löytyi tunnettuja haavoittuvuuksia.
 
-### 5.3 Staging deploy
+### 5.3 Staging deploy <a id="53-staging-deploy"></a>
 
 Tiedosto: [deploy-staging.yml](../.github/workflows/deploy-staging.yml)
 
@@ -245,7 +245,7 @@ Deploy to Staging -vaiheen onnistunut ajo:
 
 Kuva: GitHub Actionsin `Deploy to Staging` -jobi, jossa image deployataan OpenShiftiin ja rollout verifioidaan.
 
-### 5.4 Production deploy + approval gate
+### 5.4 Production deploy + approval gate <a id="54-production-deploy--approval-gate"></a>
 
 Tiedosto: [deploy-production.yml](../.github/workflows/deploy-production.yml)
 
@@ -278,7 +278,7 @@ Kuva: GitHub Actionsin `Deploy to Production (Approval Gate)` -jobi onnistui, mu
 
 Tuloksen tulkinta: production-putki testattiin onnistuneesti end-to-end, joten julkaisuprosessi (manual approval gate + deploy + verify) on toimiva. Tässä projektissa staging ja production käyttävät kuitenkin käytännössä samaa OpenShift-ympäristöä, joten testi validoi ensisijaisesti prosessin luotettavuuden eikä erillisen tuotantoinfrastruktuurin eristystä.
 
-### 5.5 OpenShift-manifestit ja operointiskriptit
+### 5.5 OpenShift-manifestit ja operointiskriptit <a id="55-openshift-manifestit-ja-operointiskriptit"></a>
 
 - [ops/openshift/deployment.yaml](../ops/openshift/deployment.yaml)
 - [ops/openshift/service.yaml](../ops/openshift/service.yaml)
@@ -304,7 +304,7 @@ Skriptien vastuut:
 - `verify-rollout.sh`: odottaa rolloutin valmistumisen ja tekee tarvittaessa ulkoisen health-checkin (`/actuator/health`).
 - `rollback.sh`: palauttaa edellisen revision ja odottaa rollbackin valmistumisen.
 
-### 5.6 Sovelluksen Health Check -valmius Openshiftiä varten
+### 5.6 Sovelluksen Health Check -valmius OpenShiftiä varten <a id="56-sovelluksen-health-check--valmius-openshiftiä-varten"></a>
 
 Sovellukseen lisättiin:
 
@@ -313,7 +313,7 @@ Sovellukseen lisättiin:
 
 Tämä oli kriittinen osa putkea, koska deploy ilman todellista health-varmistusta ei takaa, että sovellus on oikeasti käyttökelpoinen.
 
-### 5.7 Salaisuuksien ja asetusten hallinta
+### 5.7 Salaisuuksien ja asetusten hallinta <a id="57-salaisuuksien-ja-asetusten-hallinta"></a>
 
 Putki hyödyntää GitHub Secrets -muuttujia, joita ei kovakoodata workflowihin:
 
@@ -331,7 +331,7 @@ Tällä vältetään arkaluontoisen tiedon päätyminen repositorioon ja mahdoll
 
 Kuva: Lisätyt enviroment- sekä repository secretit. 
 
-### 5.8 Toteutunut staging-häiriö ja korjaavat muutokset
+### 5.8 Toteutunut staging-häiriö ja korjaavat muutokset <a id="58-toteutunut-staging-hairio-ja-korjaavat-muutokset"></a>
 
 Projektissa tuli vastaan ketjuvirhe staging-julkaisussa. Alkuvaiheessa oireena oli rolloutin jumittuminen viestiin "old replicas are pending termination", mutta juurisyy paljastui vasta podien eventeista.
 
@@ -357,7 +357,7 @@ Korjaus:
   - `POSTGRESQL_PASSWORD`
 4. Staging- ja production-workflowihin lisättiin concurrency-lukitus estämään päällekkäiset deploy-ajot samaan ympäristöön.
 
-## 6. Tuotantoputken hallinta ja julkaisumalli
+## 6 Tuotantoputken hallinta ja julkaisumalli <a id="6-tuotantoputken-hallinta-ja-julkaisumalli"></a>
 
 Käyttöön otettiin seuraavat hallintakäytannot:
 - branch protection `main`-branchille
@@ -369,7 +369,7 @@ Käyttöön otettiin seuraavat hallintakäytannot:
 Tällä mallilla julkaisu on hallittu ja toistettava prosessi.
 
 
-## 7. Ennen vs jälkeen
+## 7 Ennen vs jälkeen <a id="7-ennen-vs-jalkeen"></a>
 
 | Mittari | Ennen | Jälkeen |
 |---|---|---|
@@ -380,7 +380,7 @@ Tällä mallilla julkaisu on hallittu ja toistettava prosessi.
 | Rollback | Ei vakioitua prosessia | Scriptattu rollback |
 | Julkaisun toistettavuus | Vaihteleva | Dokumentoitu ja toistettava |
 
-### 7.1 Julkaisuaika-mittaus: Ennen (manuaalinen prosessi)
+### 7.1 Julkaisuaika-mittaus: Ennen <a id="71-julkaisuaika-mittaus-ennen-manuaalinen-prosessi"></a>
 
 Alla olevat ajat ovat arvioita:
 
@@ -397,7 +397,7 @@ Alla olevat ajat ovat arvioita:
 
 Jokainen manuaalinen vaihe sisältää myös virheriskin (väärä namespace, väärä image tag, copy-paste virhe jne).
 
-### 7.2 Julkaisuaika-mittaus: Jälkeen (automatisoitu prosessi)
+### 7.2 Julkaisuaika-mittaus: Jälkeen <a id="72-julkaisuaika-mittaus-jalkeen-automatisoitu-prosessi"></a>
 
 Nämä luvut on mitattu dokumentin kuvissa näkyvistä GitHub Actions -ajoista.
 
@@ -413,7 +413,7 @@ Huomio:
 - OWASP Security Scan voi olla ensimmäisellä ajolla hidas NVD-datan päivityksen takia.
 - `NVD_API_KEY` nopeuttaa skannauksia merkittävästi.
 
-## 8. Ongelmia ja niiden ratkaisut
+## 8 Ongelmia ja niiden ratkaisut <a id="8-ongelmia-ja-niiden-ratkaisut"></a>
 
 | Ongelma | Juuri-syy | Ratkaisu |
 |---|---|---|
@@ -427,7 +427,7 @@ Huomio:
 
 Keskeinen oppi: tuotantokelpoinen putki ei ole vain "automaattinen deploy", vaan kontrollien ketju, jossa jokainen vaihe tuottaa todisteen julkaistavuudesta.
 
-## 9 Käytännön häiriötilanne-esimerkki
+## 9 Käytännön häiriötilanne-esimerkki <a id="9-kaytannon-hairiotilanne-esimerkki"></a>
 
 Seuraava skenaario kuvaa realistisen tilanteen:
 
@@ -439,7 +439,7 @@ Seuraava skenaario kuvaa realistisen tilanteen:
 
 Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun, harjoiteltavan toimenpiteen.
 
-## 10. Testcontainers-integraatio CI/CD-putkeen
+## 10 Testcontainers-integraatio CI/CD-putkeen <a id="10-testcontainers-integraatio-cicd-putkeen"></a>
 
 ### Millä tavalla Testcontainers liittyy tähän projektiin
 
@@ -476,7 +476,7 @@ Ja tärkeintä: jos tietokanta-integraatio ei toimi, PR pysyy kiinni PR-vaiheess
 
 Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build → test (Testcontainers) → security scan → merge. Testit varmistavat että koodi toimii oikean tietokannan kanssa, ennen kuin mitään deployataan. Yhdessä meidän approval-gaten kanssa se on melko solid logiikka sille että staging-deployissa ei tule yllätyksiä.
 
-## 11. Mitä opin
+## 11 Mitä opin <a id="11-mita-opin"></a>
 
 - tuotantokelpoinen CI/CD on ennen kaikkea riskienhallintaa
 - security gate tulee suunnitella niin, etta se on vakaa ja toistettava
@@ -489,7 +489,7 @@ Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build �
 - kun staging ja production ovat samassa infrastruktuurissa, testaus validoi ennen kaikkea prosessin (gate + deploy + verify), ei ympäristöerottelua
 - deploymentin ja podien eventien järjestelmällinen lukeminen nopeuttaa juurisyyn löytymistä merkittävästi
 
-## 12. Jatkokehitysideat
+## 12 Jatkokehitysideat <a id="12-jatkokehitysideat"></a>
 
 - smoke-testit stagingiin
 - image signing (Cosign)
@@ -497,13 +497,13 @@ Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build �
 - mittarit (lead time, MTTR)
 - dependency-checkin cache optimointi
 
-## 13. Yhteenveto
+## 13 Yhteenveto <a id="13-yhteenveto"></a>
 
 Tässä työssä rakennettiin tuotantokelpoinen CI/CD-putki Spring Boot -sovellukselle, joka julkaistaan OpenShift/Rahti-ympäristöön. Automatisoitu putki kattaa buildin, testauksen, turvallisuusskannauksen, staging- ja tuotantodeployn sekä rollbackin.
 
 Manuaaliseen prosessiin verrattuna julkaisu on nyt nopeampi, toistettavampi ja vähemmän virhealtis. Turvallisuutta parantavat PR-portit, erillinen security scan, hyväksyntäportti tuotantoon sekä automatisoidut health-checkit ja rollback. Testcontainers-integraatio mahdollistaa aidon tietokantatestaamisen jo PR-vaiheessa, mikä vähentää tuotantoyllätyksiä. Kokonaisuutena ratkaisu parantaa ohjelmiston laatua, julkaisuvarmuutta ja tiimin kehityskokemusta.
 
-## 14. Lähteet
+## 14 Lähteet <a id="14-lahteet"></a>
 
 Docker 2024. Running Testcontainers tests using GitHub Actions. Luettavissa: https://www.docker.com/blog/running-testcontainers-tests-using-github-actions/
 . Luettu: 26.4.2026.
@@ -540,6 +540,7 @@ Spring 2026. Spring Boot Actuator. Luettavissa: https://docs.spring.io/spring-bo
 
 Trivy 2026. Trivy documentation. Luettavissa: https://trivy.dev/latest/
 . Luettu: 25.4.2026.
-## 15. Video
+
+## 15 Video <a id="15-video"></a>
 
 - Placeholder
