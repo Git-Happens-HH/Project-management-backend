@@ -77,7 +77,7 @@ Hyväksymiskriteerit tälle työlle:
 - Production-deploy vaatii GitHub Environment -hyväksynnän.
 - Rollback voidaan suorittaa yhdellä komennolla ja sen onnistuminen voidaan todentaa.
 
-## 3. Toteutusymparistö ja teknologiat
+## 3. Toteutusympäristö ja teknologiat
 
 - Sovellus: Spring Boot (Java 21), Maven, PostgreSQL
 - CI/CD: GitHub Actions
