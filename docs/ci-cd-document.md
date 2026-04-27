@@ -1,5 +1,49 @@
 # CI/CD-putken tuotantokelpoistaminen (Spring Boot + Docker + Rahti/OpenShift)
 
+## Sisällysluettelo
+
+1. [Johdanto](#1-johdanto)
+   1. [Rajaus ja tutkimuskysymykset](#11-rajaus-ja-tutkimuskysymykset)
+
+2. [Tavoitteet](#2-tavoitteet)
+
+3. [Toteutusympäristö ja teknologiat](#3-toteutusymparisto-ja-teknologiat)
+
+4. [Ratkaisun arkkitehtuuri](#4-ratkaisun-arkkitehtuuri)
+   1. [Triggeri- ja vastuumatriisi](#41-triggeri--ja-vastuumatriisi)
+
+5. [CI/CD-putken koodi](#5-cicd-putken-koodi)
+   1. [PR-laatu- ja tietoturvaportti](#51-pr-laatu--ja-tietoturvaportti)
+   2. [Erillinen security-scan workflow](#52-erillinen-security-scan-workflow)
+   3. [Staging deploy](#53-staging-deploy)
+   4. [Production deploy + approval gate](#54-production-deploy--approval-gate)
+   5. [OpenShift-manifestit ja operointiskriptit](#55-openshift-manifestit-ja-operointiskriptit)
+   6. [Sovelluksen Health Check -valmius OpenShiftiä varten](#56-sovelluksen-health-check--valmius-openshiftiä-varten)
+   7. [Salaisuuksien ja asetusten hallinta](#57-salaisuuksien-ja-asetusten-hallinta)
+   8. [Toteutunut staging-häiriö ja korjaavat muutokset](#58-toteutunut-staging-hairio-ja-korjaavat-muutokset)
+
+6. [Tuotantoputken hallinta ja julkaisumalli](#6-tuotantoputken-hallinta-ja-julkaisumalli)
+
+7. [Ennen vs jälkeen](#7-ennen-vs-jalkeen)
+   1. [Julkaisuaika-mittaus: Ennen](#71-julkaisuaika-mittaus-ennen-manuaalinen-prosessi)
+   2. [Julkaisuaika-mittaus: Jälkeen](#72-julkaisuaika-mittaus-jalkeen-automatisoitu-prosessi)
+
+8. [Ongelmia ja niiden ratkaisut](#8-ongelmia-ja-niiden-ratkaisut)
+
+9. [Käytännön häiriötilanne-esimerkki](#9-kaytannon-hairiotilanne-esimerkki)
+
+10. [Testcontainers-integraatio CI/CD-putkeen](#10-testcontainers-integraatio-cicd-putkeen)
+
+11. [Mitä opin](#11-mita-opin)
+
+12. [Jatkokehitysideat](#12-jatkokehitysideat)
+
+13. [Yhteenveto](#13-yhteenveto)
+
+14. [Lähteet](#14-lahteet)
+
+15. [Video](#15-video)
+
 ## 1 Johdanto
 
 Tässä seminaarityössä kehitetään CI/CD-putki Ohjelmistoprojekti 2 -kurssin projektityölle.
@@ -496,7 +540,6 @@ Spring 2026. Spring Boot Actuator. Luettavissa: https://docs.spring.io/spring-bo
 
 Trivy 2026. Trivy documentation. Luettavissa: https://trivy.dev/latest/
 . Luettu: 25.4.2026.
-
 ## 15. Video
 
 - Placeholder
