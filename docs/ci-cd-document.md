@@ -378,7 +378,45 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 - kun staging ja production ovat samassa infrastruktuurissa, testaus validoi ennen kaikkea prosessin (gate + deploy + verify), ei ympäristöerottelua
 - deploymentin ja podien eventien järjestelmällinen lukeminen nopeuttaa juurisyyn löytymistä merkittävästi
 
-## 11. Jatkokehitysideat
+## 11. Testcontainers-integraatio CI/CD-putkeen
+
+### Millä tavalla Testcontainers liittyy tähän projektiin
+
+Tiimin toinen jäsen teki seminaarityönsä [Testcontainersista](testcontainers.md), ja me päätimme ottaa sen käyttöön myös meidän CI/CD-putkessa. Osoittautui että Testcontainers sopii loistavasti putkeen. 
+
+### Miten testcontainers parantaa CI/CD-putkea?
+
+Normaalisti CI-pipelinessa pitäisi joko:
+- Käyttää kevyitä mock-ratkaisuja testeissä (H2), jotka eivät vastaa oikeaa tuotantoa
+- Tai ylläpitää erillistä docker-compose -setup:ia, joka on aina poissa synkasta koodin kanssa
+
+Testcontainers ratkaisee tämän sitten niin, että testit itse käynnistävät Docker-konteissa oikean PostgreSQL-instanssin, kun `mvn clean verify` ajetaan, ja sammuttavat sen automaattisesti kun testit on tehty. Ei erillistä setup-scriptiä, ei manuaalista tietokanta-alustusta.
+
+### Mitä hyötyä siitä käytännössä on
+
+**1. Testit testaavat oikeasti tuotanto-yhteensopivuutta**
+- H2-testit, vaikka toimivat, eivät koskaan takaa että samaa koodi toimii PostgreSQL:n kanssa
+- Nyt testit ajautuvat oikeaa tietokantaa vasten, ja jos jotain on vialla, nähdään se PR-vaiheessa eikä tuotannossa
+- Säästää häntä kautta häiriöiltä
+
+**2. Workflow-tiedostot pysyvät yksinkertaisina**
+- Ei tarvi ylläpitää erillisiä docker-compose -tiedostoja workflowissa
+- Koko logiikka on sovelluskoodissa, mihin se kuuluukin
+- Aika paljon parempi maintainability
+
+**3. Kehittäjät voivat ajaa testit samalla tavalla lokaalisti**
+- `mvn clean verify` toimii omalla koneella samalla tavalla kuin CI:ssä
+- Kun jokin menee pieleen, saa debuggattua paikallisesti ilman CI-kontekstia
+
+Ja tärkeintä: jos tietokanta-integraatio ei toimi, PR pysyy kiinni PR-vaiheessa. Ei päädy main-haaraan, ei pidemmälle putkeen.
+
+
+### Miten se vaikutti meidän projektiimme
+
+Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build → test (Testcontainers) → security scan → merge. Testit varmistavat että koodi toimii oikean tietokannan kanssa, ennen kuin mitään deployataan. Yhdessä meidän approval-gaten kanssa se on melko solid logiikka sille että staging-deployissa ei tule yllätyksiä.
+
+
+## 13. Jatkokehitysideat
 
 - smoke-testit stagingiin
 - image signing (Cosign)
@@ -386,7 +424,7 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 - mittarit (lead time, MTTR)
 - dependency-checkin cache optimointi
 
-## 12. Lähteet
+## 14. Lähteet
 
 - GitHub Actions documentation: https://docs.github.com/actions
 - OWASP Dependency-Check: https://jeremylong.github.io/DependencyCheck/
@@ -399,7 +437,8 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 - Kubernetes Secrets: https://kubernetes.io/docs/concepts/configuration/secret/
 - OpenShift Image pull secrets: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
 - OpenShift Deployments and rollout status: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
+- Docker: Running Testcontainers tests using GitHub Actions: https://www.docker.com/blog/running-testcontainers-tests-using-github-actions/
 
-## 13. Video
+## 15. Video
 
 - Placeholder
