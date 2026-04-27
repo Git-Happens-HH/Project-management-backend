@@ -335,6 +335,37 @@ Tällä mallilla julkaisu on hallittu ja toistettava prosessi.
 | Rollback | Ei vakioitua prosessia | Scriptattu rollback |
 | Julkaisun toistettavuus | Vaihteleva | Dokumentoitu ja toistettava |
 
+### 7.1 Julkaisuaika-mittaus: Ennen (manuaalinen prosessi)
+
+Arvioidut ajat vaiheiden suorittamisesta manuaalisesti:
+
+| Vaihe | Tyypillinen aika | Kuvaus |
+|---|---|---|
+| 1. Paikallinen build + testit | 5 min | `mvn clean verify` omalla kehittäjäkoneella |
+| 2. Docker image build | 3-5 min | `docker build` paikallisesti |
+| 3. Image push GHCR:ään | 2-3 min | `docker push` verkkoyhteydestä riippuen |
+| 4. SSH Rahtiin ja deploy staging | 5 min | `oc login` ja deploy-skriptien suoritus käsin |
+| 5. Staging manuaalinen testaus | 5  min | Selaimella UI:n testaaminen, endpoint-tarkistukset |
+| 6. Production approval odotus | 5 min min | Waiting for Slack/email response tiimissä |
+| 7. Production manual deploy | 5 min | SSH käsin, skriptit, tarkistukset |
+| **Yhteensä** | **30-33 min** |  |
+
+Lisäksi manuaalista vaihetta on 7, joista jokainen sisältää virheriskin (väärä namespace, väärä image tag, copy-paste virhe jne).
+
+### 7.2 Julkaisuaika-mittaus: Jälkeen (automatisoitu prosessi)
+
+Nämä luvut on mitattu dokumentin kuvissa näkyvistä GitHub Actions -ajoista.
+
+| Vaihe | Mitattu aika | Kuvaus |
+|---|---|---|
+| pr-check.yml (build + test + Trivy) | 1 min 10 s | PR Check -kuvassa näkyvä onnistunut ajo |
+| deploy-staging.yml (build + push + deploy + verify) | 1 min 15 s | Build and Push Image 49 s + Deploy to Staging 26 s |
+| deploy-production.yml (deploy + verify) | 19 s | Deploy Production -kuvassa näkyvä onnistunut ajo |
+| GitHub approval vaihe | < 1 min | Klikkaus approval -nappia |
+| **Yhteensä** | **noin 3 min** | |
+
+Vertailuna manuaaliseen arvioon (~32 min) automatisointi lyhentää julkaisuketjun läpimenoa noin 29 minuuttia, eli noin 91 %.
+
 Huomio:
 - OWASP Security Scan voi olla ensimmäisellä ajolla hidas NVD-datan päivityksen takia.
 - `NVD_API_KEY` nopeuttaa skannauksia merkittävästi.
