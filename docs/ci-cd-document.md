@@ -449,7 +449,7 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 
 ### Millä tavalla Testcontainers liittyy tähän projektiin
 
-Tiimin toinen jäsen teki seminaarityönsä [Testcontainersista](https://github.com/Git-Happens-HH/Project-management-backend/blob/main/docs/testcontainers.md), ja me päätimme ottaa sen käyttöön myös meidän CI/CD-putkessa. Osoittautui että Testcontainers sopii loistavasti putkeen. 
+Tiimin toinen jäsen teki seminaarityönsä Testcontainersista, ja me päätimme ottaa sen käyttöön myös meidän CI/CD-putkessa. Osoittautui että Testcontainers sopii loistavasti putkeen. 
 
 ### Miten testcontainers parantaa CI/CD-putkea?
 
@@ -559,9 +559,6 @@ Red Hat s.a. Using image pull secrets. Luettavissa: https://docs.openshift.com/c
 
 Sanchez J. 24.08.2025. Spring Boot Actuator. Baeldungin blogi. Luettavissa: https://www.baeldung.com/spring-boot-actuators
 . Luettu: 23.4.2026
-
-Sonatype s.a. OSS Index authentication required. Luettavissa: https://ossindex.sonatype.org/doc/auth-required
-. Luettu: 25.4.2026
 
 Trivy s.a. Trivy documentation. Luettavissa: https://trivy.dev/docs/latest/guide/
 . Luettu: 25.4.2026
