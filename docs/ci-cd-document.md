@@ -324,8 +324,10 @@ Käyttöön otettiin seuraavat hallintakäytannot:
 
 Tällä mallilla julkaisu on hallittu ja toistettava prosessi.
 
+
 ## 7. Ennen vs jälkeen
 
+| Mittari | Ennen | Jälkeen |
 |---|---|---|
 | PR-laadunvarmistus | Ei yhtenäistä gatea | Build + test + Trivy automaattisesti |
 | Riippuvuusturvallisuus | Manuaalinen tai satunnainen | OWASP Security Scan erillisessä workflowissa |
