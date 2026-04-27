@@ -553,7 +553,7 @@ Red Hat s.a. Understanding deployments and DeploymentConfigs. Luettavissa: https
 Red Hat s.a. Using image pull secrets. Luettavissa: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
 . Luettu: 24.4.2026
 
-Sanchez J. Spring Boot Actuator. Baeldungin blogi. Luettavissa: https://www.baeldung.com/spring-boot-actuators
+Sanchez J. 24.08.2025. Spring Boot Actuator. Baeldungin blogi. Luettavissa: https://www.baeldung.com/spring-boot-actuators
 . Luettu: 23.4.2026
 
 Sonatype s.a. OSS Index authentication required. Luettavissa: https://ossindex.sonatype.org/doc/auth-required
