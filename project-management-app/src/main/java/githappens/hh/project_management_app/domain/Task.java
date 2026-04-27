@@ -157,8 +157,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task [taskList=" + taskList.getTitle() + ", assignedUser=" 
-                + assignedUser.getFirstName() + " " + assignedUser.getLastName() 
-                + ", title=" + title + ", description=" + description + ", createdBy=" + createdBy + "deadline=" + deadline + "]";
+        return "TaskList=" + taskList + ", title=" + title + ", description=" + description
+                + ", deadline=" + deadline + ", comments=" + comments + "]";
     }
+   
 }
