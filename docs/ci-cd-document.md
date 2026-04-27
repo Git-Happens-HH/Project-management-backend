@@ -331,7 +331,7 @@ Tällä vältetään arkaluontoisen tiedon päätyminen repositorioon ja mahdoll
 
 ![Lisätyt salaisuudet](pictures/secrets.png)
 
-Kuva: Lisätyt enviroment- sekä repository secretit. 
+Kuva: Lisätyt environment- sekä repository secretit. 
 
 ### 5.8 Toteutunut staging-häiriö ja korjaavat muutokset <a id="58-toteutunut-staging-hairio-ja-korjaavat-muutokset"></a>
 
@@ -361,7 +361,7 @@ Korjaus:
 
 ## 6 Tuotantoputken hallinta ja julkaisumalli <a id="6-tuotantoputken-hallinta-ja-julkaisumalli"></a>
 
-Käyttöön otettiin seuraavat hallintakäytannot:
+Käyttöön otettiin seuraavat hallintakäytnnot:
 - branch protection `main`-branchille
 - merge vain PR:n kautta
 - pakollinen onnistunut status check ennen mergeä
@@ -449,7 +449,7 @@ Tiimin toinen jäsen teki seminaarityönsä [Testcontainersista](testcontainers.
 
 ### Miten testcontainers parantaa CI/CD-putkea?
 
-Normaalisti CI-pipelinessa pitäisi joko:
+Normaalisti CI-pipelinessä pitäisi joko:
 - Käyttää kevyitä mock-ratkaisuja testeissä (H2), jotka eivät vastaa oikeaa tuotantoa
 - Tai ylläpitää erillistä docker-compose -setup:ia, joka on aina poissa synkasta koodin kanssa
 
@@ -458,12 +458,12 @@ Testcontainers ratkaisee tämän sitten niin, että testit itse käynnistävät 
 ### Mitä hyötyä siitä käytännössä on
 
 **1. Testit testaavat oikeasti tuotanto-yhteensopivuutta**
-- H2-testit, vaikka toimivat, eivät koskaan takaa että samaa koodi toimii PostgreSQL:n kanssa
+- H2-testit, vaikka toimivat, eivät koskaan takaa että sama koodi toimii PostgreSQL:n kanssa
 - Nyt testit ajautuvat oikeaa tietokantaa vasten, ja jos jotain on vialla, nähdään se PR-vaiheessa eikä tuotannossa
-- Säästää häntä kautta häiriöiltä
+- Ehkäisee häiriöitä
 
 **2. Workflow-tiedostot pysyvät yksinkertaisina**
-- Ei tarvi ylläpitää erillisiä docker-compose -tiedostoja workflowissa
+- Ei tarvitse ylläpitää erillisiä docker-compose -tiedostoja workflowissa
 - Koko logiikka on sovelluskoodissa, mihin se kuuluukin
 - Aika paljon parempi maintainability
 
@@ -476,12 +476,12 @@ Ja tärkeintä: jos tietokanta-integraatio ei toimi, PR pysyy kiinni PR-vaiheess
 
 ### Miten se vaikutti meidän projektiimme
 
-Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build → test (Testcontainers) → security scan → merge. Testit varmistavat että koodi toimii oikean tietokannan kanssa, ennen kuin mitään deployataan. Yhdessä meidän approval-gaten kanssa se on melko solid logiikka sille että staging-deployissa ei tule yllätyksiä.
+Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build → test (Testcontainers) → security scan → merge. Testit varmistavat että koodi toimii oikean tietokannan kanssa, ennen kuin mitään deployataan. Yhdessä meidän approval-gaten kanssa se on melko solidi logiikka sille että staging-deployssa ei tule yllätyksiä.
 
 ## 11 Mitä opin <a id="11-mita-opin"></a>
 
 - tuotantokelpoinen CI/CD on ennen kaikkea riskienhallintaa
-- security gate tulee suunnitella niin, etta se on vakaa ja toistettava
+- security gate tulee suunnitella niin, että se on vakaa ja toistettava
 - deployment ei riitä ilman verifiointia 
 - rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
 - GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
