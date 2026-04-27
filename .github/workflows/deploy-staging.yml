@@ -88,3 +88,4 @@ jobs:
           else
             ops/openshift/verify-rollout.sh "${{ secrets.OPENSHIFT_NAMESPACE_STAGING }}" "${{ env.APP_NAME }}"
           fi
+
