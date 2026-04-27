@@ -578,5 +578,3 @@ Lähdekoodi:
 [Project Management Backend – CI/CD seminaarityö](https://github.com/Git-Happens-HH/Project-management-backend/tree/feature/ci-cd-seminaarityo)
 Dokumentaatio:
 [Project Management Backend – CI/CD seminaarityön dokumentaatio](https://github.com/Git-Happens-HH/Project-management-backend/blob/feature/ci-cd-seminaarityo/docs/ci-cd-document.md)
-
-Repositorio sisältää GitHub Actions -workflowt, Dockerfile- ja kontitusratkaisun sekä OpenShift-deploy-skriptit ja manifestit.
