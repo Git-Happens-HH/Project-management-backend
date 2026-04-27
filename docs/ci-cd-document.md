@@ -48,13 +48,13 @@
 
 ## 1 Johdanto <a id="1-johdanto"></a>
 
-Tässä seminaarityössä kehitetään CI/CD-putki Ohjelmistoprojekti 2 -kurssin projektityölle.
+Tässä seminaarityössä toteutan CI/CD-putken Ohjelmistoprojekti 2 -kurssin projektityölle.
 
-Projektissa tiimi kehittää projektinhallintatyökalua nimeltä Prokress, joka hyödyntää Kanban-taulua tehtävien hallintaan. Sovellus mahdollistaa tehtävien luomisen, muokkaamisen, poistamisen sekä siirtämisen sarakkeiden välillä drag-and-drop-toiminnallisuudella.
+Projektissa tiimimme kehittää projektinhallintatyökalua nimeltä Prokress, joka hyödyntää Kanban-taulua tehtävien hallintaan. Sovellus mahdollistaa tehtävien luomisen, muokkaamisen, poistamisen sekä siirtämisen sarakkeiden välillä drag-and-drop-toiminnallisuudella.
 
-Käyttäjät voivat luoda omia sekä jaettuja projekteja, määrittää tehtäville vastuuhenkilön ja kommentoida tehtäviä.
+Käyttäjät voivat luoda omia sekä jaettuja projekteja.
 
-Työn fokus on backend-julkaisuketjussa (Spring Boot + Docker + OpenShift), koska se sisältää eniten operatiivista riskiä: build-epäonnistumiset, riippuvuushaavoittuvuudet, rollout-ongelmat ja tuotantokatkokset.
+Työssä keskitytään ainoastaan backend-julkaisuketjuun (Spring Boot + Docker + OpenShift), koska se sisältää eniten riskiä: build-epäonnistumiset, riippuvuushaavoittuvuudet ja rollout-ongelmat.
 
 ### 1.1 Rajaus ja tutkimuskysymykset <a id="11-rajaus-ja-tutkimuskysymykset"></a>
 
@@ -76,8 +76,8 @@ Hyväksymiskriteerit tälle työlle:
 - PR ei mene läpi, jos build/test failaa.
 - PR ei mene läpi, jos Trivy löytää HIGH/CRITICAL löydöksen.
 - Staging-deploy vahvistetaan rollout- ja health-checkillä.
-- Production-deploy vaatii GitHub Environment -hyväksynnän.
-- Rollback voidaan suorittaa yhdellä komennolla ja sen onnistuminen voidaan todentaa.
+- Production-deploy vaatii hyväksynnän multa tiimin jäseniltä.
+- Rollback voidaan suorittaa yhdellä komennolla.
 
 ## 3 Toteutusympäristö ja teknologiat <a id="3-toteutusymparisto-ja-teknologiat"></a>
 
@@ -182,7 +182,7 @@ Triggerit:
 - ajastettu ajo (cron)
 
 Perustelu:
-OWASP-skannaus oli raskas ja hidasti PR-putkea merkittävästi, joten se siirrettiin erilliseen workflowiin. Tämä tekee putkesta nopeamman ja skannauksesta vakaamman.
+OWASP-skannaus oli raskas ja hidasti PR-putkea liikaa, joten siirsin sen erilliseen workflowiin. Tämä tekee putkesta nopeamman niin että Ohjelmistoprojekti 2 ei häiriinny liikaa.
 
 Keskeinen toteutusidea:
 
