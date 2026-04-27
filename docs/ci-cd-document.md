@@ -499,7 +499,7 @@ Työssä jouduin tekemään myös kompromissejä. OWASP Dependency-Check olisi t
 
 Yksi tärkeimmistä käytännön opeista liittyi virheiden diagnosointiin OpenShiftissä. Rollout-virhe näytti ensin siltä, että vanhat replicat eivät poistu normaalisti. Todellinen juurisyy löytyi kuitenkin vasta podien eventeistä: ensin image pull -secret ei toiminut, ja sen jälkeen sovellukselta puuttui vaadittu runtime-secret. Tämä opetti, että CI/CD-ongelmia ei voi ratkaista katsomalla vain workflow-logia. Pitää osata lukea myös klusterin tilaa, deploymentteja, podeja ja eventtejä.
 
-Jos tekisin työn uudelleen, erottaisin staging- ja production-ympäristöt selvemmin toisistaan jo alussa. Tässä työssä prosessi validoitiin onnistuneesti, mutta koska staging ja production olivat käytännössä samassa OpenShift-infrastruktuurissa, ympäristöerottelun testaaminen jäi rajalliseksi. Aidommassa tuotantoympäristössä käyttäisin erillisiä namespaceja, erillisiä routeja, erillisiä secrettejä ja mahdollisesti eri resource limittejä.
+Jos tekisin työn uudelleen, erottaisin staging- ja production-ympäristöt selvemmin toisistaan jo alussa. Tässä työssä prosessi validoitiin onnistuneesti, mutta koska staging ja production olivat käytännössä samassa OpenShift-infrastruktuurissa, ympäristöerottelun testaaminen jäi rajalliseksi. Aidommassa tuotantoympäristössä käyttäisin erillisiä namespaceja, erillisiä routeja ja erillisiä secrettejä.
 
 Lisäksi lisäisin putkeen automaattiset smoke-testit staging-vaiheeseen. Nykyinen health-check kertoo, että sovellus on käynnissä, mutta se ei vielä todista, että tärkeimmät käyttötapaukset toimivat. Parempi seuraava vaihe olisi esimerkiksi kirjautumisen, projektin haun tai yksinkertaisen API-endpointin automaattinen testaus staging-deployn jälkeen.
 
