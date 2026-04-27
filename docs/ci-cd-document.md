@@ -559,7 +559,7 @@ Trivy 2026. Trivy documentation. Luettavissa: https://trivy.dev/latest/
 
 ## 15 Video <a id="15-video"></a>
 
-- Placeholder
+- <video controls src="https://haagahelia-my.sharepoint.com/:v:/r/personal/bhq676_myy_haaga-helia_fi/Documents/Videos/Clipchamp/Video%20Project/Exports/CICD-seminaarityo.mp4?csf=1&web=1&e=8ONDWx" title="Seminaarityön esittelyvideo"></video>
 
 ## 16 Projektin lähdekoodi <a id="16-projektin-lahdekoodi"></a>
 
