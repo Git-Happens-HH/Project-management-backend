@@ -521,41 +521,46 @@ Manuaaliseen prosessiin verrattuna julkaisu on nyt nopeampi, toistettavampi ja v
 
 ## 14 Lähteet <a id="14-lahteet"></a>
 
-Docker 2024. Running Testcontainers tests using GitHub Actions. Luettavissa: https://www.docker.com/blog/running-testcontainers-tests-using-github-actions/
-. Luettu: 26.4.2026.
+Bcgov. s.a. Openshift Launchpad Deployment. Luettavissa: https://github.com/bcgov/openshift-launchpad-deployment Luettu: 24.4.2026
 
-GitHub 2026. GitHub Actions documentation. Luettavissa: https://docs.github.com/actions
-. Luettu: 23.4.2026.
+Etchells T. 10.12.2020. Deploying to OpenShift using Github Actions. Red Hatin blogi. Luettavissa: https://www.redhat.com/en/blog/deploying-to-openshift-using-github-actions Luettu: 
+25.4.2026
 
-GitHub 2026. Managing your personal access tokens. Luettavissa: https://docs.github.com/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-. Luettu: 25.4.2026.
+GitHub s.a. GitHub Actions documentation. Luettavissa: https://docs.github.com/actions
+. Luettu: 23.4.2026
 
-GitHub 2026. Working with the Container registry. Luettavissa: https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry
-. Luettu: 24.4.2026.
+GitHub s.a. Github documentation: Managing your personal access tokens. Luettavissa: https://docs.github.com/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+. Luettu: 25.4.2026
 
-Kubernetes 2026. Secrets. Luettavissa: https://kubernetes.io/docs/concepts/configuration/secret/
-. Luettu: 24.4.2026.
+GitHub s.a. Github documentation: Working with the Container registry. Luettavissa: https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+. Luettu: 24.4.2026
 
-OWASP Foundation 2026. Dependency-Check. Luettavissa: https://jeremylong.github.io/DependencyCheck/
-. Luettu: 25.4.2026.
+Katamreddy S. 30.6.2023. Running Testcontainers tests using GitHub Actions. Dockerin blogi. Luettavissa: https://www.docker.com/blog/running-testcontainers-tests-using-github-actions/
+Luettu: 26.4.2026
 
-Red Hat 2026. OpenShift Documentation. Luettavissa: https://docs.openshift.com/
-. Luettu: 23.4.2026.
+Kubernetes 17.03.2026. Kubernetes documentation: Secrets. Luettavissa: https://kubernetes.io/docs/concepts/configuration/secret/
+. Luettu: 24.4.2026
 
-Red Hat 2026. Using image pull secrets. Luettavissa: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
-. Luettu: 24.4.2026.
+OWASP. 11.04.2026. Dependency-Check. Luettavissa: https://jeremylong.github.io/DependencyCheck/
+. Luettu: 25.4.2026
 
-Red Hat 2026. Understanding deployments and DeploymentConfigs. Luettavissa: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
-. Luettu: 25.4.2026.
+Red Hat s.a. OpenShift Documentation. Luettavissa: https://docs.redhat.com/en/documentation/openshift_container_platform/4.21
+. Luettu: 23.4.2026
 
-Sonatype 2025. OSS Index authentication required. Luettavissa: https://ossindex.sonatype.org/doc/auth-required
-. Luettu: 25.4.2026.
+Red Hat s.a. Understanding deployments and DeploymentConfigs. Luettavissa: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
+. Luettu: 25.4.2026
 
-Spring 2026. Spring Boot Actuator. Luettavissa: https://docs.spring.io/spring-boot/reference/actuator/
-. Luettu: 23.4.2026.
+Red Hat s.a. Using image pull secrets. Luettavissa: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
+. Luettu: 24.4.2026
 
-Trivy 2026. Trivy documentation. Luettavissa: https://trivy.dev/latest/
-. Luettu: 25.4.2026.
+Sanchez J. Spring Boot Actuator. Baeldungin blogi. Luettavissa: https://www.baeldung.com/spring-boot-actuators
+. Luettu: 23.4.2026
+
+Sonatype s.a. OSS Index authentication required. Luettavissa: https://ossindex.sonatype.org/doc/auth-required
+. Luettu: 25.4.2026
+
+Trivy s.a. Trivy documentation. Luettavissa: https://trivy.dev/docs/latest/guide/
+. Luettu: 25.4.2026
 
 ## 15 Video <a id="15-video"></a>
   
