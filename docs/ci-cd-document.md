@@ -416,7 +416,7 @@ Ja tärkeintä: jos tietokanta-integraatio ei toimi, PR pysyy kiinni PR-vaiheess
 Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build → test (Testcontainers) → security scan → merge. Testit varmistavat että koodi toimii oikean tietokannan kanssa, ennen kuin mitään deployataan. Yhdessä meidän approval-gaten kanssa se on melko solid logiikka sille että staging-deployissa ei tule yllätyksiä.
 
 
-## 13. Jatkokehitysideat
+## 12. Jatkokehitysideat
 
 - smoke-testit stagingiin
 - image signing (Cosign)
@@ -424,7 +424,7 @@ Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build �
 - mittarit (lead time, MTTR)
 - dependency-checkin cache optimointi
 
-## 14. Lähteet
+## 13. Lähteet
 
 - GitHub Actions documentation: https://docs.github.com/actions
 - OWASP Dependency-Check: https://jeremylong.github.io/DependencyCheck/
@@ -439,6 +439,6 @@ Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build �
 - OpenShift Deployments and rollout status: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
 - Docker: Running Testcontainers tests using GitHub Actions: https://www.docker.com/blog/running-testcontainers-tests-using-github-actions/
 
-## 15. Video
+## 14. Video
 
 - Placeholder
