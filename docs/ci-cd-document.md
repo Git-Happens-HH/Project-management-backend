@@ -77,7 +77,7 @@ Kuva: CI/CD-putken koodirakenne Prokressin backendissä.
 
 ### 5.1 PR-laatu- ja tietoturvaportti
 
-Tiedosto: pr-check.yml
+Tiedosto: [pr-check.yml](../.github/workflows/pr-check.yml)
 
 Toteutetut vaiheet:
 - Maven build ja testit (`mvn clean verify`)
@@ -118,7 +118,7 @@ Kuva: GitHub Actions -ajo, jossa Build and Test -jobi meni läpi ja Trivy-skanna
 
 ### 5.2 Erillinen security-scan workflow
 
-Tiedosto: security-scan.yml
+Tiedosto: [security-scan.yml](../.github/workflows/security-scan.yml)
 
 Toteutetut vaiheet:
 - OWASP Dependency-Check Maven-pluginilla (CVSS-raja)
@@ -165,7 +165,7 @@ Tuloksen tulkinta: CI/CD-putki toimi oikein, koska security gate pysäytti julka
 
 ### 5.3 Staging deploy
 
-Tiedosto: deploy-staging.yml
+Tiedosto: [deploy-staging.yml](../.github/workflows/deploy-staging.yml)
 
 Sisältö:
 - image build + push GHCR:aan
@@ -203,7 +203,7 @@ Kuva: GitHub Actionsin `Deploy to Staging` -jobi, jossa image deployataan OpenSh
 
 ### 5.4 Production deploy + approval gate
 
-Tiedosto: deploy-production.yml
+Tiedosto: [deploy-production.yml](../.github/workflows/deploy-production.yml)
 
 Sisältö:
 - trigger tagista (`v*.*.*`) tai manuaalisesti
@@ -236,12 +236,12 @@ Tuloksen tulkinta: production-putki testattiin onnistuneesti end-to-end, joten j
 
 ### 5.5 OpenShift-manifestit ja operointiskriptit
 
-- ops/openshift/deployment.yaml
-- ops/openshift/service.yaml
-- ops/openshift/route.yaml
-- ops/openshift/deploy.sh
-- ops/openshift/verify-rollout.sh
-- ops/openshift/rollback.sh
+- [ops/openshift/deployment.yaml](../ops/openshift/deployment.yaml)
+- [ops/openshift/service.yaml](../ops/openshift/service.yaml)
+- [ops/openshift/route.yaml](../ops/openshift/route.yaml)
+- [ops/openshift/deploy.sh](../ops/openshift/deploy.sh)
+- [ops/openshift/verify-rollout.sh](../ops/openshift/verify-rollout.sh)
+- [ops/openshift/rollback.sh](../ops/openshift/rollback.sh)
 
 Rollback suoritetaan komennolla:
 
