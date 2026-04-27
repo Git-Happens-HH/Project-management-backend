@@ -182,7 +182,7 @@ Triggerit:
 - ajastettu ajo (cron)
 
 Perustelu:
-OWASP-skannaus oli raskas ja hidasti PR-putkea merkittävästi, joten se siirrettiin erilliseen workflowhun. Tämä tekee putkesta nopeamman ja skannauksesta vakaamman.
+OWASP-skannaus oli raskas ja hidasti PR-putkea merkittävästi, joten se siirrettiin erilliseen workflowiin. Tämä tekee putkesta nopeamman ja skannauksesta vakaamman.
 
 Keskeinen toteutusidea:
 
@@ -335,7 +335,7 @@ Kuva: Lisätyt environment- sekä repository secretit.
 
 ### 5.8 Toteutunut staging-häiriö ja korjaavat muutokset <a id="58-toteutunut-staging-hairio-ja-korjaavat-muutokset"></a>
 
-Projektissa tuli vastaan ketjuvirhe staging-julkaisussa. Alkuvaiheessa oireena oli rolloutin jumittuminen viestiin "old replicas are pending termination", mutta juurisyy paljastui vasta podien eventeista.
+Projektissa tuli vastaan ketjuvirhe staging-julkaisussa. Alkuvaiheessa oireena oli rolloutin jumittuminen viestiin "old replicas are pending termination", mutta juurisyy paljastui vasta podien eventeistä.
 
 Havaitut virheet:
 
@@ -361,7 +361,7 @@ Korjaus:
 
 ## 6 Tuotantoputken hallinta ja julkaisumalli <a id="6-tuotantoputken-hallinta-ja-julkaisumalli"></a>
 
-Käyttöön otettiin seuraavat hallintakäytnnot:
+Käyttöön otettiin seuraavat hallintakäytännöt:
 - branch protection `main`-branchille
 - merge vain PR:n kautta
 - pakollinen onnistunut status check ennen mergeä
@@ -417,7 +417,7 @@ Huomio:
 
 ## 8 Ongelmia ja niiden ratkaisut <a id="8-ongelmia-ja-niiden-ratkaisut"></a>
 
-| Ongelma | Juuri-syy | Ratkaisu |
+| Ongelma | Juurisyy | Ratkaisu |
 |---|---|---|
 | PR-putki hidastui liikaa | OWASP-skannaus liian raskas jokaisessa PR-ajossa | OWASP siirrettiin erilliseen `security-scan.yml` workflowhin |
 | Skannauksen kesto vaihteli paljon | NVD-datan päivitys ilman API-avainta | `NVD_API_KEY` käyttöön + välimuisti dependency-check datalle |
@@ -497,9 +497,9 @@ Erityisesti opin erottamaan kolme eri tasoa: koodin laatu, julkaisun tekninen to
 
 Työssä jouduin tekemään myös kompromissejä. OWASP Dependency-Check olisi turvallisuuden näkökulmasta hyödyllinen jokaisessa PR-ajossa, mutta käytännössä se hidasti putkea ja teki siitä epävakaamman. Tämän takia siirsin OWASP-skannauksen erilliseen ajastettuun ja manuaalisesti käynnistettävään workflowiin, mutta jätin Trivyn PR-porttiin. Ratkaisu ei ole täydellinen, mutta se tasapainottaa nopeuden ja turvallisuuden: PR:t eivät hidastu liikaa, mutta riippuvuusturvallisuutta seurataan silti säännöllisesti.
 
-Yksi tärkeimmistä käytännön opeista liittyi virheiden diagnosointiin OpenShiftissä. Rollout-virhe näytti ensin siltä, että vanhat replicat eivät poistu normaalisti. Todellinen juurisyy löytyi kuitenkin vasta podien eventeistä: ensin image pull -secret ei toiminut, ja sen jälkeen sovellukselta puuttui vaadittu runtime-secret. Tämä opetti, että CI/CD-ongelmia ei voi ratkaista katsomalla vain workflow-logia. Pitää osata lukea myös klusterin tilaa, deploymentteja, podeja ja eventtejä.
+Yksi tärkeimmistä käytännön opeista liittyi virheiden diagnosointiin OpenShiftissä. Rollout-virhe näytti ensin siltä, että vanhat replikat eivät poistu normaalisti. Todellinen juurisyy löytyi kuitenkin vasta podien eventeistä: ensin image pull -secret ei toiminut, ja sen jälkeen sovellukselta puuttui vaadittu runtime-secret. Tämä opetti, että CI/CD-ongelmia ei voi ratkaista katsomalla vain workflow-logia. Pitää osata lukea myös klusterin tilaa, deploymentteja, podeja ja eventtejä.
 
-Jos tekisin työn uudelleen, erottaisin staging- ja production-ympäristöt selvemmin toisistaan jo alussa. Tässä työssä prosessi validoitiin onnistuneesti, mutta koska staging ja production olivat käytännössä samassa OpenShift-infrastruktuurissa, ympäristöerottelun testaaminen jäi rajalliseksi. Aidommassa tuotantoympäristössä käyttäisin erillisiä namespaceja, erillisiä routeja ja erillisiä secrettejä.
+Jos tekisin työn uudelleen, erottaisin staging- ja production-ympäristöt selvemmin toisistaan jo alussa. Tässä työssä prosessi validoitiin onnistuneesti, mutta koska staging ja production olivat käytännössä samassa OpenShift-infrastruktuurissa, ympäristöerottelun testaaminen jäi rajalliseksi. Aidommassa tuotantoympäristössä käyttäisin erillisiä namespaceja, erillisiä routeja ja erillisiä secretejä.
 
 Lisäksi lisäisin putkeen automaattiset smoke-testit staging-vaiheeseen. Nykyinen health-check kertoo, että sovellus on käynnissä, mutta se ei vielä todista, että tärkeimmät käyttötapaukset toimivat. Parempi seuraava vaihe olisi esimerkiksi kirjautumisen, projektin haun tai yksinkertaisen API-endpointin automaattinen testaus staging-deployn jälkeen.
 
@@ -511,7 +511,7 @@ Jatkossa osaan soveltaa tätä mallia myös muihin projekteihin. Perusperiaate o
 - image signing (Cosign)
 - SARIF-raportit
 - mittarit (lead time, MTTR)
-- dependency-checkin cache optimointi
+- dependency-checkin cache-optimointi
 
 ## 13 Yhteenveto <a id="13-yhteenveto"></a>
 
