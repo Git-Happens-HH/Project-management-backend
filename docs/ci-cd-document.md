@@ -364,8 +364,6 @@ Nämä luvut on mitattu dokumentin kuvissa näkyvistä GitHub Actions -ajoista.
 | deploy-production.yml (deploy + verify) | 19 s | Deploy Production -kuvassa näkyvä onnistunut ajo ([production-deploy.png](pictures/production-deploy.png)) |
 | **Yhteensä** | **noin 5 min 48 s** | |
 
-Vertailuna manuaaliseen arvioon (~32 min) automatisointi lyhentää julkaisuketjun läpimenoa noin 29 minuuttia, eli noin 91 %.
-
 Huomio:
 - OWASP Security Scan voi olla ensimmäisellä ajolla hidas NVD-datan päivityksen takia.
 - `NVD_API_KEY` nopeuttaa skannauksia merkittävästi.
