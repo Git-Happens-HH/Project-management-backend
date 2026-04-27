@@ -54,7 +54,11 @@ Projektissa tiimimme kehittää projektinhallintatyökalua nimeltä Prokress, jo
 
 Käyttäjät voivat luoda omia sekä jaettuja projekteja.
 
-Työssä keskitytään ainoastaan backend-julkaisuketjuun (Spring Boot + Docker + OpenShift), koska se sisältää eniten riskiä: build-epäonnistumiset, riippuvuushaavoittuvuudet ja rollout-ongelmat.
+Työssä keskitytään ainoastaan backend-julkaisuketjuun (Java + Maven +Spring Boot + Docker + Rahti), koska se sisältää eniten riskiä: build-epäonnistumiset, riippuvuushaavoittuvuudet ja rollout-ongelmat.
+
+Front-end ratkaisumme on Typescript + React ja julkaisualustana toimii Azure.
+
+Tietokantana meillä on PostgreSQL.
 
 ### 1.1 Rajaus ja tutkimuskysymykset <a id="11-rajaus-ja-tutkimuskysymykset"></a>
 
