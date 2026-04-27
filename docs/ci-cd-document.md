@@ -44,6 +44,8 @@
 
 15. [Video](#15-video)  
 
+16. [Projektin lähdekoodi](#16-projektin-lahdekoodi)
+
 ## 1 Johdanto <a id="1-johdanto"></a>
 
 Tässä seminaarityössä kehitetään CI/CD-putki Ohjelmistoprojekti 2 -kurssin projektityölle.
@@ -544,3 +546,11 @@ Trivy 2026. Trivy documentation. Luettavissa: https://trivy.dev/latest/
 ## 15 Video <a id="15-video"></a>
 
 - Placeholder
+
+## 16 Projektin lähdekoodi <a id="16-projektin-lahdekoodi"></a>
+
+Seminaarityön toteutus löytyy GitHubista:
+
+[Project Management Backend – CI/CD seminaarityö](https://github.com/Git-Happens-HH/Project-management-backend/tree/feature/ci-cd-seminaarityo)
+
+Repositorio sisältää GitHub Actions -workflowt, Dockerfile- ja kontitusratkaisun sekä OpenShift-deploy-skriptit ja manifestit.
