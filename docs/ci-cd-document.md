@@ -393,21 +393,7 @@ Seuraava skenaario kuvaa realistisen tilanteen:
 
 Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun, harjoiteltavan toimenpiteen.
 
-## 10. Mitä opin
-
-- tuotantokelpoinen CI/CD on ennen kaikkea riskienhallintaa
-- security gate tulee suunnitella niin, etta se on vakaa ja toistettava
-- deployment ei riitä ilman verifiointia 
-- rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
-- GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
-- failaava security-scan voi olla onnistunut lopputulos, jos putki estää haavoittuvan buildin etenemisen
-- CI/CD-putken toimivuus riippuu myös ympäristön salaisuuksista (image pull secret + sovelluksen env-secretit), ei pelkästään workflow-koodista
-- oire ei aina ole juurisyy: rollout-jumi voi johtua taustalla image pull- tai secret-konfiguraatiosta
-- kun staging ja production ovat samassa infrastruktuurissa, testaus validoi ennen kaikkea prosessin (gate + deploy + verify), ei ympäristöerottelua
-- deploymentin ja podien eventien järjestelmällinen lukeminen nopeuttaa juurisyyn löytymistä merkittävästi
-
-
-## 11. Testcontainers-integraatio CI/CD-putkeen
+## 10. Testcontainers-integraatio CI/CD-putkeen
 
 ### Millä tavalla Testcontainers liittyy tähän projektiin
 
@@ -444,6 +430,18 @@ Ja tärkeintä: jos tietokanta-integraatio ei toimi, PR pysyy kiinni PR-vaiheess
 
 Käytännössä nyt meidän putki on selkeämpi: jokainen PR menee läpi build → test (Testcontainers) → security scan → merge. Testit varmistavat että koodi toimii oikean tietokannan kanssa, ennen kuin mitään deployataan. Yhdessä meidän approval-gaten kanssa se on melko solid logiikka sille että staging-deployissa ei tule yllätyksiä.
 
+## 11. Mitä opin
+
+- tuotantokelpoinen CI/CD on ennen kaikkea riskienhallintaa
+- security gate tulee suunnitella niin, etta se on vakaa ja toistettava
+- deployment ei riitä ilman verifiointia 
+- rollback kannattaa tuotteistaa etukäteen, ei vasta ongelmatilanteessa
+- GitHub branch protection + environment approvals ovat olennainen osa teknistä laatua
+- failaava security-scan voi olla onnistunut lopputulos, jos putki estää haavoittuvan buildin etenemisen
+- CI/CD-putken toimivuus riippuu myös ympäristön salaisuuksista (image pull secret + sovelluksen env-secretit), ei pelkästään workflow-koodista
+- oire ei aina ole juurisyy: rollout-jumi voi johtua taustalla image pull- tai secret-konfiguraatiosta
+- kun staging ja production ovat samassa infrastruktuurissa, testaus validoi ennen kaikkea prosessin (gate + deploy + verify), ei ympäristöerottelua
+- deploymentin ja podien eventien järjestelmällinen lukeminen nopeuttaa juurisyyn löytymistä merkittävästi
 
 ## 12. Jatkokehitysideat
 
