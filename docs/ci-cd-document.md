@@ -461,18 +461,41 @@ Manuaaliseen prosessiin verrattuna julkaisu on nyt nopeampi, toistettavampi ja v
 
 ## 14. Lähteet
 
-- GitHub Actions documentation: https://docs.github.com/actions
-- OWASP Dependency-Check: https://jeremylong.github.io/DependencyCheck/
-- Trivy documentation: https://trivy.dev/latest/
-- OpenShift docs: https://docs.openshift.com/
-- Spring Boot Actuator: https://docs.spring.io/spring-boot/reference/actuator/
-- GitHub Packages / Working with the Container registry: https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry
-- Managing your personal access tokens: https://docs.github.com/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
-- Sonatype OSS Index auth required announcement: https://ossindex.sonatype.org/doc/auth-required
-- Kubernetes Secrets: https://kubernetes.io/docs/concepts/configuration/secret/
-- OpenShift Image pull secrets: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
-- OpenShift Deployments and rollout status: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
-- Docker: Running Testcontainers tests using GitHub Actions: https://www.docker.com/blog/running-testcontainers-tests-using-github-actions/
+Docker 2024. Running Testcontainers tests using GitHub Actions. Luettavissa: https://www.docker.com/blog/running-testcontainers-tests-using-github-actions/
+. Luettu: 26.4.2026.
+
+GitHub 2026. GitHub Actions documentation. Luettavissa: https://docs.github.com/actions
+. Luettu: 23.4.2026.
+
+GitHub 2026. Managing your personal access tokens. Luettavissa: https://docs.github.com/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+. Luettu: 25.4.2026.
+
+GitHub 2026. Working with the Container registry. Luettavissa: https://docs.github.com/packages/working-with-a-github-packages-registry/working-with-the-container-registry
+. Luettu: 24.4.2026.
+
+Kubernetes 2026. Secrets. Luettavissa: https://kubernetes.io/docs/concepts/configuration/secret/
+. Luettu: 24.4.2026.
+
+OWASP Foundation 2026. Dependency-Check. Luettavissa: https://jeremylong.github.io/DependencyCheck/
+. Luettu: 25.4.2026.
+
+Red Hat 2026. OpenShift Documentation. Luettavissa: https://docs.openshift.com/
+. Luettu: 23.4.2026.
+
+Red Hat 2026. Using image pull secrets. Luettavissa: https://docs.openshift.com/container-platform/latest/openshift_images/managing_images/using-image-pull-secrets.html
+. Luettu: 24.4.2026.
+
+Red Hat 2026. Understanding deployments and DeploymentConfigs. Luettavissa: https://docs.openshift.com/container-platform/latest/applications/deployments/what-deployments-are.html
+. Luettu: 25.4.2026.
+
+Sonatype 2025. OSS Index authentication required. Luettavissa: https://ossindex.sonatype.org/doc/auth-required
+. Luettu: 25.4.2026.
+
+Spring 2026. Spring Boot Actuator. Luettavissa: https://docs.spring.io/spring-boot/reference/actuator/
+. Luettu: 23.4.2026.
+
+Trivy 2026. Trivy documentation. Luettavissa: https://trivy.dev/latest/
+. Luettu: 25.4.2026.
 
 ## 15. Video
 
