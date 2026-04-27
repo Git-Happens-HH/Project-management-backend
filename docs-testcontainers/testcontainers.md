@@ -141,6 +141,29 @@ Jotta Testcontainers voi tarjota realistisen tuotantoympäristön testiajon taus
 
 Testcontainers-kirjasto tarvitsee toimiakseen Docker-API-yhteensopivan ajoympäristön, kuten Docker Desktopin tai Docker Enginen. Testcontainers toimii Dockerin asiakkaana (client), joka lähettää pyyntöjä Docker-taustaprosessille (daemon), joka suorittaa konttien rakentamisen ja ajamisen. (Docker s.a.)
 
+Alla oleva kaavio kuvaa teknologiapinon hierarkiaa, Spring projektista aina PostgreSQL:lään saakka:
+
+```
++------------------+
+|  Spring + JUnit 5|
++--------+---------+
+         |
+         v
++------------------+
+|  Testcontainers  |
++--------+---------+
+         |
+         v
++------------------+
+| Docker Desktop   |
++--------+---------+
+         |
+         v
++------------------+
+|  PostgreSQL      |
++------------------+
+```
+
 <h3 id="testin-kaynnistys-ja-odotusstrategia">2.3 Testin käynnistys ja odotusstrategia</h3>
 
 Kun testi aloitetaan, Testcontainers käynnistää tarvittavat palvelut (kuten PostgreSQL) Docker-kontteina. Nämä kontit voidaan itse konfiguroida, käyttää valmista moduulia tai tehdä komposiittiratkaisu. (Testcontainers s.a.)
@@ -164,12 +187,11 @@ Yllä olevassa koodiesimerkissä ohjelma odottaa, että lokiviesti saapuu ("Serv
 
 <h3 id="resurssien-siivous">2.4 Testin päättäminen ja resurssien siivous</h3>
 
-
 Testin päätyttyä Testcontainers sammuttaa ja poistaa kontit, verkkoasetukset ja volyymit automaattisesti. Tämä prosessi toistetaan aina, riippumatta siitä, että onnistuiko, epäonnistuiko vai kaatuiko testi ajon aika. Tästä resurssienhallinnasta pitää huolta taustalla toimiva "Moby Ryuk"-niminen apukontti. Toinen nimi Moby Ryukille on "Resource Reaper". 
 
 ### Moby Ryukin nimi tulee Death Note -animesarjan hahmosta Ryuk
 <p align="left">
-  <img src="pictures/ryuk.png" alt="Piirretty kuva Death Note -sarjan Ryuk-hahmosta" width="300"><br>
+  <img src="pictures/ryuk.png" alt="Piirretty kuva Death Note -sarjan Ryuk-hahmosta" width="200"><br>
   <em>Kuva 1. Death Note: Ryuk (Cheu-Sae 2013, <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/">CC BY-NC-ND 3.0</a>)</em>
 </p>
 
@@ -797,4 +819,6 @@ Kaikki asiat huomioon otettuna voidaan todeta, että Testcontainers on varteenot
 <h3 id="video">10. Video työn lopputuloksesta</h3>
 
 [Katso video täältä!](https://haagahelia-my.sharepoint.com/:v:/r/personal/bhq714_myy_haaga-helia_fi/Documents/testcontainers-video.mp4?csf=1&web=1&e=ibzLji&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)
+
+
 
