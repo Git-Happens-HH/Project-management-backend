@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -20,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ActiveProfiles("testcontainer")
 @SpringBootTest
 @AutoConfigureMockMvc
+@WithMockUser
 public class TCTaskRestControllerTests extends AbstractPostgresBaseClass {
 
     @Autowired
@@ -49,11 +51,11 @@ public class TCTaskRestControllerTests extends AbstractPostgresBaseClass {
 
         Project project = new Project("Test Project", "Description", LocalDateTime.now(), false);
         projectRepository.save(project);
-        projectId = project.getProjectId(); // oletetaan että getter on olemassa
+        projectId = project.getProjectId(); 
 
         TaskList taskList = new TaskList(project, "Test TaskList", LocalDateTime.now());
         taskListRepository.save(taskList);
-        taskListId = taskList.getTaskListId(); // oletetaan että getter on olemassa
+        taskListId = taskList.getTaskListId(); 
 
         Task task1 = new Task(taskList, "Task One", "Desc1", user, user, LocalDateTime.now().plusDays(1));
         Task task2 = new Task(taskList, "Task Two", "Desc2", user, user, LocalDateTime.now().plusDays(2));
