@@ -345,9 +345,10 @@ Arvioidut ajat vaiheiden suorittamisesta manuaalisesti:
 | 2. Docker image build | 3-5 min | `docker build` paikallisesti |
 | 3. Image push GHCR:ään | 2-3 min | `docker push` verkkoyhteydestä riippuen |
 | 4. SSH Rahtiin ja deploy staging | 5 min | `oc login` ja deploy-skriptien suoritus käsin |
-| 5. Staging manuaalinen testaus | 5  min | Selaimella UI:n testaaminen, endpoint-tarkistukset |
-| 6. Production approval odotus | 5 min min | Waiting for Slack/email response tiimissä |
-| 7. Production manual deploy | 5 min | SSH käsin, skriptit, tarkistukset |
+| 5. Turvallisuusskannaus (OWASP/Trivy) | Ei käytössä | Ei ollut manuaalisessa prosessissa |
+| 6. Staging manuaalinen testaus | 5 min | Selaimella UI:n testaaminen, endpoint-tarkistukset |
+| 7. Production approval odotus | 3 min | Tiimin jäsenen vastauksen odotus |
+| 8. Production manual deploy | 5 min | SSH käsin, skriptit, tarkistukset |
 | **Yhteensä** | **30-33 min** |  |
 
 Lisäksi manuaalista vaihetta on 7, joista jokainen sisältää virheriskin (väärä namespace, väärä image tag, copy-paste virhe jne).
@@ -359,10 +360,11 @@ Nämä luvut on mitattu dokumentin kuvissa näkyvistä GitHub Actions -ajoista.
 | Vaihe | Mitattu aika | Kuvaus |
 |---|---|---|
 | pr-check.yml (build + test + Trivy) | 1 min 10 s | PR Check -kuvassa näkyvä onnistunut ajo |
-| deploy-staging.yml (build + push + deploy + verify) | 1 min 15 s | Build and Push Image 49 s + Deploy to Staging 26 s |
+| security-scan.yml (OWASP + Trivy) | 2 min 48 s | OWASP-scan.png-kuvassa näkyvä onnistunut ajo |
+| deploy-staging.yml (build + push + deploy + verify) | 1 min 15 s | Build and Push Image 49 s (build_and_push_image.png) + Deploy to Staging 26 s (deploy_to_staging.png) |
 | deploy-production.yml (deploy + verify) | 19 s | Deploy Production -kuvassa näkyvä onnistunut ajo |
-| GitHub approval vaihe | < 1 min | Klikkaus approval -nappia |
-| **Yhteensä** | **noin 3 min** | |
+| GitHub approval vaihe | 3 min | Tiimin jäsenen vastauksen odotus |
+| **Yhteensä** | **noin 5 min 48 s** | |
 
 Vertailuna manuaaliseen arvioon (~32 min) automatisointi lyhentää julkaisuketjun läpimenoa noin 29 minuuttia, eli noin 91 %.
 
