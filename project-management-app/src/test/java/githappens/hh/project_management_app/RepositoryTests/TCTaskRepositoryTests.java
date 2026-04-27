@@ -18,13 +18,10 @@ public class TCTaskRepositoryTests extends AbstractPostgresBaseClass {
 
     @Autowired
     private TaskRepository taskRepository;
-
     @Autowired
     private TaskListRepository taskListRepository;
-
     @Autowired
     private ProjectRepository projectRepository;
-
     @Autowired
     private AppUserRepository appUserRepository;
 

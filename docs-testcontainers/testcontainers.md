@@ -38,7 +38,10 @@
 - [8.1 Summa summarum](#yhteenveto)  
 
 ### 9. Lähteet
-- [9.1 Lähdeluettelo](#lahdeluettelo)
+- [Lähdeluettelo](#lahdeluettelo)
+
+### 10. Video
+- [Video työn lopputuloksesta](#video)
 
 ------
 
@@ -66,7 +69,7 @@ Testauksessa on perinteisesti 3 testikerrosta:
 
 
 Yksikkötestit ovat jo tulleet melkoisen tutuiksi eri ohjelmointikursseilta. Tässä seminaarityössä haluan perehtyä enemmän keskimmäiseen tasoon, eli integraatiotestaukseen. Valitsin tässä työssä tutkittavaksi teknologiaksi Testcontainers-kirjaston, jolla voin testata sovelluksen ja tietokannan välistä integraatiota. Testcontainers mahdollistaa tuotantoympäristöä vastaavan tietokannan käytön testeissä,
-mikä parantaa testien luotettavuutta ja realistisuutta verrattuna esimerkiksi H2-tietokantaan. (Testcontainers s.a., Kurian 2025)
+mikä parantaa testien luotettavuutta ja realistisuutta verrattuna esimerkiksi H2-tietokantaan (Testcontainers s.a., Kurian 23.10.2025). Raportti sisältää teoriaa Testcontainersin teknologiasta, sen kooditoteutuksen kohdeprojektiin, H2- sekä Testcontainers-testien esittelyn ja vertailun, reflektointia oppimastani sekä jatkokehitysideoita. Mukavia lukuhetkiä!
 
 
 <h3 id="kohdeprojektin-esittely">1.2 Kohdeprojektin esittely</h3>
@@ -130,11 +133,11 @@ Testcontainers tukee useita moduuleja eri teknologioille; mm. tietokantoja, vies
 - RabbitMQ
 - Ja lukuisia muita...
 
-Testcontainers käynnistää tarvittavat palvelut automaattisesti Docker-kontteina testien ajaksi ja poistaa ne testien jälkeen. Testcontainers siis mahdollistaa testien ajamisen ympäristössä, joka vastaa todellista tuotantoympäristöä paremmin kuin esimerkiksi mockit tai in-memory-ratkaisut (Testcontainers s.a, Trandafir 2026). Toisaalta Testcontainers-estit ovat hitaampia suorittaa, kuin nopeat in-memory-tietokantatestit.
+Testcontainers käynnistää tarvittavat palvelut automaattisesti Docker-kontteina testien ajaksi ja poistaa ne testien jälkeen. Testcontainers siis mahdollistaa testien ajamisen ympäristössä, joka vastaa todellista tuotantoympäristöä paremmin kuin esimerkiksi mockit tai in-memory-ratkaisut (Testcontainers s.a, Trandafir 22.04.2026). Toisaalta Testcontainers-estit ovat hitaampia suorittaa, kuin nopeat in-memory-tietokantatestit.
 
 <h3 id="docker-teknologian-rooli">2.2 Docker-teknologian rooli</h3>
 
-Jotta Testcontainers voi tarjota realistisen tuotantoympäristön testiajon taustalle, käyttää se Docker-teknologiaa. Docker-teknologia erottaa sovelluksen infrastruktuurista. Dockerin avulla palvelu tai sovellus paketoidaan yhteen eristettyyn pakettiin (eli konttiin), jotta se toimii luotettavasti missä tahansa ympäristössä, riippumatta isäntäkoneesta. (Docker s.a., Katamreddy 2024)
+Jotta Testcontainers voi tarjota realistisen tuotantoympäristön testiajon taustalle, käyttää se Docker-teknologiaa. Docker-teknologia erottaa sovelluksen infrastruktuurista. Dockerin avulla palvelu tai sovellus paketoidaan yhteen eristettyyn pakettiin (eli konttiin), jotta se toimii luotettavasti missä tahansa ympäristössä, riippumatta isäntäkoneesta. (Docker s.a., Katamreddy 16.12.2024)
 
 Testcontainers-kirjasto tarvitsee toimiakseen Docker-API-yhteensopivan ajoympäristön, kuten Docker Desktopin tai Docker Enginen. Testcontainers toimii Dockerin asiakkaana (client), joka lähettää pyyntöjä Docker-taustaprosessille (daemon), joka suorittaa konttien rakentamisen ja ajamisen. (Docker s.a.)
 
@@ -186,10 +189,10 @@ Otetaan malliesimerkiksi TaskRepositoryTests.java. Sen takana oleva Task.java do
 
 TaskRepositoryTests hyödyntää useita Spring Boot Starter Tests -riippuvuuden tarjoamia teknologioita:
 - `@Test`-annotaatio tulee JUnit 5:sta. Se määrittää, että kyseinen metodi on testi.
-- `@SpringBootTest` on Spring Bootin annotaatio, joka käynnistää koko Spring-sovelluksen contextin. Se lataa kaikki beanit, repositoryt, servicet, jne. Se ei siis käynnistä vain tiettyä kerrosta tai osaa sovelluksesta, vaan koko
+- `@SpringBootTest` on Spring Bootin annotaatio, joka käynnistää koko Spring-sovelluksen contextin. Se lataa kaikki beanit, repositoryt, servicet, jne. Se ei siis käynnistä vain tiettyä kerrosta tai osaa sovelluksesta, vaan koko sovelluksen
 - `@Transactional`-annotaatio tekee testiluokan tietokantamuutokset transaktion sisäisesti H2-tietokantaan ja samalla pitää huolta tiedon eheydestä: esimerkiksi jos testin aika tapahtuu odottamaton virhe, se peruu (rollback) nämä muutokset automaattisesti. 
 - AssertJ tarjoaa assertiometodeja, kuten `assertThat(task.getTaskTitle().isNotNull())`
-(JUnit User Guide s.a, Spring, s.a, AssertJ, s.a)
+(JUnit User Guide s.a, Spring, s.a, AssertJ 2026)
 
 <h3 id="h2-testit-suoritusajat">3.2 H2-testien esimerkkikoodit ja suoritusajat</h3>
 
@@ -374,7 +377,7 @@ Lisäsin myös tämän metodin, joka kertoo dynaamisesti, mihin tietokantaan sen
     }
 ```
 
-`@DynamicPropertySource`-annotaation avulla staattiseen metodiin voidaan lisätä konfiguraatio-ominaisuuksia (properties) Springin Environment-olioon dynaamisesti. Kun Testcontainers käynnistää PostgreSQL-kontin, se varaa sille satunnaisen portin isäntäkoneelta. Tämän vuoksi ei voi kiinteästi kirjoittaa [application.properties-tiedostoon](https://github.com/Git-Happens-HH/Project-management-backend/blob/testcontainer/project-management-app/src/main/resources/application.properties) tietokannan URL-osoitetta (kuten H2-tietokannan kanssa), vaan se haetaan suoraan kontilta testin alkaessa. (Spring s.a, Mohamadinia 2025, Trandafir 2026)
+`@DynamicPropertySource`-annotaation avulla staattiseen metodiin voidaan lisätä konfiguraatio-ominaisuuksia (properties) Springin Environment-olioon dynaamisesti. Kun Testcontainers käynnistää PostgreSQL-kontin, se varaa sille satunnaisen portin isäntäkoneelta. Tämän vuoksi ei voi kiinteästi kirjoittaa [application.properties-tiedostoon](https://github.com/Git-Happens-HH/Project-management-backend/blob/testcontainer/project-management-app/src/main/resources/application.properties) tietokannan URL-osoitetta (kuten H2-tietokannan kanssa), vaan se haetaan suoraan kontilta testin alkaessa. (Spring s.a, Mohamadinia 26.11.2025, Trandafir 22.04.2026)
 
 Metodin argumentti `DynamicPropertyRegistry` on rajapinta, joka välitetään argumenttina `@DynamicPropertySource`-metodille. Sitä käytetään nimi-arvo-parien rekisteröimiseen Spring Environment-olioon. 
 
@@ -388,7 +391,7 @@ Normaalisti nimi-arvo-pari määritellään application.properties-tiedostoon, k
 - Arvo(value): jdbc:h2:mem:testdb
 
 Tuo toimii, kun tietokannalla on kiinteä, staattinen osoite. `DynamicPropertyRehistry`-metodi kuitenkin ottaa arvon dynaamisesti käynnissä olevasta Docker-kontista, jotta testit voidaan ajaa oikeaa tietokantaa vasten.
-(Spring s.a, Mohamadinia 2025)
+(Spring s.a, Mohamadinia 26.11.2025)
 
 Testiluokkaan lisättiin myös metodi `@BeforeEach`, joka siivoaa tietokantaan luodut testidatat ennen seuraavan testin suoritusta:
 
@@ -658,7 +661,7 @@ Tästä voi päätellä, että H2 kannattaa yleensä jättää vain devausvaihee
 
 <h3 id="sama-testi-eri-tietokanta-eri-tulos">5.2 Sama testi, eri tietokanta, eri tulos</h3>
 
-Jędrzej Frankowskin (2024) kirjoittamassa [ohjeessa](https://www.baeldung.com/spring-boot-testcontainers-integration-test) (2024) ilmenee eräs mielenkiintoinen bugi, kun sama kysely suoritetaan H2:lla verrattuna PostgreSQL:lla. Jotta voin tutustua tuohon virheeseen oman koodin kautta, pyysin Claude Sonnet 4.6-kielimallia kirjoittamaan kyseiset testit raportille tuttuun taskRepositorylle molempiin tietokantoihin. 
+Jędrzej Frankowskin (08.01.2024) kirjoittamassa [ohjeessa](https://www.baeldung.com/spring-boot-testcontainers-integration-test) ilmenee eräs mielenkiintoinen bugi, kun sama kysely suoritetaan H2:lla verrattuna PostgreSQL:lla. Jotta voin tutustua tuohon virheeseen oman koodin kautta, pyysin Claude Sonnet 4.6-kielimallia kirjoittamaan kyseiset testit raportille tuttuun taskRepositorylle molempiin tietokantoihin. 
 
 Frankowskin raportoima buginen kysely on omassa esimerkissäni seuraavanlainen:
 
@@ -694,7 +697,7 @@ Caused by: org.postgresql.util.PSQLException: ERROR: column "t" of relation "tas
   Position: 19
 ```
 
-Tässä esimerkissä paljastuu, kuinka jokin kysely voi mennä läpi kehitysvaiheessa käytetyssä H2-tietokannassa, mutta aiheuttaisi päänvaivaa oikeaa tietokantaa vasten tuotantoympäristössä. Frankowski (2024) tämän pohjalta toteaa, että [JPQL](https://www.codingshuttle.com/spring-boot-handbook/jpql-and-native-queries/)-kyselyjen (Springin oma kyselykieli) käyttäminen on yleisesti turvallisempaa, koska Spring silloin huolehtii, että kysely käännetään oikein kullekin tietokannalle.
+Tässä esimerkissä paljastuu, kuinka jokin kysely voi mennä läpi kehitysvaiheessa käytetyssä H2-tietokannassa, mutta aiheuttaisi päänvaivaa oikeaa tietokantaa vasten tuotantoympäristössä. Frankowski (08.01.2024) tämän pohjalta toteaa, että [JPQL](https://www.codingshuttle.com/spring-boot-handbook/jpql-and-native-queries/)-kyselyjen (Springin oma kyselykieli) käyttäminen on yleisesti turvallisempaa, koska Spring silloin huolehtii, että kysely käännetään oikein kullekin tietokannalle.
 
 (Muutin testiluokkaa hieman tämän demonstraation jälkeen, sillä [projektin CI/CD-putki](https://github.com/Git-Happens-HH/Project-management-backend/blob/main/docs/ci-cd-document.md) vaatii testien läpäisyn mergeä varten. Testin logiikka on silti sama)
 
@@ -744,57 +747,54 @@ Testcontainersin takana on valtavasti teknologiaa. Testcontainersin kyvyn ajaa t
 
 Kaikki asiat huomioon otettuna voidaan todeta, että Testcontainers on varteenotettava työkalu ohjelmistotestauksessa, johon kehittäjien ja testaajien kannattaa tutustua. 
 
-## 9. Lähteet
+<h3 id="lahdeluettelo">9. Lähteet</h3>
 
-<h3 id="lahdeluettelo">9.1 Lähdeluettelo</h3>
+- AssertJ. 13.04.2026. AssertJ – Fluent testing assertions for Java and the JVM. Luettavissa: https://assertj.github.io/doc/ Luettu: 24.04.2026
 
-https://www.baeldung.com/spring-boot-built-in-testcontainers
+- Cheu-Sae. 2013. Death Note: Ryuk. Luettavissa: https://www.deviantart.com/cheu-sae/art/Death-Note-Ryuk-365460595. Lisenssi: CC BY-NC-ND 3.0.
 
-https://docs.spring.io/spring-boot/reference/testing/testcontainers.html
+- Docker s.a. Docker Documentation: Docker Overview. Luettavissa: https://docs.docker.com/get-started/docker-overview/ Luettu: 25.04.2026
 
-https://testcontainers.com/getting-started/#testcontainers-workflow
+- Frankowski J. 08.01.2024. DB Integration Tests with Spring Boot and Testcontainers. Baeldungin blogi. Luettavissa: https://www.baeldung.com/spring-boot-testcontainers-integration-test Luettu: 26.04.2026
 
-https://java.testcontainers.org/
+- H2 Database s.a. Features. Luettavissa: https://h2database.com/html/features.html Luettu: 26.04.2026
 
-https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/
+- JUnit s.a. Junit documentation: Annotations. Luettavissa: https://docs.junit.org/6.0.3/writing-tests/annotations.html Luettu: 24.04.2026
 
-https://blog.jetbrains.com/idea/2024/12/testing-spring-boot-applications-using-testcontainers/
+- JUnit s.a. Junit documentation: Overview. Luettavissa: https://docs.junit.org/6.0.3/overview.html Luettu: 24.04.2026
 
-https://www.baeldung.com/spring-boot-built-in-testcontainers
+- Katamreddy S. 16.12.2024. Testing Spring Boot Applications Using Testcontainers. Jetbrainsin blogi. Luettavissa: https://blog.jetbrains.com/idea/2024/12/testing-spring-boot-applications-using-testcontainers/ Luettu: 25.04.2026
 
-https://stackshare.io/stackups/h2-database-vs-postgresql
+- Kurian J. 23.10.2025. Integration Testing with Testcontainers. Microsoftin blogi. Luettavissa: https://devblogs.microsoft.com/ise/testing-with-testcontainers/ Luettu: 24.4.2026
 
-https://devblogs.microsoft.com/ise/testing-with-testcontainers/
+- Microsoft. 21.05.2025. What is the Windows Subsystem for Linux? Luettavissa: https://learn.microsoft.com/en-us/windows/wsl/about Luettu: 25.04.2025
 
-https://docs.docker.com/get-started/docker-overview/
+- Mohamadinia M. 26.11.2025. Guide to DynamicPropertySource in Spring. Baeldungin blogi. Luettavissa: https://www.baeldung.com/spring-dynamicpropertysource Luettu: 25.04.2026
 
-Cheu-Sae. 2013. Death Note: Ryuk. Luettavissa: https://www.deviantart.com/cheu-sae/art/Death-Note-Ryuk-365460595. Lisenssi: CC BY-NC-ND 3.0.
+- SaaShub s.a. PostgreSQL vs H2 Database. Luettavissa: https://www.saashub.com/compare-postgresql-vs-h2-database Luettu: 26.04.2026
 
-https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html
+- Spring s.a. Spring Boot Documentation: Context Configuration with Dynamic Property Sources. Luettavissa: https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/dynamic-property-sources.html Luettu: 26.04.2026
 
-https://docs.junit.org/6.0.3/overview.html
+- Spring s.a. Spring Boot Documentation: Testcontainers. Luettavissa: https://docs.spring.io/spring-boot/reference/testing/testcontainers.html Luettu: 25.04.2025
 
-https://assertj.github.io/doc/
+- Spring s.a. Spring Boot Documentation: Testing Spring Boot Applications. Luettavissa: https://docs.spring.io/spring-boot/reference/testing/spring-boot-applications.html Luettu: 25.04.2025
 
-https://docs.junit.org/6.0.3/writing-tests/annotations.html
+- StackShare s.a. H2 Database vs PostgreSQL. Luettavissa: https://stackshare.io/stackups/h2-database-vs-postgresql Luettu: 26.04.2026
 
-https://learn.microsoft.com/en-us/windows/wsl/about
+- Testcontainers. s.a. Getting Started. Luettavissa: https://testcontainers.com/getting-started/#testcontainers-workflow Luettu: 24.04.2026
 
-https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/dynamic-property-sources.html
+- Testcontainers s.a. Getting started with Testcontainers in a Java Spring Boot Project. Luettavissa: https://testcontainers.com/guides/testing-spring-boot-rest-api-using-testcontainers/ Luettu: 26.04.2025
 
-https://www.baeldung.com/spring-dynamicpropertysource
+- Testcontainers s.a. Manual Lifecycle Control: Singleton containers. Luettavissa: https://java.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers Luettu: 26.04.2026
 
-https://www.baeldung.com/spring-boot-testcontainers-integration-test
+- Testcontainers s.a. Test Framework Integration: Jupiter / Junit 5. Luettavissa: https://java.testcontainers.org/test_framework_integration/junit_5/ Luettu: 26.04.2026
 
-https://java.testcontainers.org/test_framework_integration/junit_5/
+- Testcontainers s.a. Testcontainers for Java. Luettavissa: https://java.testcontainers.org/ Luettu: 26.04.2026
 
-https://java.testcontainers.org/test_framework_integration/manual_lifecycle_control/#singleton-containers
+- Trandafir E. 22.04.2026. Built-in Testcontainers Support in Spring Boot. Baeldungin blogi. Luettavissa: https://www.baeldung.com/spring-boot-built-in-testcontainers Luettu: 26.04.2026
 
-https://www.saashub.com/compare-postgresql-vs-h2-database
 
-https://h2database.com/html/features.html
+<h3 id="video">10. Video työn lopputuloksesta</h3>
 
-Chat GPT-5.3 
-
-Claude Sonnet 4.6
+[Katso video täältä!](https://haagahelia-my.sharepoint.com/:v:/r/personal/bhq714_myy_haaga-helia_fi/Documents/testcontainers-video.mp4?csf=1&web=1&e=ibzLji&nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D)
 
