@@ -445,7 +445,7 @@ Tämä malli minimoi käyttökatkon keston ja tekee palautumisesta standardoidun
 
 ### Millä tavalla Testcontainers liittyy tähän projektiin
 
-Tiimin toinen jäsen teki seminaarityönsä [Testcontainersista](testcontainers.md), ja me päätimme ottaa sen käyttöön myös meidän CI/CD-putkessa. Osoittautui että Testcontainers sopii loistavasti putkeen. 
+Tiimin toinen jäsen teki seminaarityönsä [Testcontainersista](https://github.com/Git-Happens-HH/Project-management-backend/blob/main/docs/testcontainers.md), ja me päätimme ottaa sen käyttöön myös meidän CI/CD-putkessa. Osoittautui että Testcontainers sopii loistavasti putkeen. 
 
 ### Miten testcontainers parantaa CI/CD-putkea?
 
