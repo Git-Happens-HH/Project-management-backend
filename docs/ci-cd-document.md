@@ -358,10 +358,10 @@ Nämä luvut on mitattu dokumentin kuvissa näkyvistä GitHub Actions -ajoista.
 
 | Vaihe | Mitattu aika | Kuvaus |
 |---|---|---|
-| pr-check.yml (build + test + Trivy) | 1 min 10 s | [pr-scan-success.png](pictures/pr-scan-success.png) |
-| security-scan.yml (OWASP + Trivy) | 2 min 48 s | [owasp-scan.png](pictures/owasp-scan.png) |
-| deploy-staging.yml (build + push + deploy + verify) | 1 min 15 s | Build: [build_and_push_image.png](pictures/build_and_push_image.png), Deploy: [deploy_to_staging.png](pictures/deploy_to_staging.png) |
-| deploy-production.yml (deploy + verify) | 19 s | [production-deploy.png](pictures/production-deploy.png) |
+| pr-check.yml (build + test + Trivy) | 1 min 10 s | PR Check -kuvassa näkyvä onnistunut ajo ([pr-scan-success.png](pictures/pr-scan-success.png)) |
+| security-scan.yml (OWASP + Trivy) | 2 min 48 s | OWASP-scan.png-kuvassa näkyvä onnistunut ajo ([owasp-scan.png](pictures/owasp-scan.png)) |
+| deploy-staging.yml (build + push + deploy + verify) | 1 min 15 s | Build and Push Image 49 s ([build_and_push_image.png](pictures/build_and_push_image.png)) + Deploy to Staging 26 s ([deploy_to_staging.png](pictures/deploy_to_staging.png)) |
+| deploy-production.yml (deploy + verify) | 19 s | Deploy Production -kuvassa näkyvä onnistunut ajo ([production-deploy.png](pictures/production-deploy.png)) |
 | **Yhteensä** | **noin 5 min 48 s** | |
 
 Vertailuna manuaaliseen arvioon (~32 min) automatisointi lyhentää julkaisuketjun läpimenoa noin 29 minuuttia, eli noin 91 %.
