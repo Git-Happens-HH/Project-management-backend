@@ -462,20 +462,20 @@ Testcontainers ratkaisee tämän sitten niin, että testit itse käynnistävät 
 ### Mitä hyötyä siitä käytännössä on
 
 **1. Testit testaavat oikeasti tuotanto-yhteensopivuutta**
-- H2-testit, vaikka toimivat, eivät koskaan takaa että sama koodi toimii PostgreSQL:n kanssa
-- Nyt testit ajautuvat oikeaa tietokantaa vasten, ja jos jotain on vialla, nähdään se PR-vaiheessa eikä tuotannossa
-- Ehkäisee häiriöitä
+- Vaikka H2-testit toimisivat niin se ei takaa että sama koodi toimisi PostgreSQL:n kanssa
+- Nyt testit toimii oikealla tietokannalla, ja jos jotain on vialla, nähdään se PR-vaiheessa eikä tuotannossa
+- Viat huomataan ajoissa
 
 **2. Workflow-tiedostot pysyvät yksinkertaisina**
-- Ei tarvitse ylläpitää erillisiä docker-compose -tiedostoja workflowissa
+- Ei tarvitse ylläpitää erillisiä docker-tiedostoja
 - Koko logiikka on sovelluskoodissa, mihin se kuuluukin
 - Aika paljon parempi maintainability
 
-**3. Kehittäjät voivat ajaa testit samalla tavalla lokaalisti**
+**3. Testit voi ajaa myös lokaalisti samalla komennolla**
 - `mvn clean verify` toimii omalla koneella samalla tavalla kuin CI:ssä
 - Kun jokin menee pieleen, saa debuggattua paikallisesti ilman CI-kontekstia
 
-Ja tärkeintä: jos tietokanta-integraatio ei toimi, PR pysyy kiinni PR-vaiheessa. Ei päädy main-haaraan, ei pidemmälle putkeen.
+Jos tietokanta-integraatio ei toimi, PR pysyy kiinni PR-vaiheessa. Ei päädy main-haaraan.
 
 
 ### Miten se vaikutti meidän projektiimme
