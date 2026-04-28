@@ -12,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,6 +58,7 @@ public class TCTaskRestControllerTests extends AbstractPostgresBaseClass {
 
         Task task1 = new Task(taskList, "Task One", "Desc1", user, user, LocalDateTime.now().plusDays(1));
         Task task2 = new Task(taskList, "Task Two", "Desc2", user, user, LocalDateTime.now().plusDays(2));
+
         taskRepository.save(task1);
         taskRepository.save(task2);
     }
@@ -80,5 +80,18 @@ public class TCTaskRestControllerTests extends AbstractPostgresBaseClass {
                         projectId, nonExistentTaskListId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(0)));
+    }
+
+    @Test
+    void getTasksForTaskList_allowsTasksWithNullUsers() throws Exception {
+
+        Task taskWithNulls = new Task(taskListRepository.findById(taskListId).orElseThrow(),"Task with Null Users","This task has no users",null,null,LocalDateTime.now().plusDays(3));
+        taskRepository.save(taskWithNulls);
+
+        mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks",
+                        projectId, taskListId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(3)))
+                .andExpect(jsonPath("$[*].title", hasItem("Task with Null Users")));
     }
 }
