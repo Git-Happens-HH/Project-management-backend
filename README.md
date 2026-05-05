@@ -51,26 +51,65 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 The application is located in the Maven module [project-management-app](project-management-app).
 
-Run locally on Windows:
+### Running Locally on Windows
 
 ```powershell
 cd project-management-app
 ./mvnw.cmd spring-boot:run
 ```
 
-Run tests from the command line:
+The application will start with the default profile using H2 in-memory database and will be accessible at `http://localhost:8080`.
+
+**Access Swagger UI:** Open `http://localhost:8080/swagger-ui/index.html` to view all available REST API endpoints.
+
+**H2 Console:** Access the H2 database console at `http://localhost:8080/h2-console` (default credentials: username `sa`, password `password`).
+
+### Running Tests
 
 ```powershell
 cd project-management-app
 ./mvnw.cmd test
 ```
 
-Run the full verification build:
+**Note:** TestContainers tests require Docker to be installed and running. If Docker is not available, you can skip TestContainers tests using:
+
+```powershell
+cd project-management-app
+./mvnw.cmd test -DskipTests
+```
+
+### Full Verification Build
 
 ```powershell
 cd project-management-app
 ./mvnw.cmd clean verify
 ```
+
+### Application Profiles
+
+The application supports multiple Spring profiles for different environments:
+
+- **default** (local development): Uses H2 in-memory database
+- **rahti**: Uses PostgreSQL (for Rahti/OpenShift deployment) with health check endpoints enabled
+- **testcontainer**: Uses PostgreSQL with TestContainers for integration testing
+
+## REST API Documentation
+
+All REST API endpoints are automatically documented in Swagger UI and can be accessed at:
+
+- **Local:** `http://localhost:8080/swagger-ui/index.html`
+- **Production:** `https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html`
+
+The API includes endpoints for managing users, projects, task lists, tasks, and comments with full CRUD operations and WebSocket support for real-time updates.
+
+## Deployment
+
+For production deployment information and CI/CD pipeline details, see:
+
+- [CI/CD Documentation](docs/ci-cd-document.md) - Detailed information about GitHub Actions workflows, deployment strategies, and production rollout procedures
+- OpenShift manifests in [ops/openshift/](ops/openshift/) - Kubernetes deployment configurations, services, and routes
+
+The application is deployed to Rahti (OpenShift) with automated CI/CD pipelines that handle testing, security scanning, staging, and production deployment.
 
 ## Data Model
 
@@ -88,15 +127,17 @@ erDiagram
   TASK ||--o{ COMMENT : has
 
   APP_USER {
-    long app_user_id
-    string username
+    long app_user_id PK
+    string user_name UK "unique"
     string first_name
     string last_name
-    string email
+    string email UK "unique"
+    string password_hash
+    datetime registered_at
   }
 
   PROJECT {
-    long project_id
+    long project_id PK
     string title
     string description
     datetime created_at
@@ -104,27 +145,33 @@ erDiagram
   }
 
   TASK_LIST {
-    long task_list_id
+    long task_list_id PK
+    long project_id FK
     string title
     datetime created_at
   }
 
   TASK {
-    long task_id
+    long task_id PK
+    long task_list_id FK
+    long created_by FK
+    long assigned_user FK
     string title
     string description
     datetime deadline
   }
 
   COMMENT {
-    long comment_id
+    long comment_id PK
+    long app_user_id FK "commenter"
+    long task_id FK
     string content
     datetime created_at
   }
 
   USER_PROJECT {
-    long app_user_id
-    long project_id
+    long app_user_id PK,FK
+    long project_id PK,FK
     boolean shared_to_this_user
   }
 ```
