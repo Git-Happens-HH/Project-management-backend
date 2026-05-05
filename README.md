@@ -166,12 +166,6 @@ erDiagram
   }
 ```
 
-**Relationship notation:**
-- `||` = exactly one (1)
-- `o{` = zero or many (0..*)
-- `|{` = one or many (1..*)
-- Example: `A ||--|{ B` means one A to many B
-
 ## Attachments
 
 - CI/CD documentation: [docs/ci-cd-document.md](docs/ci-cd-document.md)
