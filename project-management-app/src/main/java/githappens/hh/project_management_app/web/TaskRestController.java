@@ -49,6 +49,33 @@ public class TaskRestController {
         return saved;
     }
 
+    @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
+public Task saveEditedTask(
+        @PathVariable Long projectId,
+        @PathVariable Long taskListId,
+        @PathVariable Long taskId,
+        @RequestBody Task task) {
+
+    Task existingTask = taskRepository.findById(taskId).orElse(null);
+
+    TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
+
+    // update only editable fields
+    existingTask.setTitle(task.getTitle());
+    existingTask.setDescription(task.getDescription());
+    existingTask.setDeadline(task.getDeadline());
+    existingTask.setAssignedUser(task.getAssignedUser());
+
+    existingTask.setTaskList(taskList);
+
+    Task saved = taskRepository.save(existingTask);
+    taskRepository.flush();
+
+    realtimeService.broadcastTaskLists(projectId);
+
+    return saved;
+}
+
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
         taskRepository.deleteById(taskId);
