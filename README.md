@@ -1,7 +1,7 @@
-# Project-management-backend
+# Prokress backend
 
-[![Java](https://img.shields.io/badge/Java-17+-blue)](https://www.java.com)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green)](https://spring.io/projects/spring-boot)
+[![Java](https://img.shields.io/badge/Java-21-blue)](https://www.java.com)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.14-green)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791)](https://www.postgresql.org)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)](https://www.docker.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
@@ -10,8 +10,10 @@
 [![Deploy Staging](https://github.com/Git-Happens-HH/Project-management-backend/workflows/Deploy%20Staging/badge.svg)](https://github.com/Git-Happens-HH/Project-management-backend/actions)
 [![Deploy Production](https://github.com/Git-Happens-HH/Project-management-backend/workflows/Deploy%20Production/badge.svg)](https://github.com/Git-Happens-HH/Project-management-backend/actions)
 
-Projektin nimi: Project management app
+Projektin nimi: Prokress
+
 ## Licenses
+
 ## Description
 Toteutettavan sovelluksen tarkoitus on luoda toimiva projektinhallintatyökalu,
 joka eroaa kilpailijoista jollain tavalla.
@@ -23,9 +25,20 @@ käyttäjä voi katsoa mitä kaikkia tehtäviä jollain tietyllä käyttäjäll�
 kaikki projektit voi nähdä yhdestä näkymästä
 
 ## Teknologiat
-Backend
-  - Java
-  - PostgreSQL
+
+  - **Java** 21
+  - **Spring Boot** 3.5.14
+  - **Spring Web** 
+  - **Spring Data JPA** 
+  - **Spring Data REST**
+  - **Spring Security** & **JWT** 
+  - **Spring WebSocket**
+  - **Spring Validation**
+  - **PostgreSQL** 15 
+  - **H2 Database** 
+  - **Maven** 
+  - **TestContainers** 
+  - **JUnit 5** & **Mockito** 
 
 ## Liitteet
 (kaaviiiot ja yms)
