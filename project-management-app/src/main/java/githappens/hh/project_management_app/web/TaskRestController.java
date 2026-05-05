@@ -64,7 +64,7 @@ public Task saveEditedTask(
     existingTask.setTitle(task.getTitle());
     existingTask.setDescription(task.getDescription());
     existingTask.setDeadline(task.getDeadline());
-    existingTask.setAssignedUser(task.getAssignedUser());
+    // existingTask.setAssignedUser(task.getAssignedUser());
 
     existingTask.setTaskList(taskList);
 
