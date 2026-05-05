@@ -12,7 +12,7 @@
 
 ## Project Name and Description
 
-Prokress is a project management application designed to help teams manage projects, tasks, user roles, and work progress in one place. The application supports project creation, task lists, task creation, drag and drop task handling, commenting, user login, and real-time task tracking.
+Prokress is a project management application designed to help teams manage projects, tasks, user roles, and work progress in one place. The application supports project creation, task lists, task creation, drag and drop task handling, user login, and real-time task tracking.
 
 ## Backlog
 
