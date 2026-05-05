@@ -75,19 +75,21 @@ All REST API endpoints are automatically documented in Swagger UI:
 
 The API includes endpoints for managing users, projects, task lists and tasks with full CRUD operations and WebSocket support for real-time updates.
 
-## Deployment
+## Deployment & CI/CD
 
-For production deployment information and CI/CD pipeline details, see:
+The application uses GitHub Actions for continuous integration and deployment.
 
-- [CI/CD Documentation](docs/ci-cd-document.md) - Detailed information about GitHub Actions workflows, deployment strategies, and production rollout procedures
+### GitHub Actions Workflows
+
+- **[PR Check](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Builds and tests every pull request with Maven clean verify
+- **[Security Scan](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Scans dependencies for vulnerabilities using Trivy and OWASP Dependency-Check
+- **[Deploy Staging](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Automatically deploys to staging environment on main branch
+- **[Deploy Production](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Manually triggered production deployment with approval gate
+
+### Deployment Infrastructure
+
+- Backend deployed on [Rahti (OpenShift)](https://rahti.csc.fi/) with PostgreSQL database
+- Frontend deployed on [Azure Static Web Apps](https://azure.microsoft.com/services/app-service/static/)
+- Docker images stored in [GitHub Container Registry (GHCR)](https://github.com/Git-Happens-HH/Project-management-backend/pkgs/container)
 - OpenShift manifests in [ops/openshift/](ops/openshift/) - Kubernetes deployment configurations, services, and routes
 
-The application is deployed to Rahti (OpenShift) with automated CI/CD pipelines that handle testing, security scanning, staging, and production deployment.
-
-## Data Model
-
-
-## Attachments
-
-- CI/CD documentation: [docs/ci-cd-document.md](docs/ci-cd-document.md)
-- Testcontainers documentation: [docs/testcontainers.md](docs/testcontainers.md)
