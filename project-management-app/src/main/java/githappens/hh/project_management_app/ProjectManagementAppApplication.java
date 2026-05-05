@@ -99,7 +99,6 @@ public class ProjectManagementAppApplication {
 	// 		TaskList tl1 = new TaskList();
 	// 		tl1.setProject(p1);
 	// 		tl1.setTitle("Backlog of the super cool test project");
-	// 		tl1.setPositionNumber(1);
 	// 		tl1.setCreatedAt(now);
 	// 		taskListRepository.save(tl1);
 
@@ -109,7 +108,6 @@ public class ProjectManagementAppApplication {
 	// 		t1.setTitle("Initial task");
 	// 		t1.setDescription("This task was created by test data");
 	// 		t1.setCreatedBy(user1);
-	// 		t1.setPositionNumber(1);
 	// 		t1.setDeadline(now.plusDays(7));
 	// 		taskRepository.save(t1);
 
@@ -140,7 +138,6 @@ public class ProjectManagementAppApplication {
 	// 		TaskList tl2 = new TaskList();
 	// 		tl2.setProject(p2);
 	// 		tl2.setTitle("In Progress");
-	// 		tl2.setPositionNumber(2);
 	// 		tl2.setCreatedAt(now.plusHours(1));
 	// 		taskListRepository.save(tl2);
 
@@ -150,7 +147,6 @@ public class ProjectManagementAppApplication {
 	// 		t2.setTitle("Create homepage mockup");
 	// 		t2.setDescription("Prepare updated landing page design");
 	// 		t2.setCreatedBy(user2);
-	// 		t2.setPositionNumber(2);
 	// 		t2.setDeadline(now.plusDays(14));
 	// 		taskRepository.save(t2);
 
