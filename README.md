@@ -12,7 +12,28 @@
 
 ## Project Name and Description
 
-Prokress is a project management application designed to help teams manage projects, tasks, user roles, and work progress in one place. The application supports project creation, task lists, task creation, drag and drop task handling, user login, and real-time task tracking.
+Prokress is a project management application designed to help teams manage projects, tasks, user roles, and work progress in one place.
+
+### Current Features
+
+- User registration and authentication with JWT-based login
+- Create personal and shared projects
+- Organize tasks with task lists within projects
+- Real-time task management - add and remove tasks instantly
+- Drag and drop functionality for task management
+- Real-time task tracking with WebSocket support
+- User-friendly interface with responsive design
+
+### Upcoming Features
+
+- Task editing capability
+- Task commenting
+- Task assignment to specific team members
+- User role management and permissions
+- Custom background image selection
+- Advanced search functionality for tasks
+- Calendar and backlog view navigation
+- Team member management for project managers
 
 ## Backlog
 
@@ -113,58 +134,6 @@ The application is deployed to Rahti (OpenShift) with automated CI/CD pipelines 
 
 ## Data Model
 
-The core domain consists of the following entities:
-
-```mermaid
-erDiagram
-  APP_USER ||--|{ TASK : creates
-  APP_USER ||--o{ TASK : assigned_to
-  APP_USER ||--|{ USER_PROJECT : linked_via
-  PROJECT ||--|{ USER_PROJECT : linked_via
-  PROJECT ||--|{ TASK_LIST : contains
-  TASK_LIST ||--|{ TASK : contains
-
-  APP_USER {
-    long app_user_id PK
-    string user_name UK "unique"
-    string first_name
-    string last_name
-    string email UK "unique"
-    string password_hash
-    datetime registered_at
-  }
-
-  PROJECT {
-    long project_id PK
-    string title
-    string description
-    datetime created_at
-    boolean is_shared
-  }
-
-  TASK_LIST {
-    long task_list_id PK
-    long project_id FK
-    string title
-    datetime created_at
-  }
-
-  TASK {
-    long task_id PK
-    long task_list_id FK
-    long created_by FK
-    long assigned_user FK
-    string title
-    string description
-    datetime deadline
-  }
-
-  USER_PROJECT {
-    long app_user_id PK,FK
-    long project_id PK,FK
-    boolean shared_to_this_user
-  }
-```
 
 ## Attachments
 
