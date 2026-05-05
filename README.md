@@ -68,58 +68,11 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 - JUnit 5
 - Mockito
 
-## Technical Instructions
-
-The application is located in the Maven module [project-management-app](project-management-app).
-
-### Running Locally on Windows
-
-```powershell
-cd project-management-app
-./mvnw.cmd spring-boot:run
-```
-
-The application will start with the default profile using H2 in-memory database and will be accessible at `http://localhost:8080`.
-
-**Access Swagger UI:** Open `http://localhost:8080/swagger-ui/index.html` to view all available REST API endpoints.
-
-**H2 Console:** Access the H2 database console at `http://localhost:8080/h2-console` (default credentials: username `sa`, password `password`).
-
-### Running Tests
-
-```powershell
-cd project-management-app
-./mvnw.cmd test
-```
-
-**Note:** TestContainers tests require Docker to be installed and running. If Docker is not available, you can skip TestContainers tests using:
-
-```powershell
-cd project-management-app
-./mvnw.cmd test -DskipTests
-```
-
-### Full Verification Build
-
-```powershell
-cd project-management-app
-./mvnw.cmd clean verify
-```
-
-### Application Profiles
-
-The application supports multiple Spring profiles for different environments:
-
-- **default** (local development): Uses H2 in-memory database
-- **rahti**: Uses PostgreSQL (for Rahti/OpenShift deployment) with health check endpoints enabled
-- **testcontainer**: Uses PostgreSQL with TestContainers for integration testing
-
 ## REST API Documentation
 
-All REST API endpoints are automatically documented in Swagger UI and can be accessed at:
+All REST API endpoints are automatically documented in Swagger UI:
 
-- **Local:** `http://localhost:8080/swagger-ui/index.html`
-- **Production:** `https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html`
+- **Production:** [https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html](https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html)
 
 The API includes endpoints for managing users, projects, task lists, tasks, and comments with full CRUD operations and WebSocket support for real-time updates.
 
