@@ -117,14 +117,12 @@ The core domain consists of the following entities:
 
 ```mermaid
 erDiagram
-  APP_USER ||--o{ TASK : creates
+  APP_USER ||--|{ TASK : creates
   APP_USER ||--o{ TASK : assigned_to
-  APP_USER ||--o{ COMMENT : writes
-  APP_USER ||--o{ USER_PROJECT : linked_via
-  PROJECT ||--o{ USER_PROJECT : linked_via
-  PROJECT ||--o{ TASK_LIST : contains
-  TASK_LIST ||--o{ TASK : contains
-  TASK ||--o{ COMMENT : has
+  APP_USER ||--|{ USER_PROJECT : linked_via
+  PROJECT ||--|{ USER_PROJECT : linked_via
+  PROJECT ||--|{ TASK_LIST : contains
+  TASK_LIST ||--|{ TASK : contains
 
   APP_USER {
     long app_user_id PK
@@ -161,20 +159,18 @@ erDiagram
     datetime deadline
   }
 
-  COMMENT {
-    long comment_id PK
-    long app_user_id FK "commenter"
-    long task_id FK
-    string content
-    datetime created_at
-  }
-
   USER_PROJECT {
     long app_user_id PK,FK
     long project_id PK,FK
     boolean shared_to_this_user
   }
 ```
+
+**Relationship notation:**
+- `||` = exactly one (1)
+- `o{` = zero or many (0..*)
+- `|{` = one or many (1..*)
+- Example: `A ||--|{ B` means one A to many B
 
 ## Attachments
 
