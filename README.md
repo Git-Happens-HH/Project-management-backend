@@ -71,7 +71,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 All REST API endpoints are automatically documented in Swagger UI:
 
-- **Production:** [https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html](https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html)
+[https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html](https://project-management-backend-prokress-backend.2.rahtiapp.fi/swagger-ui/index.html)
 
 The API includes endpoints for managing users, projects, task lists and tasks with full CRUD operations and WebSocket support for real-time updates.
 
