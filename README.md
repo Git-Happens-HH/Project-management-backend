@@ -1,4 +1,4 @@
-# Prokress - Project Management App
+# Prokress
 
 [![Java](https://img.shields.io/badge/Java-21-blue)](https://www.java.com)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.14-green)](https://spring.io/projects/spring-boot)
@@ -16,7 +16,7 @@ Prokress is a project management application designed to help teams manage proje
 
 ## Backlog
 
-- GitHub Projects backlog: [Git-Happens-HH projects](https://github.com/orgs/Git-Happens-HH/projects)
+- GitHub Projects backlog: [Git-Happens-HH project 1](https://github.com/orgs/Git-Happens-HH/projects/1)
 
 ## Production Deployments
 

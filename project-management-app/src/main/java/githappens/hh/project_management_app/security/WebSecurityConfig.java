@@ -66,8 +66,17 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(authorizeRequests -> 
                     authorizeRequests
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                            .requestMatchers("/login", "/register", "/h2-console/**", "/error").permitAll()
-                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers("/login", "/register", "/h2-console/**", "/error").permitAll()
+                                .requestMatchers(
+                                    "/swagger-ui/**",
+                                    "/swagger-ui.html",
+                                    "/swagger-ui/index.html",
+                                    "/v3/api-docs/**",
+                                    "/v3/api-docs.yaml",
+                                    "/swagger-resources/**",
+                                    "/webjars/**",
+                                    "/configuration/**"
+                                ).permitAll()
                             .requestMatchers("/actuator/health/**", "/actuator/info").permitAll()
                             .requestMatchers("/ws/**").permitAll()
                             .requestMatchers("/topic/**", "/app/**").permitAll()
