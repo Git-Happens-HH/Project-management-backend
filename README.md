@@ -88,7 +88,7 @@ The application uses GitHub Actions for continuous integration and deployment.
 
 ### Deployment Infrastructure
 
-- Backend deployed on [Rahti (OpenShift)](https://rahti.csc.fi/) with PostgreSQL database
-- Frontend deployed on [Azure Static Web Apps](https://azure.microsoft.com/services/app-service/static/)
+- Backend deployed on Rahti (OpenShift) with PostgreSQL database
+- Frontend deployed on Azure Static Web Apps
 - OpenShift manifests in [ops/openshift/](ops/openshift/) - Kubernetes deployment configurations, services, and routes
 
