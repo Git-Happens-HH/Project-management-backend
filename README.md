@@ -6,10 +6,10 @@
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)](https://www.docker.com)
 [![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
 [![Build](https://img.shields.io/badge/Build-Passing-brightgreen)](https://github.com)
-[![Build & Test](https://github.com/YOUR-USERNAME/Project-management-backend/workflows/pr-check/badge.svg)](https://github.com/YOUR-USERNAME/Project-management-backend/actions)
-[![Security Scan](https://github.com/YOUR-USERNAME/Project-management-backend/workflows/security-scan/badge.svg)](https://github.com/YOUR-USERNAME/Project-management-backend/actions)
-[![Deploy Staging](https://github.com/YOUR-USERNAME/Project-management-backend/workflows/deploy-staging/badge.svg)](https://github.com/YOUR-USERNAME/Project-management-backend/actions)
-[![Deploy Production](https://github.com/YOUR-USERNAME/Project-management-backend/workflows/deploy-production/badge.svg)](https://github.com/YOUR-USERNAME/Project-management-backend/actions)
+[![Build & Test](https://github.com/Git-Happens-HH/Project-management-backend/workflows/pr-check/badge.svg)](https://github.com/Git-Happens-HH/Project-management-backend/actions)
+[![Security Scan](https://github.com/Git-Happens-HH/Project-management-backend/workflows/security-scan/badge.svg)](https://github.com/Git-Happens-HH/Project-management-backend/actions)
+[![Deploy Staging](https://github.com/Git-Happens-HH/Project-management-backend/workflows/deploy-staging/badge.svg)](https://github.com/Git-Happens-HH/Project-management-backend/actions)
+[![Deploy Production](https://github.com/Git-Happens-HH/Project-management-backend/workflows/deploy-production/badge.svg)](https://github.com/Git-Happens-HH/Project-management-backend/actions)
 
 Projektin nimi: Project management app
 ## Licenses
