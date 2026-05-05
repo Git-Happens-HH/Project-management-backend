@@ -67,6 +67,7 @@ public class WebSecurityConfig {
                     authorizeRequests
                             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                             .requestMatchers("/login", "/register", "/h2-console/**", "/error").permitAll()
+                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                             .requestMatchers("/actuator/health/**", "/actuator/info").permitAll()
                             .requestMatchers("/ws/**").permitAll()
                             .requestMatchers("/topic/**", "/app/**").permitAll()
