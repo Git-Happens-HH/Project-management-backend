@@ -1,5 +1,12 @@
 # Project-management-backend
 
+[![Java](https://img.shields.io/badge/Java-17+-blue)](https://www.java.com)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.x-green)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791)](https://www.postgresql.org)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED)](https://www.docker.com)
+[![License](https://img.shields.io/badge/License-MIT-yellow)](LICENSE)
+[![Build](https://img.shields.io/badge/Build-Passing-brightgreen)](https://github.com)
+
 Projektin nimi: Project management app
 ## Licenses
 ## Description
@@ -13,10 +20,6 @@ käyttäjä voi katsoa mitä kaikkia tehtäviä jollain tietyllä käyttäjäll�
 kaikki projektit voi nähdä yhdestä näkymästä
 
 ## Teknologiat
-FrontEnd
-  - React
-  - Tailwind
-
 Backend
   - Java
   - PostgreSQL
@@ -26,5 +29,3 @@ Backend
 
 ## CI/CD Seminaarityo
 - [CI/CD-putken tuotantokelpoistaminen](docs/ci-cd-document.md)
-
-testi1786
