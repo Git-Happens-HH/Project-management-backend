@@ -81,10 +81,10 @@ The application uses GitHub Actions for continuous integration and deployment.
 
 ### GitHub Actions Workflows
 
-- **[PR Check](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Builds and tests every pull request with Maven clean verify
-- **[Security Scan](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Scans dependencies for vulnerabilities using Trivy and OWASP Dependency-Check
-- **[Deploy Staging](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Automatically deploys to staging environment on main branch
-- **[Deploy Production](https://github.com/Git-Happens-HH/Project-management-backend/actions)** - Manually triggered production deployment with approval gate
+- **[PR Check](https://github.com/Git-Happens-HH/Project-management-backend/actions/workflows/pr-check.yml)** - Builds and tests every pull request with Maven clean verify
+- **[Security Scan](https://github.com/Git-Happens-HH/Project-management-backend/actions/workflows/security-scan.yml)** - Scans dependencies for vulnerabilities using Trivy and OWASP Dependency-Check
+- **[Deploy Staging](https://github.com/Git-Happens-HH/Project-management-backend/actions/workflows/deploy-staging.yml)** - Automatically deploys to staging environment on main branch
+- **[Deploy Production](https://github.com/Git-Happens-HH/Project-management-backend/actions/workflows/deploy-production.yml)** - Manually triggered production deployment with approval gate
 
 ### Deployment Infrastructure
 
