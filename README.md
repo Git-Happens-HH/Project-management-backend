@@ -75,7 +75,7 @@ All REST API endpoints are automatically documented in Swagger UI:
 
 The API includes endpoints for managing users, projects, task lists and tasks with full CRUD operations and WebSocket support for real-time updates.
 
-### Technical instructions
+## Technical instructions
 
 **1. Clone repository:**
 ```bash
