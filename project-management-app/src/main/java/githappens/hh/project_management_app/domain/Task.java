@@ -23,7 +23,7 @@ import jakarta.persistence.CascadeType;
 public class Task {
 
     // taskId, taskList, assignedUser, title, description,
-    // createdBy, positionNumber (?), deadline, comments
+    // createdBy, deadline, comments
     
 
     // taskId
