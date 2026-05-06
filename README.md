@@ -119,3 +119,7 @@ The application uses GitHub Actions for continuous integration and deployment.
 - Backend deployed on Rahti (OpenShift) with PostgreSQL database
 - Frontend deployed on Azure Static Web Apps
 - OpenShift manifests in [ops/openshift/](ops/openshift/) - Kubernetes deployment configurations, services, and routes
+
+### Relational diagram
+
+![Relational diagram](prokress_relaatiokaavio.png)
