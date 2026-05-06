@@ -77,7 +77,8 @@ The API includes endpoints for managing users, projects, task lists and tasks wi
 
 ## Technical instructions
 
-**1. Clone repository:**
+### Clone repository 
+
 ```bash
 git clone https://github.com/Git-Happens-HH/Project-management-backend.git
 cd Project-management-backend
