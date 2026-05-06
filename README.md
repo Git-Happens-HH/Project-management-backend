@@ -75,6 +75,35 @@ All REST API endpoints are automatically documented in Swagger UI:
 
 The API includes endpoints for managing users, projects, task lists and tasks with full CRUD operations and WebSocket support for real-time updates.
 
+## Technical instructions
+
+### Clone repository 
+
+```bash
+git clone https://github.com/Git-Happens-HH/Project-management-backend.git
+cd Project-management-backend
+```
+
+### Running Backend
+
+```bash
+cd project-management-app
+mvn clean spring-boot:run
+```
+
+Backend runs at: **http://localhost:8080**
+
+API docs: **http://localhost:8080/swagger-ui/index.html**
+
+### Running Tests
+
+```bash
+cd project-management-app
+mvn test                    # Run all tests
+mvn clean verify            # Run with coverage
+```
+
+
 ## Deployment & CI/CD
 
 The application uses GitHub Actions for continuous integration and deployment.
@@ -91,4 +120,3 @@ The application uses GitHub Actions for continuous integration and deployment.
 - Backend deployed on Rahti (OpenShift) with PostgreSQL database
 - Frontend deployed on Azure Static Web Apps
 - OpenShift manifests in [ops/openshift/](ops/openshift/) - Kubernetes deployment configurations, services, and routes
-
