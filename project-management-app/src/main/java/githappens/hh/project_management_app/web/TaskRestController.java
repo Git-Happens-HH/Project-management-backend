@@ -1,19 +1,13 @@
 package githappens.hh.project_management_app.web;
 
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import githappens.hh.project_management_app.service.ProjectRealtimeService;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 import githappens.hh.project_management_app.domain.Task;
 import githappens.hh.project_management_app.domain.TaskList;
 import githappens.hh.project_management_app.domain.TaskListRepository;
 import githappens.hh.project_management_app.domain.TaskRepository;
-import githappens.hh.project_management_app.service.ProjectRealtimeService;
-
 import java.util.List;
 
 @RestController
@@ -50,7 +44,7 @@ public class TaskRestController {
     }
 
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
-public Task saveEditedTask(
+    public Task saveEditedTask(
         @PathVariable Long projectId,
         @PathVariable Long taskListId,
         @PathVariable Long taskId,
@@ -74,12 +68,31 @@ public Task saveEditedTask(
     realtimeService.broadcastTaskLists(projectId);
 
     return saved;
-}
+    }
 
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
         taskRepository.deleteById(taskId);
         taskRepository.flush();
         realtimeService.broadcastTaskLists(projectId);
+    }
+
+    @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}/to/{newTaskListId}")
+    public Task moveTask(
+            @PathVariable Long projectId,
+            @PathVariable Long taskListId,
+            @PathVariable Long taskId,
+            @PathVariable Long newTaskListId) {
+
+        Task existingTask = taskRepository.findById(taskId).orElse(null);
+
+        TaskList newTaskList = taskListRepository.findById(newTaskListId).orElse(null);
+
+        existingTask.setTaskList(newTaskList);
+
+        Task saved = taskRepository.save(existingTask);
+        taskRepository.flush();
+        realtimeService.broadcastTaskLists(projectId);
+        return saved;
     }
 }
