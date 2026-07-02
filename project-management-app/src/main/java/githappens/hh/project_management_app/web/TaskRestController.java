@@ -15,6 +15,7 @@ import githappens.hh.project_management_app.domain.TaskRepository;
 import githappens.hh.project_management_app.service.ProjectRealtimeService;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class TaskRestController {
@@ -31,7 +32,7 @@ public class TaskRestController {
 
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
     public List<Task> getTasksForTaskList(@PathVariable Long projectId, @PathVariable Long taskListId) {
-        return taskRepository.findByTaskList_TaskListId(taskListId);
+        return taskRepository.findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(taskListId);
     }
 
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
@@ -43,6 +44,10 @@ public class TaskRestController {
     public Task createTask(@PathVariable Long projectId, @PathVariable Long taskListId, @RequestBody Task task) {
         TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
         task.setTaskList(taskList);
+        if (task.getSortOrder() == null) {
+            int nextSortOrder = taskRepository.findByTaskList_TaskListId(taskListId).size();
+            task.setSortOrder(nextSortOrder);
+        }
         Task saved = taskRepository.save(task);
         taskRepository.flush();
         realtimeService.broadcastTaskLists(projectId);
@@ -64,6 +69,9 @@ public Task saveEditedTask(
     existingTask.setTitle(task.getTitle());
     existingTask.setDescription(task.getDescription());
     existingTask.setDeadline(task.getDeadline());
+    if (task.getSortOrder() != null) {
+        existingTask.setSortOrder(task.getSortOrder());
+    }
     // existingTask.setAssignedUser(task.getAssignedUser());
 
     existingTask.setTaskList(taskList);
@@ -75,6 +83,31 @@ public Task saveEditedTask(
 
     return saved;
 }
+
+    @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/reorder")
+    public List<Task> reorderTasks(
+            @PathVariable Long projectId,
+            @PathVariable Long taskListId,
+            @RequestBody List<Long> taskIds) {
+
+        List<Task> tasks = taskRepository.findAllById(taskIds);
+
+        for (int i = 0; i < taskIds.size(); i++) {
+            Long taskId = taskIds.get(i);
+            for (Task task : tasks) {
+                if (task.getTaskId().equals(taskId)) {
+                    task.setSortOrder(i);
+                    break;
+                }
+            }
+        }
+
+        taskRepository.saveAll(tasks);
+        taskRepository.flush();
+        realtimeService.broadcastTaskLists(projectId);
+
+        return taskRepository.findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(taskListId);
+    }
 
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {

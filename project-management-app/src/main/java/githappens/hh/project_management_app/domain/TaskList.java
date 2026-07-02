@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OrderBy;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
@@ -48,6 +49,7 @@ public class TaskList {
 
     // tasks
     @OneToMany(mappedBy = "taskList", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("sortOrder ASC, taskId ASC")
     @JsonIgnoreProperties("taskList")
     private List<Task> tasks = new ArrayList<>();
 
