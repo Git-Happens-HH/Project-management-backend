@@ -27,16 +27,19 @@ public class TaskListRestController {
         this.realtimeService =  realtimeService;
     }
 
+    // get tasklists (by project id)
     @GetMapping("/api/projects/{projectId}/tasklists")
     public List<TaskList> getTaskListsForProject(@PathVariable Long projectId) {
         return taskListRepository.findByProject_ProjectId(projectId);
     }
 
+    // get tasklist (by tasklist id)
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}")
     public TaskList getTaskListById(@PathVariable Long taskListId) {
         return taskListRepository.findById(taskListId).orElse(null);
     }
 
+    // CREATE tasklist
     @PostMapping("/api/projects/{projectId}/tasklists")
     public TaskList createTaskList(@PathVariable Long projectId, @RequestBody TaskList taskList) {
         Project project = projectRepository.findById(projectId).orElse(null);
@@ -47,6 +50,7 @@ public class TaskListRestController {
         return saved;
     }
     
+    // DELETE tasklist
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}")
     public void deleteTaskList(@PathVariable Long taskListId, @PathVariable Long projectId) {
         taskListRepository.deleteById(taskListId);

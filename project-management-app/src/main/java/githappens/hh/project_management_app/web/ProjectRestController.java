@@ -21,21 +21,25 @@ public class ProjectRestController {
         this.projectRepository = projectRepository;
     }
 
+    // get projects
     @GetMapping("/api/projects")
     public @ResponseBody List<Project> listProjects() {
         return (List<Project>) projectRepository.findAll();
     }
 
+    // get project by id
     @GetMapping("/api/projects/{projectId}")
     public @ResponseBody Optional<Project> getProjectById(@PathVariable Long projectId) {
         return projectRepository.findById(projectId);
     }
 
+    // CREATE project
     @PostMapping("/api/projects")
     public @ResponseBody Project createProject(@RequestBody Project project) {
         return projectRepository.save(project);
     }
 
+    // DELETE project
     @DeleteMapping("/api/projects/{projectId}")
     public void deleteProject(@PathVariable Long projectId) {
         projectRepository.deleteById(projectId);

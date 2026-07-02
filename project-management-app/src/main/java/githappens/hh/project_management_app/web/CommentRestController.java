@@ -24,6 +24,7 @@ public class CommentRestController {
         this.taskRepository = taskRepository;
     }
 
+    // get comments
     @GetMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments")
     public List<Comment> getComments(@PathVariable("taskId") Long taskId) {
         Task task = taskRepository.findById(taskId).orElse(null);
@@ -33,11 +34,13 @@ public class CommentRestController {
         return commentRepository.findByTaskOrderByCreatedAtDesc(task);
     }
 
+    // get comment by id
     @GetMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments/{commentId}")
     public Comment getCommentById(@PathVariable("commentId") Long commentId) {
         return commentRepository.findById(commentId).orElse(null);
     }
 
+    // CREATE comment
     @PostMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments")
     public Comment createComment(@PathVariable("projectId") Long projectId,
             @PathVariable("tasklistId") Long tasklistId,
@@ -49,6 +52,7 @@ public class CommentRestController {
         return commentRepository.save(comment);
     }
 
+    // DELETE comment
     @DeleteMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments/{commentId}")
     public void deleteComment(@PathVariable("commentId") Long commentId) {
         commentRepository.deleteById(commentId);
