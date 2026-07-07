@@ -15,6 +15,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -25,6 +28,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.AppUserRepository;
+
 
 @WebMvcTest
 public class AppUserControllerTests {
@@ -70,6 +74,7 @@ public class AppUserControllerTests {
                 .andExpect(jsonPath("$[0].email").value("paulapython@example.com"));
 }
 
+    // Return user by id test
     @Test
     void shouldReturnUserById() throws Exception {
 
@@ -98,23 +103,28 @@ public class AppUserControllerTests {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.username").value("P-python"));
 
-
     }
 
+    // Reject duplicate username test
     @Test
-void shouldRejectDuplicateUsername() throws Exception {
+    void shouldRejectDuplicateUsername() throws Exception {
 
-    when(appUserRepository.existsByUsername("P-python"))
-            .thenReturn(true);
+        when(appUserRepository.existsByUsername("P-python"))
+                .thenReturn(true);
 
-    mockMvc.perform(post("/api/users")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsString(user)))
-            .andExpect(status().is5xxServerError());
-}
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().is5xxServerError());
+    }
 
-    
+    // DELETE user test
+    @Test
+    void shouldDeleteUser() throws Exception {
+        mockMvc.perform(delete("/api/users/1"))
+        .andExpect(status().isOk());
 
-    
+        verify(appUserRepository).deleteById(1L);
+    }
     
 }
