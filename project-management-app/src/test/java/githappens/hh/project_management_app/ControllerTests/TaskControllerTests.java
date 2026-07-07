@@ -13,6 +13,8 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,8 +24,12 @@ import githappens.hh.project_management_app.domain.Task;
 import githappens.hh.project_management_app.domain.TaskList;
 import githappens.hh.project_management_app.domain.TaskListRepository;
 import githappens.hh.project_management_app.domain.TaskRepository;
+import githappens.hh.project_management_app.security.AuthTokenFilter;
 import githappens.hh.project_management_app.service.ProjectRealtimeService;
+import githappens.hh.project_management_app.web.TaskRestController;
 
+@WebMvcTest(TaskRestController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class TaskControllerTests {
     
     @Autowired
@@ -37,6 +43,9 @@ public class TaskControllerTests {
 
     @MockitoBean
     private TaskListRepository taskListRepository;
+
+    @MockitoBean
+    private AuthTokenFilter authTokenFilter;
 
     @MockitoBean
     private ProjectRealtimeService realtimeService;
@@ -88,9 +97,9 @@ public class TaskControllerTests {
     void getTaskById_returnsTaskWhenFound() throws Exception {
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
 
-        mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks",
-                        projectId, taskListId, taskId))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.taskId").value(taskId));
+        mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}",
+                projectId, taskListId, taskId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.taskId").value(taskId));
     }
 }
