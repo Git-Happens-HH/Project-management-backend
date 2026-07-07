@@ -1,6 +1,6 @@
 package githappens.hh.project_management_app.ControllerTests;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
 
 import java.time.LocalDateTime;
@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -28,9 +29,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.AppUserRepository;
+import githappens.hh.project_management_app.web.ProjectRestController;
 
 
-@WebMvcTest
+@WebMvcTest(AppUserRestController.class)
 public class AppUserControllerTests {
 
     @Autowired
