@@ -1,31 +1,34 @@
 package githappens.hh.project_management_app.ControllerTests;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import githappens.hh.project_management_app.domain.Task;
-import githappens.hh.project_management_app.domain.TaskList;
-import githappens.hh.project_management_app.domain.TaskListRepository;
-import githappens.hh.project_management_app.domain.TaskRepository;
-import githappens.hh.project_management_app.service.ProjectRealtimeService;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import githappens.hh.project_management_app.domain.Task;
+import githappens.hh.project_management_app.domain.TaskList;
+import githappens.hh.project_management_app.domain.TaskListRepository;
+import githappens.hh.project_management_app.domain.TaskRepository;
+import githappens.hh.project_management_app.security.AuthTokenFilter;
+import githappens.hh.project_management_app.service.ProjectRealtimeService;
+import githappens.hh.project_management_app.web.TaskRestController;
+
+@WebMvcTest(TaskRestController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class TaskControllerTests {
     
     @Autowired
@@ -39,6 +42,9 @@ public class TaskControllerTests {
 
     @MockitoBean
     private TaskListRepository taskListRepository;
+
+    @MockitoBean
+    private AuthTokenFilter authTokenFilter;
 
     @MockitoBean
     private ProjectRealtimeService realtimeService;
@@ -90,10 +96,10 @@ public class TaskControllerTests {
     void getTaskById_returnsTaskWhenFound() throws Exception {
         when(taskRepository.findById(taskId)).thenReturn(Optional.of(task));
 
-        mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks",
-                        projectId, taskListId, taskId))
-                        .andExpect(status().isOk())
-                        .andExpect(jsonPath("$.taskId").value(taskId));
+        mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}",
+                projectId, taskListId, taskId))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.taskId").value(taskId));
     }
 
     @Test
