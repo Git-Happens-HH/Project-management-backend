@@ -38,7 +38,7 @@ import org.springframework.http.MediaType;
 @WebMvcTest(TaskRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
 public class TaskControllerTests {
-    
+
     @Autowired
     private MockMvc mockMvc;
 
@@ -77,7 +77,6 @@ public class TaskControllerTests {
         task.setTaskList(taskList);
     }
 
-
     @Test
     void getTasksForTaskList_returnsTasksFromRepository() throws Exception {
         when(taskRepository.findByTaskList_TaskListId(taskListId)).thenReturn(List.of(task));
@@ -106,8 +105,8 @@ public class TaskControllerTests {
 
         mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}",
                 projectId, taskListId, taskId))
-        .andExpect(status().isOk())
-        .andExpect(jsonPath("$.taskId").value(taskId));
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.taskId").value(taskId));
     }
 
     @Test
@@ -115,7 +114,7 @@ public class TaskControllerTests {
         Task newTask = new Task();
         newTask.setTitle("new task");
         newTask.setDescription("Do the thing");
-    
+
         when(taskListRepository.findById(taskListId)).thenReturn(Optional.of(taskList));
         when(taskRepository.save(any(Task.class))).thenAnswer(inv -> {
             Task t = inv.getArgument(0);
@@ -124,17 +123,17 @@ public class TaskControllerTests {
         });
 
         mockMvc.perform(post("/api/projects/{projectId}/tasklists/{taskListId}/tasks", projectId, taskListId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(newTask)))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(newTask)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.taskId").value(99))
-                .andExpect(jsonPath("$.title").value("New task"));
+                .andExpect(jsonPath("$.taskId").value(99L))
+                .andExpect(jsonPath("$.title").value("new task"));
 
         verify(taskRepository).save(any(Task.class));
         verify(taskRepository).flush();
         verify(realtimeService, times(1)).broadcastTaskLists(projectId);
     }
-    
+
     @Test
     void saveEditedTask_updatesEditableFieldsAndBroadcasts() throws Exception {
         Task edits = new Task();
@@ -147,15 +146,15 @@ public class TaskControllerTests {
         when(taskRepository.save(any(Task.class))).thenAnswer(inv -> inv.getArgument(0));
 
         mockMvc.perform(post("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}",
-                        projectId, taskListId, taskId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(edits)))
+                projectId, taskListId, taskId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(edits)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Updated title"))
                 .andExpect(jsonPath("$.description").value("Updated description"));
 
-        verify(taskRepository).save(argThat(t ->
-                t.getTitle().equals("Updated title") && t.getDescription().equals("Updated description")));
+        verify(taskRepository).save(
+                argThat(t -> t.getTitle().equals("Updated title") && t.getDescription().equals("Updated description")));
         verify(realtimeService).broadcastTaskLists(projectId);
     }
 
@@ -164,7 +163,7 @@ public class TaskControllerTests {
         doNothing().when(taskRepository).deleteById(taskId);
 
         mockMvc.perform(delete("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}",
-                        projectId, taskListId, taskId))
+                projectId, taskListId, taskId))
                 .andExpect(status().isOk());
 
         verify(taskRepository).deleteById(taskId);

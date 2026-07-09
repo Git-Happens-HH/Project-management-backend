@@ -21,14 +21,25 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping
 public class AuthController {
-    @Autowired
+    
     AuthenticationManager authenticationManager;
-    @Autowired
+
     AppUserRepository AppUserRepository;
-    @Autowired
+    
     PasswordEncoder encoder;
-    @Autowired
+    
     JwtUtil jwtUtils;
+
+    public AuthController(AuthenticationManager authenticationManager,
+            githappens.hh.project_management_app.domain.AppUserRepository appUserRepository, PasswordEncoder encoder,
+            JwtUtil jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        AppUserRepository = appUserRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
+
+
     @PostMapping("/login")
     public String authenticateUser(@RequestBody AppUser appUser) {
         Authentication authentication = authenticationManager.authenticate(
@@ -45,7 +56,7 @@ public class AuthController {
 @PostMapping("/register")
 public String registerAppUser(@RequestBody AppUser appUser) {
     if (AppUserRepository.existsByEmail(appUser.getEmail())) {
-        return "Error: Username is already taken!";
+        return "Error: An account is already registered with this email!";
     }
     AppUser newUser = new AppUser(
         appUser.getUsername(),

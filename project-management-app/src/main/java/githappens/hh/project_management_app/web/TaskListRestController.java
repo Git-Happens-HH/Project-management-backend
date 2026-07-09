@@ -36,13 +36,13 @@ public class TaskListRestController {
     // get tasklist (by tasklist id)
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}")
     public TaskList getTaskListById(@PathVariable Long taskListId) {
-        return taskListRepository.findById(taskListId).orElse(null);
+        return taskListRepository.findById(taskListId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task list not found"));
     }
 
     // CREATE tasklist
     @PostMapping("/api/projects/{projectId}/tasklists")
     public TaskList createTaskList(@PathVariable Long projectId, @RequestBody TaskList taskList) {
-        Project project = projectRepository.findById(projectId).orElse(null);
+        Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
         taskList.setProject(project);
         TaskList saved = taskListRepository.save(taskList);
         taskListRepository.flush();

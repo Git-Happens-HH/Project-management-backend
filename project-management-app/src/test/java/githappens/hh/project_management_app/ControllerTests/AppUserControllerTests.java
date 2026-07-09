@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -29,10 +30,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.AppUserRepository;
+import githappens.hh.project_management_app.security.JwtUtil;
+import githappens.hh.project_management_app.web.AppUserDetailsServiceImpl;
+import githappens.hh.project_management_app.web.AppUserRestController;
 import githappens.hh.project_management_app.web.ProjectRestController;
 
 
 @WebMvcTest(AppUserRestController.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class AppUserControllerTests {
 
     @Autowired
@@ -47,12 +52,17 @@ public class AppUserControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
     
-    @Autowired
     private AppUser user;
+
+    @MockitoBean
+    private JwtUtil jwtUtil;
+
+    @MockitoBean
+    private AppUserDetailsServiceImpl appUserDetailsService;
 
     @BeforeEach
     void setUp() {
-        AppUser user = new AppUser();
+        user = new AppUser();
         user.setAppUserId(1L);
         user.setUsername("P-python");
         user.setFirstName("Paula");
@@ -85,7 +95,7 @@ public class AppUserControllerTests {
 
         mockMvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.username").value("alice"));
+                .andExpect(jsonPath("$.username").value("P-python"));
     }
 
 
@@ -117,7 +127,7 @@ public class AppUserControllerTests {
         mockMvc.perform(post("/api/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(user)))
-                .andExpect(status().is5xxServerError());
+                .andExpect(status().isBadRequest());
     }
 
     // DELETE user test

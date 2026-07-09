@@ -39,8 +39,7 @@ public class AppUser {
     private Long appUserId;
 
     // username
-    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique and can't
-                                                                                    // be changed
+    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique                                                                               // be changed
     @NotBlank(message = "A unique username is required")
     private String username;
 
