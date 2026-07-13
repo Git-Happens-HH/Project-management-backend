@@ -156,7 +156,7 @@ public class AppUser {
         this.email = email;
     }
 
-    @JsonIgnore
+    @JsonProperty(access = Access.WRITE_ONLY)
     public String getPasswordHash() {
         return passwordHash;
     }

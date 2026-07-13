@@ -119,7 +119,7 @@ public class TaskListControllerTests {
     void deleteTaskList_deletesAndBroadcasts() throws Exception {
         doNothing().when(taskListRepository).deleteById(taskListId);
 
-        mockMvc.perform(delete("/api/projects/{project}tasklists/{taskListId}", projectId, taskListId))
+        mockMvc.perform(delete("/api/projects/{project}/tasklists/{taskListId}", projectId, taskListId))
         .andExpect(status().isOk());
 
         verify(taskListRepository).deleteById(taskListId);

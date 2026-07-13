@@ -21,6 +21,9 @@ import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -30,6 +33,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.AppUserRepository;
+import githappens.hh.project_management_app.domain.Project;
 import githappens.hh.project_management_app.security.JwtUtil;
 import githappens.hh.project_management_app.web.AppUserDetailsServiceImpl;
 import githappens.hh.project_management_app.web.AppUserRestController;
@@ -98,6 +102,22 @@ public class AppUserControllerTests {
                 .andExpect(jsonPath("$.username").value("P-python"));
     }
 
+    // Return a users projects
+    @Test
+    void shouldReturnUsersProjects() throws Exception {
+        Project project1 = new Project("Project 1", "Description 1", null, false);
+        Project project2 = new Project("Project 2", "Description 2", null, false);
+        user.setProjects(List.of(project1, project2));
+
+        when(appUserRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        mockMvc.perform(get("/api/users/1/projects"))
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$[0].title").value("Project 1"))
+       .andExpect(jsonPath("$[1].title").value("Project 2"));
+        
+    }
+
 
     // CREATE user test
     @Test
@@ -122,6 +142,19 @@ public class AppUserControllerTests {
     void shouldRejectDuplicateUsername() throws Exception {
 
         when(appUserRepository.existsByUsername("P-python"))
+                .thenReturn(true);
+
+        mockMvc.perform(post("/api/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(user)))
+                .andExpect(status().isBadRequest());
+    }
+
+    // Reject duplicate email test
+    @Test
+    void shouldRejectDuplicateEmail() throws Exception {
+
+        when(appUserRepository.existsByEmail("paulapython@example.com"))
                 .thenReturn(true);
 
         mockMvc.perform(post("/api/users")

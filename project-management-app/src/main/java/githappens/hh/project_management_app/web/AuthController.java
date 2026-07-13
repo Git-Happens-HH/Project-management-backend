@@ -54,10 +54,13 @@ public class AuthController {
 
 
 @PostMapping("/register")
-public String registerAppUser(@RequestBody AppUser appUser) {
+public ResponseEntity<String> registerAppUser(@RequestBody AppUser appUser) {
     if (AppUserRepository.existsByEmail(appUser.getEmail())) {
-        return "Error: An account is already registered with this email!";
+        return ResponseEntity
+        .badRequest()
+        .body("Error: An account is already registered with this email!");
     }
+
     AppUser newUser = new AppUser(
         appUser.getUsername(),
         appUser.getFirstName(),
@@ -67,7 +70,7 @@ public String registerAppUser(@RequestBody AppUser appUser) {
         LocalDateTime.now()
     );
     AppUserRepository.save(newUser);
-    return "User registered succesfully!";
+    return ResponseEntity.ok("User registered succesfully!");
 
 // generate JWT for the newly created user (use email as subject if your auth uses email)
      // String subjectForToken = appUser.getEmail(); // or appUser.getUsername() depending how JwtUtil/userDetails are configured
