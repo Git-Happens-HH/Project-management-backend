@@ -1,6 +1,6 @@
 package githappens.hh.project_management_app.domain;
 
 public enum EnumProjectRole {
-    OWNER,
-    MEMBER
+    owner,
+    member
 }

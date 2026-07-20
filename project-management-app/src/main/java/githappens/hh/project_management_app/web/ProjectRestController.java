@@ -57,10 +57,8 @@ public class ProjectRestController {
 // __________________________________________________________________________________________
 
     // get projects where user is owner or member
-    @GetMapping("/api/projectsbyuser/{userId}")
-    public @ResponseBody List<Project> getProjectsByUserIdAndRole(@PathVariable Long userId, @RequestParam EnumProjectRole role) {
+    @GetMapping("/api/projectsbyuser/{userId}/{role}")
+    public @ResponseBody List<Project> getProjectsByUserIdAndRole(@PathVariable Long userId, @PathVariable EnumProjectRole role) {
         return userProjectRepository.findProjectsByUserIdAndRole(userId, role);
     }
-    
-
 }
