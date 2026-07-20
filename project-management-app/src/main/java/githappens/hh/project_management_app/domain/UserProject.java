@@ -6,11 +6,13 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 
 @Entity(name="user_project")
 public class UserProject {
 
-    // userProject, appUser, project, sharedToThisUser
+    // userProject, appUser, project, role
 
     // userProject
     @EmbeddedId
@@ -28,20 +30,20 @@ public class UserProject {
     @JoinColumn(name="project_id")
     Project project;
 
-    // shared to this user (true/false)
-    // if shared = false, this user is the owner of the project
-    @Column(name = "shared_to_this_user", updatable = false)
-    boolean sharedToThisUser;
+    // role
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, updatable = true)
+    private EnumProjectRole role;
 
 // CONSTRUCTORS
 
     public UserProject() {
     }
 
-    public UserProject(AppUser appUser, Project project, boolean sharedToThisUser) {
+    public UserProject(AppUser appUser, Project project, EnumProjectRole role) {
         this.appUser = appUser;
         this.project = project;
-        this.sharedToThisUser = sharedToThisUser;
+        this.role = role;
         this.userProjectKeyId = new UserProjectKey(appUser.getAppUserId(), project.getProjectId());
     }
 
@@ -71,20 +73,20 @@ public class UserProject {
         this.project = project;
     }
 
-    public boolean getSharedToThisUser() {
-        return sharedToThisUser;
+     public EnumProjectRole getRole() {
+        return role;
     }
 
-    public void setSharedToThisUser(boolean sharedToThisUser) {
-        this.sharedToThisUser = sharedToThisUser;
+    public void setRole(EnumProjectRole role) {
+        this.role = role;
     }
 
 // TO STRING
 
     @Override
     public String toString() {
-        return "UserProject [appUser=" + appUser + ", project=" + project + ", sharedToThisUser=" + sharedToThisUser
-                + "]";
+        return "UserProject [appUser=" + appUser + ", project=" + project
+                + ", role=" + role + "]";
     }
 
     

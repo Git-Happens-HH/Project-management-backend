@@ -14,8 +14,6 @@ import java.util.Optional;
 
 import githappens.hh.project_management_app.domain.Comment;
 
-
-
 @RestController
 public class CommentRestController {
     private final CommentRepository commentRepository;
