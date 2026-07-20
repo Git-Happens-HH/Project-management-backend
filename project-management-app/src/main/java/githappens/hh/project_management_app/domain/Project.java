@@ -44,13 +44,9 @@ public class Project {
     private boolean isShared;
 
     // projectMembers
-    @ManyToMany(mappedBy = "projects")
+    @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("projects")
     private List<AppUser> projectMembers = new ArrayList<>();
-
-    // projectMembers
-    // @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL)
-    // @JsonIgnoreProperties("projects")
-    // private List<AppUser> projectMembers = new ArrayList<>();
 
     //taskList
     @OneToMany(mappedBy = "project")

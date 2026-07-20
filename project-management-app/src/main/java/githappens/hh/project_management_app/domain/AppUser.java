@@ -73,11 +73,10 @@ public class AppUser {
 
     // LISTS OF PROJECTS, TASKS AND COMMENTS
 
-    // projects
-    @ManyToMany
-    // many-to-many relatonship requires a new join table
-    @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
-    private List<Project> projects = new ArrayList<>();
+    // userProjects
+    @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Project> userProjects = new ArrayList<>();
 
     // tasksAssigned
     @OneToMany(mappedBy = "assignedUser", cascade = CascadeType.ALL)
@@ -173,12 +172,12 @@ public class AppUser {
         this.registeredAt = registeredAt;
     }
 
-    public List<Project> getProjects() {
-        return projects;
+    public List<Project> getUserProjects() {
+        return userProjects;
     }
 
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
+    public void setUserProjects(List<Project> projects) {
+        this.userProjects = projects;
     }
 
     public List<Task> getTasksAssigned() {
