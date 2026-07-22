@@ -51,7 +51,7 @@ public class ExamplePostgres extends AbstractPostgresBaseClass {
     void aliasBugPostgreSQL() {
         // Arrange — same setup as the H2 test
         Project project = projectRepository.save(
-                new Project("Test Project", "For alias bug demo", LocalDateTime.now(), false));
+                new Project("Test Project", "For alias bug demo", LocalDateTime.now()));
 
         TaskList taskList = taskListRepository.save(
                 new TaskList(project, "Sprint 1", LocalDateTime.now()));

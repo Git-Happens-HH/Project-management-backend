@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.AppUserRepository;
 import githappens.hh.project_management_app.domain.Project;
+import githappens.hh.project_management_app.domain.UserProject;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,8 +35,11 @@ public class AppUserRestController {
     }
 
     // get projects for user
+
+    // Is this neccessary? Is there any for this?
+    
     @GetMapping("/api/users/{userId}/projects")
-    public Iterable<Project> getProjectsForUser(@PathVariable Long userId) {
+    public Iterable<UserProject> getProjectsForUser(@PathVariable Long userId) {
         return appUserRepository.findById(userId)
                 .map(AppUser::getProjects)
                 .orElse(List.of());

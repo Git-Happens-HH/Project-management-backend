@@ -71,8 +71,7 @@ public class ProjectControllerTests {
         project = new Project(
                 "Project controller test",
                 "Testing",
-                LocalDateTime.now(),
-                false);
+                LocalDateTime.now());
         project.setProjectId(1L);
     }
 
@@ -83,12 +82,10 @@ public class ProjectControllerTests {
 
         Project project1 = new Project("Test 1",
                 "Testing 1",
-                LocalDateTime.now(),
-                false);
+                LocalDateTime.now());
         Project project2 = new Project("Test 2",
                 "Testing 2",
-                LocalDateTime.now(),
-                false);
+                LocalDateTime.now());
 
         List<Project> projects = List.of(project1, project2);
 

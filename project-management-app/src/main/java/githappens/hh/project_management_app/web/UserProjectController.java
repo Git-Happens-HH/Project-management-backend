@@ -56,7 +56,7 @@ public class UserProjectController {
 
     // DELETE member from project
     
-    @DeleteMapping("api/projects/{projectId}/members/{userId}")
+    @DeleteMapping("/api/projects/{projectId}/members/{userId}")
     public void deleteMemberFromProject(@PathVariable Long projectId, 
                                         @PathVariable Long userId, 
                                         @RequestBody AppUser requesterUser) {

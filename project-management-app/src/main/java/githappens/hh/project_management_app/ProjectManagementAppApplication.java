@@ -61,7 +61,6 @@ public class ProjectManagementAppApplication {
 			user1.setEmail("jukkis@example.com");
 			user1.setPasswordHash(passwordEncoder.encode("Salasana@123"));
 			user1.setRegisteredAt(now);
-			user1.setProjects(new ArrayList<>());
 			user1.setTasksAssigned(new ArrayList<>());
 			user1.setTasksCreated(new ArrayList<>());
 			user1.setComments(new ArrayList<>());
@@ -74,7 +73,6 @@ public class ProjectManagementAppApplication {
 			user2.setEmail("paula.python@example.com");
 			user2.setPasswordHash(passwordEncoder.encode("Salasana@123"));
 			user2.setRegisteredAt(now);
-			user2.setProjects(new ArrayList<>());
 			user2.setTasksAssigned(new ArrayList<>());
 			user2.setTasksCreated(new ArrayList<>());
 			user2.setComments(new ArrayList<>());
@@ -89,13 +87,10 @@ public class ProjectManagementAppApplication {
 			p1.setTitle("Test Project: The Six Seven App Creation Team");
 			p1.setDescription("Random description");
 			p1.setCreatedAt(now);
-			p1.setIsShared(false);
 			projectRepository.save(p1);
 
-			// UserProject: Join table entry linking user to project with ownership tracking
-			// Parameters: (user, project, sharedToThisUser)
-			// sharedToThisUser = false means this user OWNS the project
-			// sharedToThisUser = true means the project is SHARED with this user (not owner)
+			// UserProject: liitostaulun rivi, joka yhdistää käyttäjän projektiin
+			// ja tallentaa roolin (owner / member)
 
 			UserProject up1 = new UserProject(user1, p1, roleOwner);
 			userProjectRepository.save(up1);
@@ -126,19 +121,15 @@ public class ProjectManagementAppApplication {
 			p2.setTitle("Website Redesign: Make YouTube great again");
 			p2.setDescription("Second test project description");
 			p2.setCreatedAt(now.plusHours(1));
-			p2.setIsShared(true);
 			projectRepository.save(p2);
 
-			// Multiple users can access the same project with different roles:
-			// up2: 'user' owns this project (sharedToThisUser = false)
-			// up3: 'admin' has it shared with them (sharedToThisUser = true)
-			// This allows collaboration while tracking who owns vs who has shared access
+			// Useampi käyttäjä voi kuulua samaan projektiin eri roolein:
+			// up2: jukka omistaa tämän projektin (rooli: owner)
+			// up3: paulalla on jäsenoikeus tähän projektiin (rooli: member)
 
-		
-			
-			UserProject up2 = new UserProject(user2, p2, roleOwner);
+			UserProject up2 = new UserProject(user1, p2, roleOwner);
 			userProjectRepository.save(up2);
-			UserProject up3 = new UserProject(user1, p2, roleMember);
+			UserProject up3 = new UserProject(user2, p2, roleMember);
 			userProjectRepository.save(up3);
 
 			TaskList tl2 = new TaskList();

@@ -89,7 +89,6 @@ public class CommentControllerTests {
         project.setTitle("Test Project");
         project.setDescription("Project for comment tests");
         project.setCreatedAt(LocalDateTime.now());
-        project.setIsShared(false);
 
         taskList = new TaskList();
         taskList.setTaskListId(taskListId);

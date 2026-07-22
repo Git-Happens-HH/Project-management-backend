@@ -33,7 +33,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.AppUserRepository;
+import githappens.hh.project_management_app.domain.EnumProjectRole;
 import githappens.hh.project_management_app.domain.Project;
+import githappens.hh.project_management_app.domain.UserProject;
 import githappens.hh.project_management_app.security.JwtUtil;
 import githappens.hh.project_management_app.web.AppUserDetailsServiceImpl;
 import githappens.hh.project_management_app.web.AppUserRestController;
@@ -105,9 +107,17 @@ public class AppUserControllerTests {
     // Return a users projects
     @Test
     void shouldReturnUsersProjects() throws Exception {
-        Project project1 = new Project("Project 1", "Description 1", null, false);
-        Project project2 = new Project("Project 2", "Description 2", null, false);
-        user.setProjects(List.of(project1, project2));
+        Project project1 = new Project("Project 1", "Description 1", null);
+        Project project2 = new Project("Project 2", "Description 2", null);
+
+        EnumProjectRole roleOwner = EnumProjectRole.owner;
+        EnumProjectRole roleMember = EnumProjectRole.member;
+
+        UserProject userProject1 = new UserProject(user, project1, roleOwner);
+        UserProject userProject2 = new UserProject(user, project2, roleMember);
+
+
+        user.setProjects(List.of(userProject1, userProject2));
 
         when(appUserRepository.findById(1L)).thenReturn(Optional.of(user));
 

@@ -24,30 +24,28 @@ public class ProjectRepositoryTests {
     // CREATE a new project test
     @Test
     public void createNewProject() {
-        Project project1 = new Project("Test Project1", "Testing project creation1", LocalDateTime.now(), false);
+        Project project1 = new Project("Test Project1", "Testing project creation1", LocalDateTime.now());
         projectRepository.save(project1);
         assertThat(project1.getProjectId()).isNotNull();
         assertThat(project1.getTitle()).isEqualTo("Test Project1");
         assertThat(project1.getDescription()).isEqualTo("Testing project creation1");
-        assertThat(project1.getIsShared()).isFalse();
     }
 
     // SEARCH project by title test
     @Test
     public void findByTitleShouldReturnProject() {
-        Project project2 = new Project("Test Project2", "Testing project search2", LocalDateTime.now(), false);
+        Project project2 = new Project("Test Project2", "Testing project search2", LocalDateTime.now());
         projectRepository.save(project2);
         Optional<Project> found1 = projectRepository.findByTitle("Test Project2");
         assertThat(found1).isPresent();
         assertThat(found1.get().getTitle()).isEqualTo("Test Project2");
         assertThat(found1.get().getDescription()).isEqualTo("Testing project search2");
-        assertThat(found1.get().getIsShared()).isFalse();
     }
 
     // SEARCH project by id test
     @Test
     public void findByIdShouldReturnProject() {
-        Project project3 = new Project("Test Project3", "Testing project search by id3", LocalDateTime.now(), false);
+        Project project3 = new Project("Test Project3", "Testing project search by id3", LocalDateTime.now());
         projectRepository.save(project3);
         Long projectId = project3.getProjectId();
         Optional<Project> found2 = projectRepository.findById(projectId);
@@ -55,13 +53,12 @@ public class ProjectRepositoryTests {
         assertThat(found2.get().getProjectId()).isEqualTo(projectId);
         assertThat(found2.get().getTitle()).isEqualTo("Test Project3");
         assertThat(found2.get().getDescription()).isEqualTo("Testing project search by id3");
-        assertThat(found2.get().getIsShared()).isFalse();
     }
 
     // DELETE project by Id test
     @Test
     public void deleteProjectById() {
-        Project project4 = new Project("Test Project4", "Testing project deletion4", LocalDateTime.now(), false);
+        Project project4 = new Project("Test Project4", "Testing project deletion4", LocalDateTime.now());
         projectRepository.save(project4);
         Long projectId = project4.getProjectId();
         projectRepository.deleteById(projectId);
@@ -72,8 +69,8 @@ public class ProjectRepositoryTests {
     // CUSTOM QUERY: FIND BY TITLE ignore case
     @Test
     public void findByTitleContainingIgnoreCaseShouldReturnProjects() {
-        Project project1 = new Project("Test Project One", "Description1", LocalDateTime.now(), false);
-        Project project2 = new Project("Another Test Project", "Description2", LocalDateTime.now(), false);
+        Project project1 = new Project("Test Project One", "Description1", LocalDateTime.now());
+        Project project2 = new Project("Another Test Project", "Description2", LocalDateTime.now());
         projectRepository.save(project1);
         projectRepository.save(project2);
 
@@ -85,9 +82,9 @@ public class ProjectRepositoryTests {
     // CUSTOM QUERY: FIND ALL BY ORDER BY TITLE ASC
     @Test
     public void findAllByOrderByTitleAscShouldReturnProjectsInOrder() {
-        Project project1 = new Project("Z Project", "Description Z", LocalDateTime.now(), false);
-        Project project2 = new Project("A Project", "Description A", LocalDateTime.now(), false);
-        Project project3 = new Project("M Project", "Description M", LocalDateTime.now(), false);
+        Project project1 = new Project("Z Project", "Description Z", LocalDateTime.now());
+        Project project2 = new Project("A Project", "Description A", LocalDateTime.now());
+        Project project3 = new Project("M Project", "Description M", LocalDateTime.now());
         projectRepository.save(project1);
         projectRepository.save(project2);
         projectRepository.save(project3);
