@@ -61,7 +61,7 @@ public class ProjectManagementAppApplication {
 			user1.setEmail("jukkis@example.com");
 			user1.setPasswordHash(passwordEncoder.encode("Salasana@123"));
 			user1.setRegisteredAt(now);
-			user1.setUserProjects(new ArrayList<>());
+			user1.setProjects(new ArrayList<>());
 			user1.setTasksAssigned(new ArrayList<>());
 			user1.setTasksCreated(new ArrayList<>());
 			user1.setComments(new ArrayList<>());
@@ -74,7 +74,7 @@ public class ProjectManagementAppApplication {
 			user2.setEmail("paula.python@example.com");
 			user2.setPasswordHash(passwordEncoder.encode("Salasana@123"));
 			user2.setRegisteredAt(now);
-			user2.setUserProjects(new ArrayList<>());
+			user2.setProjects(new ArrayList<>());
 			user2.setTasksAssigned(new ArrayList<>());
 			user2.setTasksCreated(new ArrayList<>());
 			user2.setComments(new ArrayList<>());

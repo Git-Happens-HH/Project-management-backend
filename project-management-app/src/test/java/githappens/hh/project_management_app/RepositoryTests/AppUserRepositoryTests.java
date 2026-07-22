@@ -33,7 +33,7 @@ public class AppUserRepositoryTests {
         assertThat(user.getEmail()).isEqualTo("test1@hh.com");
         assertThat(user.getPasswordHash()).isEqualTo("Test123!");
         assertThat(user.getTasksAssigned()).hasSize(0);
-        assertThat(user.getUserProjects()).hasSize(0);
+        assertThat(user.getProjects()).hasSize(0);
     }
 
     // SEARCH user by username test

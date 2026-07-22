@@ -107,7 +107,7 @@ public class AppUserControllerTests {
     void shouldReturnUsersProjects() throws Exception {
         Project project1 = new Project("Project 1", "Description 1", null, false);
         Project project2 = new Project("Project 2", "Description 2", null, false);
-        user.setUserProjects(List.of(project1, project2));
+        user.setProjects(List.of(project1, project2));
 
         when(appUserRepository.findById(1L)).thenReturn(Optional.of(user));
 
