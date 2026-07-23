@@ -84,9 +84,11 @@ public class TaskRestController {
             @PathVariable Long taskId,
             @PathVariable Long newTaskListId) {
 
-        Task existingTask = taskRepository.findById(taskId).orElse(null);
+        Task existingTask = taskRepository.findById(taskId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
 
-        TaskList newTaskList = taskListRepository.findById(newTaskListId).orElse(null);
+        TaskList newTaskList = taskListRepository.findById(newTaskListId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task list not found"));
 
         existingTask.setTaskList(newTaskList);
 
