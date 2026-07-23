@@ -21,14 +21,25 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping
 public class AuthController {
-    @Autowired
+    
     AuthenticationManager authenticationManager;
-    @Autowired
+
     AppUserRepository AppUserRepository;
-    @Autowired
+    
     PasswordEncoder encoder;
-    @Autowired
+    
     JwtUtil jwtUtils;
+
+    public AuthController(AuthenticationManager authenticationManager,
+            githappens.hh.project_management_app.domain.AppUserRepository appUserRepository, PasswordEncoder encoder,
+            JwtUtil jwtUtils) {
+        this.authenticationManager = authenticationManager;
+        AppUserRepository = appUserRepository;
+        this.encoder = encoder;
+        this.jwtUtils = jwtUtils;
+    }
+
+
     @PostMapping("/login")
     public String authenticateUser(@RequestBody AppUser appUser) {
         Authentication authentication = authenticationManager.authenticate(
@@ -43,10 +54,13 @@ public class AuthController {
 
 
 @PostMapping("/register")
-public String registerAppUser(@RequestBody AppUser appUser) {
+public ResponseEntity<String> registerAppUser(@RequestBody AppUser appUser) {
     if (AppUserRepository.existsByEmail(appUser.getEmail())) {
-        return "Error: Username is already taken!";
+        return ResponseEntity
+        .badRequest()
+        .body("Error: An account is already registered with this email!");
     }
+
     AppUser newUser = new AppUser(
         appUser.getUsername(),
         appUser.getFirstName(),
@@ -56,7 +70,7 @@ public String registerAppUser(@RequestBody AppUser appUser) {
         LocalDateTime.now()
     );
     AppUserRepository.save(newUser);
-    return "User registered succesfully!";
+    return ResponseEntity.ok("User registered succesfully!");
 
 // generate JWT for the newly created user (use email as subject if your auth uses email)
      // String subjectForToken = appUser.getEmail(); // or appUser.getUsername() depending how JwtUtil/userDetails are configured

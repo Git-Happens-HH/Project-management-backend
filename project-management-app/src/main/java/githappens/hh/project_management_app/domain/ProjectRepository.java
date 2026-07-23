@@ -2,11 +2,16 @@ package githappens.hh.project_management_app.domain;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.lang.NonNull;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     // find project by name
     Optional<Project> findByTitle(String title);
+
+    // find project by id
+    @NonNull
+    Optional<Project> findById(@NonNull Long id);
 
      // search project by name (with a keyword)
     Iterable<Project> findByTitleContainingIgnoreCase(String keyword);

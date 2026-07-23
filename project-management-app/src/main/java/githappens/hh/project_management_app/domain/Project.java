@@ -39,9 +39,11 @@ public class Project {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    // isShared
     @Column(name = "is_shared", nullable = false, updatable = true)
     private boolean isShared;
 
+    // projectMembers
     @ManyToMany(mappedBy = "projects")
     private List<AppUser> projectMembers = new ArrayList<>();
 
