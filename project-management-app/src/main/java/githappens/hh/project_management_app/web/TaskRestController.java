@@ -23,19 +23,22 @@ public class TaskRestController {
         this.realtimeService = realtimeService;
     }
 
+    // get tasks (by tasklist id)
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
     public List<Task> getTasksForTaskList(@PathVariable Long projectId, @PathVariable Long taskListId) {
         return taskRepository.findByTaskList_TaskListId(taskListId);
     }
 
+    // get task by taskId
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public Task getTaskById(@PathVariable Long taskId) {
-        return taskRepository.findById(taskId).orElse(null);
+        return taskRepository.findById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "task not found"));
     }
 
+    // CREATE task
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
     public Task createTask(@PathVariable Long projectId, @PathVariable Long taskListId, @RequestBody Task task) {
-        TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
+        TaskList taskList = taskListRepository.findById(taskListId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "tasklist not found"));
         task.setTaskList(taskList);
         Task saved = taskRepository.save(task);
         taskRepository.flush();
@@ -43,6 +46,7 @@ public class TaskRestController {
         return saved;
     }
 
+    // SAVE edited task
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public Task saveEditedTask(
         @PathVariable Long projectId,
@@ -58,7 +62,7 @@ public class TaskRestController {
     existingTask.setTitle(task.getTitle());
     existingTask.setDescription(task.getDescription());
     existingTask.setDeadline(task.getDeadline());
-    existingTask.setAssignedUser(task.getAssignedUser());
+    // existingTask.setAssignedUser(task.getAssignedUser());
 
     existingTask.setTaskList(taskList);
 
@@ -68,31 +72,12 @@ public class TaskRestController {
     realtimeService.broadcastTaskLists(projectId);
 
     return saved;
-    }
-
+}
+    // DELETE task
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
         taskRepository.deleteById(taskId);
         taskRepository.flush();
         realtimeService.broadcastTaskLists(projectId);
-    }
-
-    @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}/to/{newTaskListId}")
-    public Task moveTask(
-            @PathVariable Long projectId,
-            @PathVariable Long taskListId,
-            @PathVariable Long taskId,
-            @PathVariable Long newTaskListId) {
-
-        Task existingTask = taskRepository.findById(taskId).orElse(null);
-
-        TaskList newTaskList = taskListRepository.findById(newTaskListId).orElse(null);
-
-        existingTask.setTaskList(newTaskList);
-
-        Task saved = taskRepository.save(existingTask);
-        taskRepository.flush();
-        realtimeService.broadcastTaskLists(projectId);
-        return saved;
     }
 }
