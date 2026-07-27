@@ -63,7 +63,7 @@ public class TaskListControllerTests {
 
     @BeforeEach
     void setUp() {
-        project = new Project("Project title", "Project description", null, false);
+        project = new Project("Project title", "Project description", null);
         project.setProjectId(projectId);
 
         taskList = new TaskList();

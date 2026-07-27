@@ -40,7 +40,7 @@ public class ExampleH2 {
     public void aliasBugH2() {
         // Arrange — build the full entity chain: Project → TaskList → AppUser → Tasks
         Project project = projectRepository.save(
-                new Project("Test Project", "For alias bug demo", LocalDateTime.now(), false));
+                new Project("Test Project", "For alias bug demo", LocalDateTime.now()));
 
         TaskList taskList = taskListRepository.save(
                 new TaskList(project, "Sprint 1", LocalDateTime.now()));

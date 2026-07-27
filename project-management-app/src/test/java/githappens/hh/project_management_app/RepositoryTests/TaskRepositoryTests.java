@@ -38,7 +38,7 @@ public class TaskRepositoryTests {
     public void createNewTask() {
         AppUser user1 = new AppUser("test1", "Test", "User", "test1@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user1);
-        Project project1 = new Project("Test Project1", "Description", LocalDateTime.now(), false);
+        Project project1 = new Project("Test Project1", "Description", LocalDateTime.now());
         projectRepository.save(project1);
         TaskList taskList1 = new TaskList(project1, "Test TaskList1", LocalDateTime.now());
         taskListRepository.save(taskList1);
@@ -55,7 +55,7 @@ public class TaskRepositoryTests {
     public void findByTitleShouldReturnTask() {
         AppUser user2 = new AppUser("test2", "Test", "User", "test2@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user2);
-        Project project2 = new Project("Test Project2", "Description", LocalDateTime.now(), false);
+        Project project2 = new Project("Test Project2", "Description", LocalDateTime.now());
         projectRepository.save(project2);
         TaskList taskList2 = new TaskList(project2, "Test TaskList2", LocalDateTime.now());
         taskListRepository.save(taskList2);
@@ -73,7 +73,7 @@ public class TaskRepositoryTests {
     public void findByIdShouldReturnTask() {
         AppUser user3 = new AppUser("test3", "Test", "User", "test3@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user3);
-        Project project3 = new Project("Test Project3", "Description", LocalDateTime.now(), false);
+        Project project3 = new Project("Test Project3", "Description", LocalDateTime.now());
         projectRepository.save(project3);
         TaskList taskList3 = new TaskList(project3, "Test TaskList3", LocalDateTime.now());
         taskListRepository.save(taskList3);
@@ -93,7 +93,7 @@ public class TaskRepositoryTests {
     public void deleteTaskById() {
         AppUser user4 = new AppUser("test4", "Test", "User", "test4@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user4);
-        Project project4 = new Project("Test Project4", "Description", LocalDateTime.now(), false);
+        Project project4 = new Project("Test Project4", "Description", LocalDateTime.now());
         projectRepository.save(project4);
         TaskList taskList4 = new TaskList(project4, "Test TaskList4", LocalDateTime.now());
         taskListRepository.save(taskList4);
@@ -110,7 +110,7 @@ public class TaskRepositoryTests {
     public void findByTitleContainingIgnoreCaseShouldReturnTasks() {
         AppUser user5 = new AppUser("test5", "Test", "User", "test5@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user5);
-        Project project5 = new Project("Test Project5", "Description", LocalDateTime.now(), false);
+        Project project5 = new Project("Test Project5", "Description", LocalDateTime.now());
         projectRepository.save(project5);
         TaskList taskList5 = new TaskList(project5, "Test TaskList5", LocalDateTime.now());
         taskListRepository.save(taskList5);
@@ -129,7 +129,7 @@ public class TaskRepositoryTests {
     public void findByTaskList_TaskListIdShouldReturnTasks() {
         AppUser user6 = new AppUser("test6", "Test", "User", "test6@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user6);
-        Project project6 = new Project("Test Project6", "Description", LocalDateTime.now(), false);
+        Project project6 = new Project("Test Project6", "Description", LocalDateTime.now());
         projectRepository.save(project6);
         TaskList taskList6 = new TaskList(project6, "Test TaskList6", LocalDateTime.now());
         taskListRepository.save(taskList6);
@@ -148,7 +148,7 @@ public class TaskRepositoryTests {
     public void findByDeadlineShouldReturnTask() {
         AppUser user7 = new AppUser("test7", "Test", "User", "test7@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user7);
-        Project project7 = new Project("Test Project7", "Description", LocalDateTime.now(), false);
+        Project project7 = new Project("Test Project7", "Description", LocalDateTime.now());
         projectRepository.save(project7);
         TaskList taskList7 = new TaskList(project7, "Test TaskList7", LocalDateTime.now());
         taskListRepository.save(taskList7);
@@ -165,7 +165,7 @@ public class TaskRepositoryTests {
     public void findByAssignedUserShouldReturnTasks() {
         AppUser user8 = new AppUser("test8", "Test", "User", "test8@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user8);
-        Project project8 = new Project("Test Project8", "Description", LocalDateTime.now(), false);
+        Project project8 = new Project("Test Project8", "Description", LocalDateTime.now());
         projectRepository.save(project8);
         TaskList taskList8 = new TaskList(project8, "Test TaskList8", LocalDateTime.now());
         taskListRepository.save(taskList8);

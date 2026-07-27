@@ -28,7 +28,7 @@ public class TaskListRepositoryTests {
     // CREATE a new task list test
     @Test
     public void createNewTaskList() {
-        Project project1 = new Project("Test Project1", "Description", LocalDateTime.now(), false);
+        Project project1 = new Project("Test Project1", "Description", LocalDateTime.now());
         projectRepository.save(project1);
         TaskList taskList1 = new TaskList(project1, "Test TaskList1", LocalDateTime.now());
         taskListRepository.save(taskList1);
@@ -40,7 +40,7 @@ public class TaskListRepositoryTests {
     // SEARCH task list by title test
     @Test
     public void findByTitleShouldReturnTaskList() {
-        Project project2 = new Project("Test Project2", "Description", LocalDateTime.now(), false);
+        Project project2 = new Project("Test Project2", "Description", LocalDateTime.now());
         projectRepository.save(project2);
         TaskList taskList2 = new TaskList(project2, "Test TaskList2", LocalDateTime.now());
         taskListRepository.save(taskList2);
@@ -53,7 +53,7 @@ public class TaskListRepositoryTests {
     // SEARCH task list by id test
     @Test
     public void findByIdShouldReturnTaskList() {
-        Project project3 = new Project("Test Project3", "Description", LocalDateTime.now(), false);
+        Project project3 = new Project("Test Project3", "Description", LocalDateTime.now());
         projectRepository.save(project3);
         TaskList taskList3 = new TaskList(project3, "Test TaskList3", LocalDateTime.now());
         taskListRepository.save(taskList3);
@@ -68,7 +68,7 @@ public class TaskListRepositoryTests {
     // DELETE task list by Id test
     @Test
     public void deleteTaskListById() {
-        Project project4 = new Project("Test Project4", "Description", LocalDateTime.now(), false);
+        Project project4 = new Project("Test Project4", "Description", LocalDateTime.now());
         projectRepository.save(project4);
         TaskList taskList4 = new TaskList(project4, "Test TaskList4", LocalDateTime.now());
         taskListRepository.save(taskList4);
@@ -81,7 +81,7 @@ public class TaskListRepositoryTests {
     // CUSTOM QUERY: FIND BY PROJECT ID
     @Test
     public void findByProject_ProjectIdShouldReturnTaskLists() {
-        Project project5 = new Project("Test Project5", "Description", LocalDateTime.now(), false);
+        Project project5 = new Project("Test Project5", "Description", LocalDateTime.now());
         projectRepository.save(project5);
         TaskList taskList1 = new TaskList(project5, "TaskList One", LocalDateTime.now());
         TaskList taskList2 = new TaskList(project5, "TaskList Two", LocalDateTime.now());

@@ -40,7 +40,7 @@ public class TCTaskRepositoryTests extends AbstractPostgresBaseClass {
         AppUser user = new AppUser("test1", "Test", "User","test1@hh.com", "Test123!",LocalDateTime.now());
         appUserRepository.save(user);
 
-        Project project = new Project( "Test Project", "Description",LocalDateTime.now(), false);
+        Project project = new Project( "Test Project", "Description",LocalDateTime.now());
         projectRepository.save(project);
 
         TaskList taskList = new TaskList(project, "TaskList",LocalDateTime.now() );
@@ -62,7 +62,7 @@ public class TCTaskRepositoryTests extends AbstractPostgresBaseClass {
         AppUser user = new AppUser("test5", "Test", "User","test5@hh.com", "Test123!",LocalDateTime.now() );
         appUserRepository.save(user);
 
-        Project project = new Project("Test Project","Description", LocalDateTime.now(),false);
+        Project project = new Project("Test Project","Description", LocalDateTime.now());
         projectRepository.save(project);
 
         TaskList taskList = new TaskList(project,"TaskList",LocalDateTime.now());

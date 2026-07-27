@@ -15,8 +15,8 @@ public interface UserProjectRepository extends JpaRepository<UserProject, UserPr
 @Query("SELECT up.project FROM user_project up WHERE up.appUser.appUserId = :userId AND up.role = :role")
 List<Project> findProjectsByUserIdAndRole(@Param("userId") Long userId, @Param("role") EnumProjectRole role);
 
-UserProject findUserProjectByUserIdAndProjectId(@Param("userId") Long userId, @Param("projectId") Long projectId);
-
+@Query("SELECT up FROM user_project up WHERE up.appUser.appUserId = :userId AND up.project.projectId = :projectId")
+    UserProject findUserProjectByUserIdAndProjectId(@Param("userId") Long userId, @Param("projectId") Long projectId);
 }
 
     

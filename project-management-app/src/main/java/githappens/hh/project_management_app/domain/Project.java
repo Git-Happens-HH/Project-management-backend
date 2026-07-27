@@ -39,13 +39,10 @@ public class Project {
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    // isShared
-    @Column(name = "is_shared", nullable = false, updatable = true)
-    private boolean isShared;
-
     // projectMembers
-    @ManyToMany(mappedBy = "projects")
-    private List<AppUser> projectMembers = new ArrayList<>();
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<UserProject> projectMembers = new ArrayList<>();
 
     // projectMembers
     // @OneToMany(mappedBy = "projects", cascade = CascadeType.ALL)
@@ -62,11 +59,11 @@ public class Project {
     public Project() {
     }
 
-    public Project(String title, String description, LocalDateTime createdAt, boolean isShared) {
+    public Project(String title, String description, LocalDateTime createdAt) {
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
-        this.isShared = isShared;
+
     }
 
 // GETTERS AND SETTERS
@@ -103,22 +100,13 @@ public class Project {
         this.createdAt = createdAt;
     }
 
-    public boolean getIsShared() {
-        return isShared;
+    public List<UserProject> getProjectMembers() {
+        return projectMembers;
     }
 
-    public void setIsShared(boolean isShared) {
-        this.isShared = isShared;
+    public void setProjectMembers(List<UserProject> projectMembers) {
+        this.projectMembers = projectMembers;
     }
-
-
-    // public List<AppUser> getProjectMembers() {
-    //     return projectMembers;
-    // }
-
-    // public void setProjectMembers(List<AppUser> projectMembers) {
-    //     this.projectMembers = projectMembers;
-    // }
 
     public List<TaskList> getTaskList() {
         return taskList;
@@ -132,8 +120,7 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project [title=" + title + ", description=" + description + ", createdAt=" + createdAt 
-            + ", isShared=" + isShared + "]";
+        return "Project [title=" + title + ", description=" + description + ", createdAt=" + createdAt + "]";
     }
 
     
