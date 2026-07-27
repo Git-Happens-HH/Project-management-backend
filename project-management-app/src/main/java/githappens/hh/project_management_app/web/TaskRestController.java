@@ -80,4 +80,25 @@ public class TaskRestController {
         taskRepository.flush();
         realtimeService.broadcastTaskLists(projectId);
     }
+
+    @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}/to/{newTaskListId}")
+    public Task moveTask(
+            @PathVariable Long projectId,
+            @PathVariable Long taskListId,
+            @PathVariable Long taskId,
+            @PathVariable Long newTaskListId) {
+
+        Task existingTask = taskRepository.findById(taskId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+
+        TaskList newTaskList = taskListRepository.findById(newTaskListId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task list not found"));
+
+        existingTask.setTaskList(newTaskList);
+
+        Task saved = taskRepository.save(existingTask);
+        taskRepository.flush();
+        realtimeService.broadcastTaskLists(projectId);
+        return saved;
+    }
 }
