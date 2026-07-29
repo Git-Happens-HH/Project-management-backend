@@ -49,7 +49,7 @@ public class UserProject {
     @Column(name = "role", nullable = false, updatable = true)
     private EnumProjectRole role;
 
-    @Column(name = "joined_at", nullable = true, updatable = false)
+    @Column(name = "joined_at", nullable = false, updatable = false)
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
     private LocalDateTime joinedAt;
 
