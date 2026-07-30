@@ -66,6 +66,8 @@ public class AppUserControllerTests {
     @MockitoBean
     private AppUserDetailsServiceImpl appUserDetailsService;
 
+    LocalDateTime now = LocalDateTime.now();
+
     @BeforeEach
     void setUp() {
         user = new AppUser();
@@ -113,8 +115,8 @@ public class AppUserControllerTests {
         EnumProjectRole roleOwner = EnumProjectRole.owner;
         EnumProjectRole roleMember = EnumProjectRole.member;
 
-        UserProject userProject1 = new UserProject(user, project1, roleOwner);
-        UserProject userProject2 = new UserProject(user, project2, roleMember);
+        UserProject userProject1 = new UserProject(user, project1, roleOwner, now);
+        UserProject userProject2 = new UserProject(user, project2, roleMember, now);
 
 
         user.setProjects(List.of(userProject1, userProject2));
