@@ -15,7 +15,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
 
@@ -60,7 +59,6 @@ public class Task {
 
     // deadline
     @Column(name="deadline", nullable = false, updatable = true)
-    @FutureOrPresent(message = "Due date must be in the present or future")
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm follows iso-standards, i.e html uses this format
     private LocalDateTime deadline;
 
