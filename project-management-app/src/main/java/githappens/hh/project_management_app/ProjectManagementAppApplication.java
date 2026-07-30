@@ -91,6 +91,17 @@ public class ProjectManagementAppApplication {
 			heikki.setComments(new ArrayList<>());
 			userRepository.save(heikki);	
 
+			AppUser ismo = new AppUser();
+			ismo.setUsername("pesapallomaila");
+			ismo.setFirstName("Ismo");
+			ismo.setLastName("Laitela");
+			ismo.setEmail("ismo.laitela@example.com");
+			ismo.setPasswordHash(passwordEncoder.encode("Salasana@123"));
+			ismo.setRegisteredAt(now);
+			ismo.setTasksAssigned(new ArrayList<>());
+			ismo.setTasksCreated(new ArrayList<>());
+			ismo.setComments(new ArrayList<>());
+			userRepository.save(ismo);
 			// // PROJECTS, TASKLISTS, TASKS, COMMENTS
 
 			jukka = userRepository.findByUsername("jukka-poika42").orElseThrow();
@@ -108,6 +119,10 @@ public class ProjectManagementAppApplication {
 
 			UserProject up1 = new UserProject(jukka, p1, roleOwner, now);
 			userProjectRepository.save(up1);
+
+			// Add Heikki as a member of project 1 even though Jukka owns it
+			UserProject up2 = new UserProject(heikki, p1, roleMember, now);
+			userProjectRepository.save(up2);
 
 			TaskList tl1 = new TaskList();
 			tl1.setProject(p1);
@@ -138,13 +153,24 @@ public class ProjectManagementAppApplication {
 			projectRepository.save(p2);
 
 			// Useampi käyttäjä voi kuulua samaan projektiin eri roolein:
-			// up2: jukka omistaa tämän projektin (rooli: owner)
-			// up3: paulalla on jäsenoikeus tähän projektiin (rooli: member)
+			// up3: jukka omistaa tämän projektin (rooli: owner)
+			// up4: paulalla on jäsenoikeus tähän projektiin (rooli: member)
 
-			UserProject up2 = new UserProject(jukka, p2, roleOwner, now);
-			userProjectRepository.save(up2);
-			UserProject up3 = new UserProject(paula, p2, roleMember, now);
+			UserProject up3 = new UserProject(jukka, p2, roleOwner, now);
 			userProjectRepository.save(up3);
+			UserProject up4 = new UserProject(paula, p2, roleMember, now);
+			userProjectRepository.save(up4);
+
+			Project p3 = new Project();
+			p3.setTitle("Team Collaboration Project: We are so back");
+			p3.setDescription("It's so over");
+			p3.setCreatedAt(now.plusHours(2));
+			projectRepository.save(p3);
+
+			UserProject up5 = new UserProject(heikki, p3, roleOwner, now);
+			userProjectRepository.save(up5);
+			UserProject up6 = new UserProject(paula, p3, roleMember, now);
+			userProjectRepository.save(up6);
 
 			TaskList tl2 = new TaskList();
 			tl2.setProject(p2);

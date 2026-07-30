@@ -3,8 +3,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,21 +29,14 @@ public class UserProjectController {
     private final UserProjectRepository userProjectRepository;
     private final ProjectRepository projectRepository;
     private final AppUserRepository appUserRepository;
-    
+    private final CurrentUserService currentUserService;
+
     public UserProjectController(UserProjectRepository userProjectRepository, ProjectRepository projectRepository,
-            AppUserRepository appUserRepository) {
+            AppUserRepository appUserRepository, CurrentUserService currentUserService) {
         this.userProjectRepository = userProjectRepository;
         this.projectRepository = projectRepository;
         this.appUserRepository = appUserRepository;
-    }
-
-    private Long getRequesterUserId(Long projectId) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String email = authentication.getName();
-        AppUser requester = appUserRepository.findByEmail(email)
-            .orElseThrow(() ->
-                new EntityNotFoundException("User Not found"));
-        return requester.getAppUserId();
+        this.currentUserService = currentUserService;
     }
 
     private EnumProjectRole getRequesterUserRole(Long projectId, Long userId) {
@@ -67,13 +58,13 @@ public class UserProjectController {
         AppUser newMember = appUserRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("User Not found"));
 
-        Long requesterUserId = getRequesterUserId(projectId);
+        Long requesterUserId = currentUserService.getRequesterUserId();
         EnumProjectRole requesterUserRole = getRequesterUserRole(projectId, requesterUserId);
 
-        if (userProjectRepository.findUserProjectByUserIdAndProjectId(userId, projectId) != null) { // if membership already exists
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is already a member of this project");
-        } else if (requesterUserRole == EnumProjectRole.member) {
+        if (requesterUserRole == EnumProjectRole.member) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the project owner can add new members");
+        } else if (userProjectRepository.findUserProjectByUserIdAndProjectId(userId, projectId) != null) { // if membership already exists
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "User is already a member of this project");
         }
         
         UserProject membership = new UserProject();
@@ -99,26 +90,23 @@ public class UserProjectController {
             throw new EntityNotFoundException("User Not found");
         }
 
-        Long requesterUserId = getRequesterUserId(projectId);
+        Long requesterUserId = currentUserService.getRequesterUserId();
         EnumProjectRole requesterUserRole = getRequesterUserRole(projectId, requesterUserId);
 
         UserProject userProjectToBeDeleted = userProjectRepository.findUserProjectByUserIdAndProjectId(userId, projectId);
         
         if (userProjectToBeDeleted != null ) {
             if ((requesterUserId.equals(userId) && requesterUserRole == EnumProjectRole.member) // if requester is a member trying to delete themselves -> allow
-                || (requesterUserId != userId && requesterUserRole == EnumProjectRole.owner)) { // if requester is an owner trying to delete a member -> allow
+                || (!requesterUserId.equals(userId) && requesterUserRole == EnumProjectRole.owner)) { // if requester is an owner trying to delete a member -> allow
                     userProjectRepository.delete(userProjectToBeDeleted);
             }
             else {
                 throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You do not have permission to delete this user");
             }       
         } else {
-            throw new Error("This user cannot be removed from project because they are not a member");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+                "This user cannot be removed from the project because they are not a member");
         }
     }
-    
-    
-
-
-    
+        
 }

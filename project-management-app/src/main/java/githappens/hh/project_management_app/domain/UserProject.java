@@ -18,8 +18,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-@Entity(name="user_project")
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"app_user_id", "project_id"}))
+@Entity
+@Table(name = "user_project", uniqueConstraints = @UniqueConstraint(columnNames = {"app_user_id", "project_id"}))
 
 public class UserProject {
 
