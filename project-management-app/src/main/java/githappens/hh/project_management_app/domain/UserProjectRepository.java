@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface UserProjectRepository extends JpaRepository<UserProject, UserProjectKey> {
+public interface UserProjectRepository extends JpaRepository<UserProject, Long> {
 
 // FIND PROJECT BY ROLE AND USER (OWNER / MEMBER)
 // includes only projects
