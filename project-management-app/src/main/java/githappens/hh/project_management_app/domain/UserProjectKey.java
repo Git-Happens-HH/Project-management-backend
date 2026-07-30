@@ -1,83 +1,83 @@
-package githappens.hh.project_management_app.domain;
+// package githappens.hh.project_management_app.domain;
 
-import java.io.Serializable;
+// import java.io.Serializable;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Embeddable;
+// import jakarta.persistence.Column;
+// import jakarta.persistence.Embeddable;
 
-@Embeddable
-public class UserProjectKey implements Serializable {
+// @Embeddable
+// public class UserProjectKey implements Serializable {
 
-// this class is the composite key for the join table "user_project", since user and project have a M:N relationship
+// // this class is the composite key for the join table "user_project", since user and project have a M:N relationship
 
-    // appUserId
-    @Column(name = "app_user_id") 
-    Long appUserId; 
+//     // appUserId
+//     @Column(name = "app_user_id") 
+//     Long appUserId; 
 
-    // projectId
-    @Column(name = "project_id") 
-    Long projectId;
+//     // projectId
+//     @Column(name = "project_id") 
+//     Long projectId;
 
-// CONSTRUCTORS
+// // CONSTRUCTORS
 
-    public UserProjectKey() {
-    }
+//     public UserProjectKey() {
+//     }
 
-    public UserProjectKey(Long appUserId, Long projectId) {
-        this.appUserId = appUserId;
-        this.projectId = projectId;
-    }
+//     public UserProjectKey(Long appUserId, Long projectId) {
+//         this.appUserId = appUserId;
+//         this.projectId = projectId;
+//     }
 
-// GETTERS AND SETTERS
+// // GETTERS AND SETTERS
 
-    public Long getAppUserId() {
-        return appUserId;
-    }
+//     public Long getAppUserId() {
+//         return appUserId;
+//     }
 
-    public void setAppUserId(Long appUserId) {
-        this.appUserId = appUserId;
-    }
+//     public void setAppUserId(Long appUserId) {
+//         this.appUserId = appUserId;
+//     }
 
-    public Long getProjectId() {
-        return projectId;
-    }
+//     public Long getProjectId() {
+//         return projectId;
+//     }
 
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
+//     public void setProjectId(Long projectId) {
+//         this.projectId = projectId;
+//     }
 
-// HASH CODE
+// // HASH CODE
 
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((appUserId == null) ? 0 : appUserId.hashCode());
-        result = prime * result + ((projectId == null) ? 0 : projectId.hashCode());
-        return result;
-    }
+//     @Override
+//     public int hashCode() {
+//         final int prime = 31;
+//         int result = 1;
+//         result = prime * result + ((appUserId == null) ? 0 : appUserId.hashCode());
+//         result = prime * result + ((projectId == null) ? 0 : projectId.hashCode());
+//         return result;
+//     }
 
-// EQUALS
+// // EQUALS
 
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        UserProjectKey other = (UserProjectKey) obj;
-        if (appUserId == null) {
-            if (other.appUserId != null)
-                return false;
-        } else if (!appUserId.equals(other.appUserId))
-            return false;
-        if (projectId == null) {
-            if (other.projectId != null)
-                return false;
-        } else if (!projectId.equals(other.projectId))
-            return false;
-        return true;
-    } 
-}
+//     @Override
+//     public boolean equals(Object obj) {
+//         if (this == obj)
+//             return true;
+//         if (obj == null)
+//             return false;
+//         if (getClass() != obj.getClass())
+//             return false;
+//         UserProjectKey other = (UserProjectKey) obj;
+//         if (appUserId == null) {
+//             if (other.appUserId != null)
+//                 return false;
+//         } else if (!appUserId.equals(other.appUserId))
+//             return false;
+//         if (projectId == null) {
+//             if (other.projectId != null)
+//                 return false;
+//         } else if (!projectId.equals(other.projectId))
+//             return false;
+//         return true;
+//     } 
+// }
