@@ -53,49 +53,32 @@ public class ProjectManagementAppApplication {
 		return args -> {
 			LocalDateTime now = LocalDateTime.now();
 
-			// USERS
+			AppUser user1 = new AppUser();
+			user1.setUsername("jukka-poika42");
+			user1.setFirstName("Jukka");
+			user1.setLastName("Javalainen");
+			user1.setEmail("jukkis@example.com");
+			user1.setPasswordHash(passwordEncoder.encode("Salasana@123"));
+			user1.setRegisteredAt(now);
+			user1.setTasksAssigned(new ArrayList<>());
+			user1.setTasksCreated(new ArrayList<>());
+			user1.setComments(new ArrayList<>());
+			userRepository.save(user1);
 
-			AppUser jukka = new AppUser();
-			jukka.setUsername("jukka-poika42");
-			jukka.setFirstName("Jukka");
-			jukka.setLastName("Javalainen");
-			jukka.setEmail("jukkis@example.com");
-			jukka.setPasswordHash(passwordEncoder.encode("Salasana@123"));
-			jukka.setRegisteredAt(now);
-			jukka.setTasksAssigned(new ArrayList<>());
-			jukka.setTasksCreated(new ArrayList<>());
-			jukka.setComments(new ArrayList<>());
-			userRepository.save(jukka);
+			AppUser user2 = new AppUser();
+			user2.setUsername("p-python");
+			user2.setFirstName("Paula");
+			user2.setLastName("Python");
+			user2.setEmail("paula.python@example.com");
+			user2.setPasswordHash(passwordEncoder.encode("Salasana@123"));
+			user2.setRegisteredAt(now);
+			user2.setTasksAssigned(new ArrayList<>());
+			user2.setTasksCreated(new ArrayList<>());
+			user2.setComments(new ArrayList<>());
+			userRepository.save(user2);
 
-			AppUser paula = new AppUser();
-			paula.setUsername("p-python");
-			paula.setFirstName("Paula");
-			paula.setLastName("Python");
-			paula.setEmail("paula.python@example.com");
-			paula.setPasswordHash(passwordEncoder.encode("Salasana@123"));
-			paula.setRegisteredAt(now);
-			paula.setTasksAssigned(new ArrayList<>());
-			paula.setTasksCreated(new ArrayList<>());
-			paula.setComments(new ArrayList<>());
-			userRepository.save(paula);
-
-			AppUser heikki = new AppUser();
-			heikki.setUsername("heikki-hacker");
-			heikki.setFirstName("Heikki");
-			heikki.setLastName("Hacker");
-			heikki.setEmail("heikki.hacker@example.com");
-			heikki.setPasswordHash(passwordEncoder.encode("Salasana@123"));
-			heikki.setRegisteredAt(now);
-			heikki.setTasksAssigned(new ArrayList<>());
-			heikki.setTasksCreated(new ArrayList<>());
-			heikki.setComments(new ArrayList<>());
-			userRepository.save(heikki);	
-
-			// // PROJECTS, TASKLISTS, TASKS, COMMENTS
-
-			jukka = userRepository.findByUsername("jukka-poika42").orElseThrow();
-			paula = userRepository.findByUsername("p-python").orElseThrow();
-			heikki = userRepository.findByUsername("heikki-hacker").orElseThrow();
+			user1 = userRepository.findByUsername("jukka-poika42").orElseThrow();
+			user2 = userRepository.findByUsername("p-python").orElseThrow();
 
 			Project p1 = new Project();
 			p1.setTitle("Test Project: The Six Seven App Creation Team");
@@ -103,10 +86,7 @@ public class ProjectManagementAppApplication {
 			p1.setCreatedAt(now);
 			projectRepository.save(p1);
 
-			// UserProject: liitostaulun rivi, joka yhdistää käyttäjän projektiin
-			// ja tallentaa roolin (owner / member)
-
-			UserProject up1 = new UserProject(jukka, p1, roleOwner, now);
+			UserProject up1 = new UserProject(user1, p1, EnumProjectRole.owner);
 			userProjectRepository.save(up1);
 
 			TaskList tl1 = new TaskList();
@@ -117,15 +97,15 @@ public class ProjectManagementAppApplication {
 
 			Task t1 = new Task();
 			t1.setTaskList(tl1);
-			t1.setAssignedUser(jukka);
+			t1.setAssignedUser(user1);
 			t1.setTitle("Initial task");
 			t1.setDescription("This task was created by test data");
-			t1.setCreatedBy(jukka);
+			t1.setCreatedBy(user1);
 			t1.setDeadline(now.plusDays(7));
 			taskRepository.save(t1);
 
 			Comment c1 = new Comment();
-			c1.setCommenter(jukka);
+			c1.setCommenter(user1);
 			c1.setContent("This is a comment in test project 1");
 			c1.setTask(t1);
 			c1.setCreatedAt(now);
@@ -137,13 +117,9 @@ public class ProjectManagementAppApplication {
 			p2.setCreatedAt(now.plusHours(1));
 			projectRepository.save(p2);
 
-			// Useampi käyttäjä voi kuulua samaan projektiin eri roolein:
-			// up2: jukka omistaa tämän projektin (rooli: owner)
-			// up3: paulalla on jäsenoikeus tähän projektiin (rooli: member)
-
-			UserProject up2 = new UserProject(jukka, p2, roleOwner, now);
+			UserProject up2 = new UserProject(user1, p2, EnumProjectRole.owner);
 			userProjectRepository.save(up2);
-			UserProject up3 = new UserProject(paula, p2, roleMember, now);
+			UserProject up3 = new UserProject(user2, p2, EnumProjectRole.member);
 			userProjectRepository.save(up3);
 
 			TaskList tl2 = new TaskList();
@@ -154,15 +130,15 @@ public class ProjectManagementAppApplication {
 
 			Task t2 = new Task();
 			t2.setTaskList(tl2);
-			t2.setAssignedUser(paula);
+			t2.setAssignedUser(user2);
 			t2.setTitle("Create homepage mockup");
 			t2.setDescription("Prepare updated landing page design");
-			t2.setCreatedBy(paula);
+			t2.setCreatedBy(user2);
 			t2.setDeadline(now.plusDays(14));
 			taskRepository.save(t2);
 
 			Comment c2 = new Comment();
-			c2.setCommenter(paula);
+			c2.setCommenter(user2);
 			c2.setContent("Second seed comment");
 			c2.setTask(t2);
 			c2.setCreatedAt(now.plusHours(1));
