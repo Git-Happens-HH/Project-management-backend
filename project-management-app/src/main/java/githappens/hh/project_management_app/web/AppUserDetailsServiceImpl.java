@@ -24,9 +24,10 @@ public class AppUserDetailsServiceImpl implements UserDetailsService {
         this.appUserRepository = appUserRepository;
     }
 
-    @Override
+   @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        AppUser currUser = appUserRepository.findByEmail(email).orElse(null);
+        AppUser currUser = appUserRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with email: " + email));
 
     // empty list of authorities, since we don't have roles (yet)
          List<GrantedAuthority> authorities = new ArrayList<>();
