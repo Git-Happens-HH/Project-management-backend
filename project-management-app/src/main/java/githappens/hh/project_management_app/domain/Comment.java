@@ -1,6 +1,7 @@
 package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -19,9 +20,9 @@ public class Comment {
 
     // commentId
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id", nullable = false, updatable = false)
-    private Long commentId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "comment_id", nullable = false, updatable = false, columnDefinition = "UUID")
+    private UUID commentId;
 
     // commenter
     @ManyToOne(optional=false)
@@ -58,11 +59,11 @@ public class Comment {
 
 // GETTERS AND SETTERS
 
-    public Long getCommentId() {
+    public UUID getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(Long commentId) {
+    public void setCommentId(UUID commentId) {
         this.commentId = commentId;
     }
 

@@ -3,6 +3,7 @@ package githappens.hh.project_management_app.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -34,9 +35,9 @@ public class AppUser {
 
     // appUserId
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "app_user_id", nullable = false, updatable = false)
-    private Long appUserId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "app_user_id", nullable = false, updatable = false, columnDefinition = "UUID")
+    private UUID appUserId;
 
     // username
     @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique                                                                               // be changed
@@ -119,11 +120,11 @@ public class AppUser {
 
 // GETTERS AND SETTERS
 
-    public Long getAppUserId() {
+    public UUID getAppUserId() {
         return appUserId;
     }
 
-    public void setAppUserId(Long appUserId) {
+    public void setAppUserId(UUID appUserId) {
         this.appUserId = appUserId;
     }
 

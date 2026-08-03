@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 
 import githappens.hh.project_management_app.domain.TaskListRepository;
 
+import java.util.UUID;
+
 @Controller
 public class ProjectWebSocketController {
 
@@ -20,7 +22,7 @@ public class ProjectWebSocketController {
     }
 
     @MessageMapping("/project/{projectId}")
-    public void sendInitial(@DestinationVariable Long projectId) {
+    public void sendInitial(@DestinationVariable UUID projectId) {
         messagingTemplate.convertAndSend(
                 "/topic/project/" + projectId,
                 taskListRepository.findByProject_ProjectId(projectId)

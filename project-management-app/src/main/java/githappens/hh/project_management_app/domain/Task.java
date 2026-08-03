@@ -3,6 +3,7 @@ package githappens.hh.project_management_app.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -27,9 +28,9 @@ public class Task {
 
     // taskId
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "task_id", nullable = false, updatable = false)
-    private Long taskId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "task_id", nullable = false, updatable = false, columnDefinition = "UUID")
+    private UUID taskId;
 
     // taskList
     @ManyToOne(optional = false)
@@ -85,11 +86,11 @@ public class Task {
 
 // GETTERS AND SETTERS
 
-    public Long getTaskId() {
+    public UUID getTaskId() {
         return taskId;
     }
 
-    public void setTaskId(Long taskId) {
+    public void setTaskId(UUID taskId) {
         this.taskId = taskId;
     }
 

@@ -2,6 +2,8 @@ package githappens.hh.project_management_app.web;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RestController;
 import githappens.hh.project_management_app.domain.AppUser;
@@ -30,7 +32,7 @@ public class AppUserRestController {
 
     // get user by id
     @GetMapping("/api/users/{userId}")
-    public Optional<AppUser> getUserById(@PathVariable Long userId) {
+    public Optional<AppUser> getUserById(@PathVariable UUID userId) {
         return appUserRepository.findById(userId);
     }
 
@@ -39,7 +41,7 @@ public class AppUserRestController {
     // Is this neccessary? Is there any for this?
     
     @GetMapping("/api/users/{userId}/projects")
-    public Iterable<UserProject> getProjectsForUser(@PathVariable Long userId) {
+    public Iterable<UserProject> getProjectsForUser(@PathVariable UUID userId) {
         return appUserRepository.findById(userId)
                 .map(AppUser::getProjects)
                 .orElse(List.of());
@@ -58,7 +60,7 @@ public class AppUserRestController {
     }
 
     @DeleteMapping("/api/users/{userId}")
-    public void deleteUser(@PathVariable Long userId) {
+    public void deleteUser(@PathVariable UUID userId) {
         appUserRepository.deleteById(userId);
     }
 }

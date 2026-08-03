@@ -15,6 +15,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,9 +58,9 @@ public class TaskControllerTests {
     @MockitoBean
     private ProjectRealtimeService realtimeService;
 
-    private final Long projectId = 1L;
-    private final Long taskListId = 2L;
-    private final Long taskId = 3L;
+    private final UUID projectId = UUID.randomUUID();
+    private final UUID taskListId = UUID.randomUUID();
+    private final UUID taskId = UUID.randomUUID();
 
     private TaskList taskList;
     private Task task;
@@ -118,7 +119,7 @@ public class TaskControllerTests {
         when(taskListRepository.findById(taskListId)).thenReturn(Optional.of(taskList));
         when(taskRepository.save(any(Task.class))).thenAnswer(inv -> {
             Task t = inv.getArgument(0);
-            t.setTaskId(99L);
+            t.setTaskId(UUID.randomUUID());
             return t;
         });
 

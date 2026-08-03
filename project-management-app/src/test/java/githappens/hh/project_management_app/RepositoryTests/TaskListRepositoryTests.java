@@ -15,6 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @SpringBootTest
@@ -57,7 +58,7 @@ public class TaskListRepositoryTests {
         projectRepository.save(project3);
         TaskList taskList3 = new TaskList(project3, "Test TaskList3", LocalDateTime.now());
         taskListRepository.save(taskList3);
-        Long taskListId = taskList3.getTaskListId();
+        UUID taskListId = taskList3.getTaskListId();
         Optional<TaskList> found2 = taskListRepository.findById(taskListId);
         assertThat(found2).isPresent();
         assertThat(found2.get().getTaskListId()).isEqualTo(taskListId);
@@ -72,7 +73,7 @@ public class TaskListRepositoryTests {
         projectRepository.save(project4);
         TaskList taskList4 = new TaskList(project4, "Test TaskList4", LocalDateTime.now());
         taskListRepository.save(taskList4);
-        Long taskListId = taskList4.getTaskListId();
+        UUID taskListId = taskList4.getTaskListId();
         taskListRepository.deleteById(taskListId);
         Optional<TaskList> deleted = taskListRepository.findById(taskListId);
         assertThat(deleted).isEmpty();

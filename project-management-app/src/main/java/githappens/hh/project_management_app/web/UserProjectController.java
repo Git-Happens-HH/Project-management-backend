@@ -2,6 +2,7 @@ package githappens.hh.project_management_app.web;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -39,7 +40,7 @@ public class UserProjectController {
         this.appUserRepository = appUserRepository;
     }
 
-    private Long getRequesterUserId(Long projectId) {
+    private UUID getRequesterUserId(UUID projectId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
         AppUser requester = appUserRepository.findByEmail(email)
@@ -48,7 +49,7 @@ public class UserProjectController {
         return requester.getAppUserId();
     }
 
-    private EnumProjectRole getRequesterUserRole(Long projectId, Long userId) {
+    private EnumProjectRole getRequesterUserRole(UUID projectId, UUID userId) {
         UserProject requesterUserProject = userProjectRepository.findUserProjectByUserIdAndProjectId(userId, projectId);
         if (requesterUserProject == null) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You are not a member of this project");
@@ -60,14 +61,14 @@ public class UserProjectController {
     // ADD a member to a project
 
     @PostMapping("/api/projects/{projectId}/members/{userId}")
-    public void addMemberToProject(@PathVariable Long projectId, @PathVariable Long userId) {
+    public void addMemberToProject(@PathVariable UUID projectId, @PathVariable UUID userId) {
 
         Project project = projectRepository.findById(projectId)
             .orElseThrow(() -> new EntityNotFoundException("Project Not found"));
         AppUser newMember = appUserRepository.findById(userId)
             .orElseThrow(() -> new EntityNotFoundException("User Not found"));
 
-        Long requesterUserId = getRequesterUserId(projectId);
+        UUID requesterUserId = getRequesterUserId(projectId);
         EnumProjectRole requesterUserRole = getRequesterUserRole(projectId, requesterUserId);
 
         if (userProjectRepository.findUserProjectByUserIdAndProjectId(userId, projectId) != null) { // if membership already exists
@@ -80,7 +81,7 @@ public class UserProjectController {
         membership.setProject(project);
         membership.setAppUser(newMember);
         membership.setRole(EnumProjectRole.member);
-        membership.setJoinedAt(LocalDateTime.now());
+        //membership.setJoinedAt(LocalDateTime.now());
 
         UserProject saved = userProjectRepository.save(membership);
     }
@@ -89,8 +90,8 @@ public class UserProjectController {
     // DELETE a member from a project
     
     @DeleteMapping("/api/projects/{projectId}/members/{userId}")
-    public void deleteMemberFromProject(@PathVariable Long projectId, 
-                                        @PathVariable Long userId) {
+    public void deleteMemberFromProject(@PathVariable UUID projectId, 
+                                        @PathVariable UUID userId) {
 
         // Check if project and user exist
         if (projectRepository.findById(projectId).isEmpty()) {
@@ -99,7 +100,7 @@ public class UserProjectController {
             throw new EntityNotFoundException("User Not found");
         }
 
-        Long requesterUserId = getRequesterUserId(projectId);
+        UUID requesterUserId = getRequesterUserId(projectId);
         EnumProjectRole requesterUserRole = getRequesterUserRole(projectId, requesterUserId);
 
         UserProject userProjectToBeDeleted = userProjectRepository.findUserProjectByUserIdAndProjectId(userId, projectId);

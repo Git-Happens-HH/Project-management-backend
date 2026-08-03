@@ -1,6 +1,7 @@
 package githappens.hh.project_management_app.domain;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -31,8 +32,8 @@ public class UserProject {
 
     // id
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userProjectId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID userProjectId;
     
     // appUser
     @ManyToOne
@@ -49,20 +50,20 @@ public class UserProject {
     @Column(name = "role", nullable = false, updatable = true)
     private EnumProjectRole role;
 
-    @Column(name = "joined_at", nullable = false, updatable = false)
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
-    private LocalDateTime joinedAt;
+    //@Column(name = "joined_at", nullable = false, updatable = false)
+    //@DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm
+    //private LocalDateTime joinedAt;
 
 // CONSTRUCTORS
 
     public UserProject() {
     }
 
-    public UserProject(AppUser appUser, Project project, EnumProjectRole role, LocalDateTime joinedAt) {
+    public UserProject(AppUser appUser, Project project, EnumProjectRole role) {
         this.appUser = appUser;
         this.project = project;
         this.role = role;
-        this.joinedAt = joinedAt;
+        // this.joinedAt = joinedAt;
         // this.userProjectKeyId = new UserProjectKey(appUser.getAppUserId(), project.getProjectId());
     }
 
@@ -100,20 +101,20 @@ public class UserProject {
         this.role = role;
     }
 
-    public LocalDateTime getJoinedAt() {
+    /* public LocalDateTime getJoinedAt() {
         return joinedAt;
     }
 
     public void setJoinedAt(LocalDateTime joinedAt) {
         this.joinedAt = joinedAt;
-    }
+    } */
 
 // TO STRING
 
     @Override
     public String toString() {
         return "UserProject [appUser=" + appUser + ", project=" + project
-                + ", role=" + role + ", joinedAt=" + joinedAt + "]";
+                + ", role=" + role + "]";
     }
 
     

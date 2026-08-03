@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -55,8 +56,8 @@ public class TaskListControllerTests {
     @MockitoBean
     private AuthTokenFilter authTokenFilter;
 
-    private final Long projectId = 1L;
-    private final Long taskListId = 2L;
+    private final UUID projectId = UUID.randomUUID();
+    private final UUID taskListId = UUID.randomUUID();
 
     private Project project;
     private TaskList taskList;
@@ -99,7 +100,7 @@ public class TaskListControllerTests {
         when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         when(taskListRepository.save(any(TaskList.class))).thenAnswer(inv -> {
             TaskList tl = inv.getArgument(0);
-            tl.setTaskListId(99L);
+            tl.setTaskListId(UUID.randomUUID());
             return tl;
         });
 

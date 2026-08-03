@@ -38,6 +38,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @WebMvcTest(CommentRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -75,11 +76,11 @@ public class CommentControllerTests {
     private Task task;
     private TaskList taskList;
     private Project project;
-
-    private final Long projectId = 1L;
-    private final Long taskListId = 1L;
-    private final Long taskId = 1L;
-    private final Long commentId = 1L;
+    private final UUID projectId = UUID.randomUUID();
+    private final UUID taskListId = UUID.randomUUID();
+    private final UUID taskId = UUID.randomUUID();
+    private final UUID commentId = UUID.randomUUID();
+    UUID appUserUUID = UUID.randomUUID();
 
 
     @BeforeEach
@@ -97,7 +98,7 @@ public class CommentControllerTests {
         taskList.setCreatedAt(LocalDateTime.now());
 
         commenter = new AppUser();
-        commenter.setAppUserId(1L);
+        commenter.setAppUserId(appUserUUID);
         commenter.setFirstName("Test");
         commenter.setLastName("User");
         commenter.setUsername("testuser");
@@ -152,14 +153,14 @@ public class CommentControllerTests {
     @Test
     void shouldReturnSpecificComment() throws Exception {
 
-        when(commentRepository.findById(1L))
+        when(commentRepository.findById(commentId))
         .thenReturn(Optional.of(comment));
 
         // Test GET /api/projects/1/tasklists/1/tasks/1/comments/1
         mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}/comments/{commentId}",
         projectId, taskListId, taskId, commentId))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.commentId").value(1L));
+        .andExpect(jsonPath("$.commentId").value(commentId));
     }
 
     // CREATE comment test
@@ -177,7 +178,7 @@ public class CommentControllerTests {
         .contentType(MediaType.APPLICATION_JSON)
         .content(objectMapper.writeValueAsString(comment)))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.commentId").value(1L));
+        .andExpect(jsonPath("$.commentId").value(commentId));
 
         verify(commentRepository).save(any(Comment.class));
 }

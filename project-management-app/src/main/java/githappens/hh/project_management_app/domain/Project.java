@@ -3,6 +3,7 @@ package githappens.hh.project_management_app.domain;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -23,9 +24,9 @@ public class Project {
 
     // projectId
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "project_id", nullable = false, updatable = false)
-    private Long projectId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "project_id", nullable = false, updatable = false, columnDefinition = "UUID")
+    private UUID projectId;
 
     // title
     @Column(name = "title", nullable = false, updatable = true)
@@ -68,11 +69,11 @@ public class Project {
 
 // GETTERS AND SETTERS
 
-    public Long getProjectId() {
+    public UUID getProjectId() {
         return projectId;
     }
 
-    public void setProjectId(Long projectId) {
+    public void setProjectId(UUID projectId) {
         this.projectId = projectId;
     }
 

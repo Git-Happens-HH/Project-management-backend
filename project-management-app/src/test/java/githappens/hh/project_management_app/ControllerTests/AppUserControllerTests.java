@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -67,11 +68,11 @@ public class AppUserControllerTests {
     private AppUserDetailsServiceImpl appUserDetailsService;
 
     LocalDateTime now = LocalDateTime.now();
-
+    UUID appUserUUID = UUID.randomUUID();
     @BeforeEach
     void setUp() {
         user = new AppUser();
-        user.setAppUserId(1L);
+        user.setAppUserId(appUserUUID);
         user.setUsername("P-python");
         user.setFirstName("Paula");
         user.setLastName("Python");
@@ -98,7 +99,7 @@ public class AppUserControllerTests {
     @Test
     void shouldReturnUserById() throws Exception {
 
-        when(appUserRepository.findById(1L))
+        when(appUserRepository.findById(appUserUUID))
                 .thenReturn(Optional.of(user));
 
         mockMvc.perform(get("/api/users/1"))
@@ -121,7 +122,7 @@ public class AppUserControllerTests {
 
         user.setProjects(List.of(userProject1, userProject2));
 
-        when(appUserRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(appUserRepository.findById(appUserUUID)).thenReturn(Optional.of(user));
 
         mockMvc.perform(get("/api/users/1/projects"))
         .andExpect(status().isOk())
@@ -181,7 +182,7 @@ public class AppUserControllerTests {
         mockMvc.perform(delete("/api/users/1"))
         .andExpect(status().isOk());
 
-        verify(appUserRepository).deleteById(1L);
+        verify(appUserRepository).deleteById(appUserUUID);
     }
     
 }

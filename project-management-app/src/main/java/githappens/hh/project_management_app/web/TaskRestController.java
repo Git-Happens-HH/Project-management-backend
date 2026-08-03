@@ -9,6 +9,7 @@ import githappens.hh.project_management_app.domain.TaskList;
 import githappens.hh.project_management_app.domain.TaskListRepository;
 import githappens.hh.project_management_app.domain.TaskRepository;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class TaskRestController {
@@ -25,20 +26,20 @@ public class TaskRestController {
 
     // get tasks (by tasklist id)
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
-    public List<Task> getTasksForTaskList(@PathVariable Long projectId, @PathVariable Long taskListId) {
+    public List<Task> getTasksForTaskList(@PathVariable UUID projectId, @PathVariable UUID taskListId) {
         return taskRepository.findByTaskList_TaskListId(taskListId);
     }
 
     // get task by taskId
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
-    public Task getTaskById(@PathVariable Long taskId) {
+    public Task getTaskById(@PathVariable UUID taskId) {
         return taskRepository.findById(taskId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "task not found"));
     }
 
     // CREATE task
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
-    public Task createTask(@PathVariable Long projectId, @PathVariable Long taskListId, @RequestBody Task task) {
+    public Task createTask(@PathVariable UUID projectId, @PathVariable UUID taskListId, @RequestBody Task task) {
         TaskList taskList = taskListRepository.findById(taskListId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "tasklist not found"));
         task.setTaskList(taskList);
@@ -51,9 +52,9 @@ public class TaskRestController {
     // SAVE edited task
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public Task saveEditedTask(
-            @PathVariable Long projectId,
-            @PathVariable Long taskListId,
-            @PathVariable Long taskId,
+            @PathVariable UUID projectId,
+            @PathVariable UUID taskListId,
+            @PathVariable UUID taskId,
             @RequestBody Task task) {
 
         Task existingTask = taskRepository.findById(taskId).orElse(null);
@@ -78,7 +79,7 @@ public class TaskRestController {
 
     // DELETE task
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
-    public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
+    public void deleteTask(@PathVariable UUID taskId, @PathVariable UUID projectId) {
         taskRepository.deleteById(taskId);
         taskRepository.flush();
         realtimeService.broadcastTaskLists(projectId);
@@ -86,10 +87,10 @@ public class TaskRestController {
 
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}/to/{newTaskListId}")
     public Task moveTask(
-            @PathVariable Long projectId,
-            @PathVariable Long taskListId,
-            @PathVariable Long taskId,
-            @PathVariable Long newTaskListId) {
+            @PathVariable UUID projectId,
+            @PathVariable UUID taskListId,
+            @PathVariable UUID taskId,
+            @PathVariable UUID newTaskListId) {
 
         System.out.println(
                 "MOVE ENDPOINT HIT: project=" + projectId +

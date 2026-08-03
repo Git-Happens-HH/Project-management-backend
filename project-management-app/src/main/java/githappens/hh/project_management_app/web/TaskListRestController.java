@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class TaskListRestController {
@@ -29,19 +30,19 @@ public class TaskListRestController {
 
     // get tasklists (by project id)
     @GetMapping("/api/projects/{projectId}/tasklists")
-    public List<TaskList> getTaskListsForProject(@PathVariable Long projectId) {
+    public List<TaskList> getTaskListsForProject(@PathVariable UUID projectId) {
         return taskListRepository.findByProject_ProjectId(projectId);
     }
 
     // get tasklist (by tasklist id)
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}")
-    public TaskList getTaskListById(@PathVariable Long taskListId) {
+    public TaskList getTaskListById(@PathVariable UUID taskListId) {
         return taskListRepository.findById(taskListId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task list not found"));
     }
 
     // CREATE tasklist
     @PostMapping("/api/projects/{projectId}/tasklists")
-    public TaskList createTaskList(@PathVariable Long projectId, @RequestBody TaskList taskList) {
+    public TaskList createTaskList(@PathVariable UUID projectId, @RequestBody TaskList taskList) {
         Project project = projectRepository.findById(projectId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Project not found"));
         taskList.setProject(project);
         TaskList saved = taskListRepository.save(taskList);
@@ -52,7 +53,7 @@ public class TaskListRestController {
     
     // DELETE tasklist
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}")
-    public void deleteTaskList(@PathVariable Long taskListId, @PathVariable Long projectId) {
+    public void deleteTaskList(@PathVariable UUID taskListId, @PathVariable UUID projectId) {
         taskListRepository.deleteById(taskListId);
         taskListRepository.flush();
         realtimeService.broadcastTaskLists(projectId);

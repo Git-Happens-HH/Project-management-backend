@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @SpringBootTest
@@ -64,7 +65,7 @@ public class AppUserRepositoryTests {
     public void deleteUserShouldRemoveFromRepository() {
         AppUser user = new AppUser("test4", "Test", "User", "test4@hh.com", "Test123!", LocalDateTime.now());
         appUserRepository.save(user);
-        Long id = user.getAppUserId();
+        UUID id = user.getAppUserId();
         appUserRepository.deleteById(id);
         assertThat(appUserRepository.findById(id)).isEmpty();
     }

@@ -11,6 +11,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,14 +66,14 @@ public class ProjectControllerTests {
     // Test data
     LocalDateTime time;
     List<AppUser> users;
-
+    UUID projectUUID =  UUID.randomUUID();
     @BeforeEach
     void setUp() {
         project = new Project(
                 "Project controller test",
                 "Testing",
                 LocalDateTime.now());
-        project.setProjectId(1L);
+        project.setProjectId(projectUUID);
     }
 
     // GET projects
@@ -102,9 +103,9 @@ public class ProjectControllerTests {
 
     @Test
     public void shouldReturnProjectById() throws Exception {
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(projectRepository.findById(projectUUID)).thenReturn(Optional.of(project));
 
-        mockmvc.perform(get("/api/projects/{projectId}", 1L))
+        mockmvc.perform(get("/api/projects/{projectId}", projectUUID))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.title").value("Project controller test"));
     }
@@ -121,7 +122,7 @@ public class ProjectControllerTests {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(project)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.projectId").value(1L))
+                .andExpect(jsonPath("$.projectId").value(projectUUID))
                 .andExpect(jsonPath("$.title").value("Project controller test"))
                 .andExpect(jsonPath("$.description").value("Testing"));
 
@@ -132,7 +133,7 @@ public class ProjectControllerTests {
     @Test
     public void shouldDeleteProjectById() throws Exception {
 
-        when(projectRepository.findById(1L)).thenReturn(Optional.of(project));
+        when(projectRepository.findById(projectUUID)).thenReturn(Optional.of(project));
 
         mockmvc.perform(delete("/api/projects/{projectId}", 1L))
                 .andExpect(status().isOk());

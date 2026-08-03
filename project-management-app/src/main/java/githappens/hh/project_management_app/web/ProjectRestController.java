@@ -2,6 +2,7 @@ package githappens.hh.project_management_app.web;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,7 +39,7 @@ public class ProjectRestController {
 
     // get project by id
     @GetMapping("/api/projects/{projectId}")
-    public @ResponseBody Optional<Project> getProjectById(@PathVariable Long projectId) {
+    public @ResponseBody Optional<Project> getProjectById(@PathVariable UUID projectId) {
         return projectRepository.findById(projectId);
     }
 
@@ -50,7 +51,7 @@ public class ProjectRestController {
 
     // DELETE project
     @DeleteMapping("/api/projects/{projectId}")
-    public void deleteProject(@PathVariable Long projectId) {
+    public void deleteProject(@PathVariable UUID projectId) {
         projectRepository.deleteById(projectId);
     }
 
@@ -58,7 +59,7 @@ public class ProjectRestController {
 
     // get projects where user is owner or member
     @GetMapping("/api/projectsbyuser/{userId}/{role}")
-    public @ResponseBody List<Project> getProjectsByUserIdAndRole(@PathVariable Long userId, @PathVariable EnumProjectRole role) {
+    public @ResponseBody List<Project> getProjectsByUserIdAndRole(@PathVariable UUID userId, @PathVariable EnumProjectRole role) {
         return userProjectRepository.findProjectsByUserIdAndRole(userId, role);
     }
 }

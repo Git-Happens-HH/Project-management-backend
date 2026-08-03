@@ -3,12 +3,14 @@ package githappens.hh.project_management_app.domain;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface TaskRepository extends JpaRepository<Task, Long> {
+public interface TaskRepository extends JpaRepository<Task, UUID> {
 // find task by title
     Optional<Task> findByTitle(String title);
 
@@ -16,10 +18,10 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByTitleContainingIgnoreCase(String keyword);
 
     // find task by id
-    Optional<Task> findById(long taskId);
+    Optional<Task> findById(UUID taskId);
 
     // find all tasks that belong to a given taskList (by taskListId)
-    List<Task> findByTaskList_TaskListId(Long taskListId);
+    List<Task> findByTaskList_TaskListId(UUID taskListId);
 
     // find task by duedate
     Optional<Task> findByDeadline(LocalDateTime deadline);

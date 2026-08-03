@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Transactional
 @SpringBootTest
@@ -47,7 +48,7 @@ public class ProjectRepositoryTests {
     public void findByIdShouldReturnProject() {
         Project project3 = new Project("Test Project3", "Testing project search by id3", LocalDateTime.now());
         projectRepository.save(project3);
-        Long projectId = project3.getProjectId();
+        UUID projectId = project3.getProjectId();
         Optional<Project> found2 = projectRepository.findById(projectId);
         assertThat(found2).isPresent();
         assertThat(found2.get().getProjectId()).isEqualTo(projectId);
@@ -60,7 +61,7 @@ public class ProjectRepositoryTests {
     public void deleteProjectById() {
         Project project4 = new Project("Test Project4", "Testing project deletion4", LocalDateTime.now());
         projectRepository.save(project4);
-        Long projectId = project4.getProjectId();
+        UUID projectId = project4.getProjectId();
         projectRepository.deleteById(projectId);
         Optional<Project> deleted = projectRepository.findById(projectId);
         assertThat(deleted).isEmpty();

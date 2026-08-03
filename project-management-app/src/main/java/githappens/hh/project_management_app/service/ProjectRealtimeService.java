@@ -6,6 +6,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Service
 public class ProjectRealtimeService {
 
@@ -17,7 +19,7 @@ public class ProjectRealtimeService {
         this.taskListRepository = taskListRepository;
     }
 
-    public void broadcastTaskLists(long projectId){
+    public void broadcastTaskLists(UUID projectId){
         var taskLists = taskListRepository.findByProject_ProjectId(projectId);
         messagingTemplate.convertAndSend("/topic/project/" + projectId, taskLists);
     }

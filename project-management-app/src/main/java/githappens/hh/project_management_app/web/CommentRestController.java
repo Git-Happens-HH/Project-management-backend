@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import githappens.hh.project_management_app.domain.Comment;
 
@@ -26,7 +27,7 @@ public class CommentRestController {
 
     // get comments
     @GetMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments")
-    public List<Comment> getComments(@PathVariable("taskId") Long taskId) {
+    public List<Comment> getComments(@PathVariable("taskId") UUID taskId) {
         Task task = taskRepository.findById(taskId).orElse(null);
         if (task == null) {
             return List.of();
@@ -36,15 +37,15 @@ public class CommentRestController {
 
     // get comment by id
     @GetMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments/{commentId}")
-    public Comment getCommentById(@PathVariable("commentId") Long commentId) {
+    public Comment getCommentById(@PathVariable("commentId") UUID commentId) {
         return commentRepository.findById(commentId).orElse(null);
     }
 
     // CREATE comment
     @PostMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments")
-    public Comment createComment(@PathVariable("projectId") Long projectId,
-            @PathVariable("tasklistId") Long tasklistId,
-            @PathVariable("taskId") Long taskId,
+    public Comment createComment(@PathVariable("projectId") UUID projectId,
+            @PathVariable("tasklistId") UUID tasklistId,
+            @PathVariable("taskId") UUID taskId,
             @RequestBody Comment comment) {
         
         Task task = taskRepository.findById(taskId).orElse(null);
@@ -54,7 +55,7 @@ public class CommentRestController {
 
     // DELETE comment
     @DeleteMapping("/api/projects/{projectId}/tasklists/{tasklistId}/tasks/{taskId}/comments/{commentId}")
-    public void deleteComment(@PathVariable("commentId") Long commentId) {
+    public void deleteComment(@PathVariable("commentId") UUID commentId) {
         commentRepository.deleteById(commentId);
     }
 
