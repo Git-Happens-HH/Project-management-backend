@@ -55,54 +55,31 @@ public class ProjectManagementAppApplication {
 
 	// 		// USERS
 
-	// 		AppUser jukka = new AppUser();
-	// 		jukka.setUsername("jukka-poika42");
-	// 		jukka.setFirstName("Jukka");
-	// 		jukka.setLastName("Javalainen");
-	// 		jukka.setEmail("jukkis@example.com");
-	// 		jukka.setPasswordHash(passwordEncoder.encode("Salasana@123"));
-	// 		jukka.setRegisteredAt(now);
-	// 		jukka.setTasksAssigned(new ArrayList<>());
-	// 		jukka.setTasksCreated(new ArrayList<>());
-	// 		jukka.setComments(new ArrayList<>());
-	// 		userRepository.save(jukka);
+	// 		AppUser user1 = new AppUser();
+	// 		user1.setUsername("jukka-poika42");
+	// 		user1.setFirstName("Jukka");
+	// 		user1.setLastName("Javalainen");
+	// 		user1.setEmail("jukkis@example.com");
+	// 		user1.setPasswordHash(passwordEncoder.encode("Salasana@123"));
+	// 		user1.setRegisteredAt(now);
+	// 		user1.setTasksAssigned(new ArrayList<>());
+	// 		user1.setTasksCreated(new ArrayList<>());
+	// 		user1.setComments(new ArrayList<>());
+	// 		userRepository.save(user1);
 
-	// 		AppUser paula = new AppUser();
-	// 		paula.setUsername("p-python");
-	// 		paula.setFirstName("Paula");
-	// 		paula.setLastName("Python");
-	// 		paula.setEmail("paula.python@example.com");
-	// 		paula.setPasswordHash(passwordEncoder.encode("Salasana@123"));
-	// 		paula.setRegisteredAt(now);
-	// 		paula.setTasksAssigned(new ArrayList<>());
-	// 		paula.setTasksCreated(new ArrayList<>());
-	// 		paula.setComments(new ArrayList<>());
-	// 		userRepository.save(paula);
+	// 		AppUser user2 = new AppUser();
+	// 		user2.setUsername("p-python");
+	// 		user2.setFirstName("Paula");
+	// 		user2.setLastName("Python");
+	// 		user2.setEmail("paula.python@example.com");
+	// 		user2.setPasswordHash(passwordEncoder.encode("Salasana@123"));
+	// 		user2.setRegisteredAt(now);
+	// 		user2.setTasksAssigned(new ArrayList<>());
+	// 		user2.setTasksCreated(new ArrayList<>());
+	// 		user2.setComments(new ArrayList<>());
+	// 		userRepository.save(user2);
 
-	// 		AppUser heikki = new AppUser();
-	// 		heikki.setUsername("heikki-hacker");
-	// 		heikki.setFirstName("Heikki");
-	// 		heikki.setLastName("Hacker");
-	// 		heikki.setEmail("heikki.hacker@example.com");
-	// 		heikki.setPasswordHash(passwordEncoder.encode("Salasana@123"));
-	// 		heikki.setRegisteredAt(now);
-	// 		heikki.setTasksAssigned(new ArrayList<>());
-	// 		heikki.setTasksCreated(new ArrayList<>());
-	// 		heikki.setComments(new ArrayList<>());
-	// 		userRepository.save(heikki);	
-
-	// 		AppUser ismo = new AppUser();
-	// 		ismo.setUsername("pesapallomaila");
-	// 		ismo.setFirstName("Ismo");
-	// 		ismo.setLastName("Laitela");
-	// 		ismo.setEmail("ismo.laitela@example.com");
-	// 		ismo.setPasswordHash(passwordEncoder.encode("Salasana@123"));
-	// 		ismo.setRegisteredAt(now);
-	// 		ismo.setTasksAssigned(new ArrayList<>());
-	// 		ismo.setTasksCreated(new ArrayList<>());
-	// 		ismo.setComments(new ArrayList<>());
-	// 		userRepository.save(ismo);
-	// 		// // PROJECTS, TASKLISTS, TASKS, COMMENTS
+	// 		// PROJECTS, TASKLISTS, TASKS, COMMENTS
 
 	// 		jukka = userRepository.findByUsername("jukka-poika42").orElseThrow();
 	// 		paula = userRepository.findByUsername("p-python").orElseThrow();
@@ -117,7 +94,7 @@ public class ProjectManagementAppApplication {
 	// 		// UserProject: liitostaulun rivi, joka yhdistää käyttäjän projektiin
 	// 		// ja tallentaa roolin (owner / member)
 
-	// 		UserProject up1 = new UserProject(jukka, p1, roleOwner, now);
+	// 		UserProject up1 = new UserProject(user1, p1, roleOwner, now);
 	// 		userProjectRepository.save(up1);
 
 	// 		// Add Heikki as a member of project 1 even though Jukka owns it
@@ -156,7 +133,9 @@ public class ProjectManagementAppApplication {
 	// 		// up3: jukka omistaa tämän projektin (rooli: owner)
 	// 		// up4: paulalla on jäsenoikeus tähän projektiin (rooli: member)
 
-	// 		UserProject up3 = new UserProject(jukka, p2, roleOwner, now);
+	// 		UserProject up2 = new UserProject(user1, p2, roleOwner, now);
+	// 		userProjectRepository.save(up2);
+	// 		UserProject up3 = new UserProject(user2, p2, roleMember, now);
 	// 		userProjectRepository.save(up3);
 	// 		UserProject up4 = new UserProject(paula, p2, roleMember, now);
 	// 		userProjectRepository.save(up4);

@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Column;
 import jakarta.persistence.CascadeType;
 
@@ -62,6 +63,10 @@ public class Task {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) // yyyy-MM-dd'T'HH:mm follows iso-standards, i.e html uses this format
     private LocalDateTime deadline;
 
+    // sortOrder
+    @Column(name = "sort_order", nullable = false)
+    private Integer sortOrder;
+
     // comments
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     @JsonIgnoreProperties("task")
@@ -81,6 +86,13 @@ public class Task {
         this.assignedUser = assignedUser;
         this.deadline = deadline;
 
+    }
+
+    @PrePersist
+    void initializeSortOrder() {
+        if (sortOrder == null) {
+            sortOrder = 0;
+        }
     }
 
 // GETTERS AND SETTERS
@@ -149,6 +161,14 @@ public class Task {
 
     public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
+    }
+
+    public Integer getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortOrder(Integer sortOrder) {
+        this.sortOrder = sortOrder;
     }
 
 // TO STRING
