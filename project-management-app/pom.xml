@@ -15,7 +15,7 @@
 
     <groupId>githappens.hh</groupId>
     <artifactId>project-management-app</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
     <name>project-management-app</name>
     <description>Project management application</description>
 

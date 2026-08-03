@@ -16,8 +16,8 @@ public class TaskRestController {
     private final TaskListRepository taskListRepository;
     private final ProjectRealtimeService realtimeService;
 
-    public TaskRestController(TaskRepository taskRepository, TaskListRepository taskListRepository, 
-                                ProjectRealtimeService realtimeService) {
+    public TaskRestController(TaskRepository taskRepository, TaskListRepository taskListRepository,
+            ProjectRealtimeService realtimeService) {
         this.taskRepository = taskRepository;
         this.taskListRepository = taskListRepository;
         this.realtimeService = realtimeService;
@@ -32,13 +32,15 @@ public class TaskRestController {
     // get task by taskId
     @GetMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public Task getTaskById(@PathVariable Long taskId) {
-        return taskRepository.findById(taskId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "task not found"));
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "task not found"));
     }
 
     // CREATE task
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks")
     public Task createTask(@PathVariable Long projectId, @PathVariable Long taskListId, @RequestBody Task task) {
-        TaskList taskList = taskListRepository.findById(taskListId).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "tasklist not found"));
+        TaskList taskList = taskListRepository.findById(taskListId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "tasklist not found"));
         task.setTaskList(taskList);
         Task saved = taskRepository.save(task);
         taskRepository.flush();
@@ -49,30 +51,31 @@ public class TaskRestController {
     // SAVE edited task
     @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public Task saveEditedTask(
-        @PathVariable Long projectId,
-        @PathVariable Long taskListId,
-        @PathVariable Long taskId,
-        @RequestBody Task task) {
+            @PathVariable Long projectId,
+            @PathVariable Long taskListId,
+            @PathVariable Long taskId,
+            @RequestBody Task task) {
 
-    Task existingTask = taskRepository.findById(taskId).orElse(null);
+        Task existingTask = taskRepository.findById(taskId).orElse(null);
 
-    TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
+        TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
 
-    // update only editable fields
-    existingTask.setTitle(task.getTitle());
-    existingTask.setDescription(task.getDescription());
-    existingTask.setDeadline(task.getDeadline());
-    // existingTask.setAssignedUser(task.getAssignedUser());
+        // update only editable fields
+        existingTask.setTitle(task.getTitle());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setDeadline(task.getDeadline());
+        // existingTask.setAssignedUser(task.getAssignedUser());
 
-    existingTask.setTaskList(taskList);
+        existingTask.setTaskList(taskList);
 
-    Task saved = taskRepository.save(existingTask);
-    taskRepository.flush();
+        Task saved = taskRepository.save(existingTask);
+        taskRepository.flush();
 
-    realtimeService.broadcastTaskLists(projectId);
+        realtimeService.broadcastTaskLists(projectId);
 
-    return saved;
-}
+        return saved;
+    }
+
     // DELETE task
     @DeleteMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
     public void deleteTask(@PathVariable Long taskId, @PathVariable Long projectId) {
@@ -88,11 +91,17 @@ public class TaskRestController {
             @PathVariable Long taskId,
             @PathVariable Long newTaskListId) {
 
+        System.out.println(
+                "MOVE ENDPOINT HIT: project=" + projectId +
+                        " sourceList=" + taskListId +
+                        " task=" + taskId +
+                        " targetList=" + newTaskListId);
+
         Task existingTask = taskRepository.findById(taskId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task not found"));
 
         TaskList newTaskList = taskListRepository.findById(newTaskListId)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task list not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Task list not found"));
 
         existingTask.setTaskList(newTaskList);
 
