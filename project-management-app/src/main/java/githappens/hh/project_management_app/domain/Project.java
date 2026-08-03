@@ -50,7 +50,7 @@ public class Project {
     // private List<AppUser> projectMembers = new ArrayList<>();
 
     //taskList
-    @OneToMany(mappedBy = "project")
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private List<TaskList> taskList = new ArrayList<>();
 

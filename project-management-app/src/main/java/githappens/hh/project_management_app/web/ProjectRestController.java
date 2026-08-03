@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.query.Param;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import githappens.hh.project_management_app.domain.AppUser;
 import githappens.hh.project_management_app.domain.EnumProjectRole;
@@ -68,7 +70,14 @@ public class ProjectRestController {
     // DELETE project
     @DeleteMapping("/api/projects/{projectId}")
     public void deleteProject(@PathVariable Long projectId) {
-        projectRepository.deleteById(projectId);
+        AppUser requester = currentUserService.getRequester();
+        UserProject userProject = userProjectRepository.findUserProjectByUserIdAndProjectId(requester.getAppUserId(), projectId);
+        EnumProjectRole role = userProject.getRole();
+        if (role.equals(EnumProjectRole.owner)) {
+            projectRepository.deleteById(projectId);
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the project owner can delete the project");
+        }
     }
 
 // __________________________________________________________________________________________
