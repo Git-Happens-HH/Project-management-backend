@@ -79,19 +79,19 @@ public class TaskControllerTests {
 
     @Test
     void getTasksForTaskList_returnsTasksFromRepository() throws Exception {
-        when(taskRepository.findByTaskList_TaskListId(taskListId)).thenReturn(List.of(task));
+        when(taskRepository.findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(taskListId)).thenReturn(List.of(task));
 
         mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks", projectId, taskListId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].taskId").value(taskId))
                 .andExpect(jsonPath("$[0].title").value("Original title"));
 
-        verify(taskRepository).findByTaskList_TaskListId(taskListId);
+        verify(taskRepository).findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(taskListId);
     }
 
     @Test
     void getTasksForTaskList_returnsEmptyListWhenNoneFound() throws Exception {
-        when(taskRepository.findByTaskList_TaskListId(taskListId)).thenReturn(List.of());
+        when(taskRepository.findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(taskListId)).thenReturn(List.of());
 
         mockMvc.perform(get("/api/projects/{projectId}/tasklists/{taskListId}/tasks", projectId, taskListId))
                 .andExpect(status().isOk())
@@ -116,6 +116,7 @@ public class TaskControllerTests {
         newTask.setDescription("Do the thing");
 
         when(taskListRepository.findById(taskListId)).thenReturn(Optional.of(taskList));
+        when(taskRepository.findMaxSortOrderByTaskListId(taskListId)).thenReturn(-1);
         when(taskRepository.save(any(Task.class))).thenAnswer(inv -> {
             Task t = inv.getArgument(0);
             t.setTaskId(99L);
@@ -127,7 +128,8 @@ public class TaskControllerTests {
                 .content(objectMapper.writeValueAsString(newTask)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.taskId").value(99L))
-                .andExpect(jsonPath("$.title").value("new task"));
+            .andExpect(jsonPath("$.title").value("new task"))
+            .andExpect(jsonPath("$.sortOrder").value(0));
 
         verify(taskRepository).save(any(Task.class));
         verify(taskRepository).flush();
@@ -169,5 +171,38 @@ public class TaskControllerTests {
         verify(taskRepository).deleteById(taskId);
         verify(taskRepository).flush();
         verify(realtimeService, times(1)).broadcastTaskLists(projectId);
+    }
+
+    @Test
+    void reorderTasks_updatesSortOrderAndReturnsOrderedTasks() throws Exception {
+        Task first = new Task();
+        first.setTaskId(10L);
+        first.setTaskList(taskList);
+        first.setTitle("First");
+        first.setSortOrder(0);
+
+        Task second = new Task();
+        second.setTaskId(11L);
+        second.setTaskList(taskList);
+        second.setTitle("Second");
+        second.setSortOrder(1);
+
+        when(taskRepository.findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(taskListId)).thenReturn(List.of(second, first));
+
+        mockMvc.perform(post("/api/projects/{projectId}/tasklists/{taskListId}/task-order", projectId, taskListId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(List.of(11L, 10L))))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].taskId").value(11L))
+                .andExpect(jsonPath("$[1].taskId").value(10L));
+
+        verify(taskRepository).saveAll(argThat(tasks -> {
+            int count = 0;
+            for (Task ignored : tasks) {
+                count++;
+            }
+            return count == 2;
+        }));
+        verify(realtimeService).broadcastTaskLists(projectId);
     }
 }

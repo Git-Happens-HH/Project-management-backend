@@ -21,6 +21,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     // find all tasks that belong to a given taskList (by taskListId)
     List<Task> findByTaskList_TaskListId(Long taskListId);
 
+    // find all tasks that belong to a given taskList in persisted order
+    List<Task> findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(Long taskListId);
+
+    @Query("select coalesce(max(t.sortOrder), -1) from task t where t.taskList.taskListId = :taskListId")
+    Integer findMaxSortOrderByTaskListId(@Param("taskListId") Long taskListId);
+
     // find task by duedate
     Optional<Task> findByDeadline(LocalDateTime deadline);
 

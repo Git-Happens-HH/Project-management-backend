@@ -135,12 +135,14 @@ public class TaskRepositoryTests {
         taskListRepository.save(taskList6);
         Task task1 = new Task(taskList6, "Task1", "Description1", user6, user6, LocalDateTime.now().plusDays(1));
         Task task2 = new Task(taskList6, "Task2", "Description2", user6, user6, LocalDateTime.now().plusDays(1));
+        task1.setSortOrder(1);
+        task2.setSortOrder(0);
         taskRepository.save(task1);
         taskRepository.save(task2);
 
-        List<Task> found = taskRepository.findByTaskList_TaskListId(taskList6.getTaskListId());
+        List<Task> found = taskRepository.findByTaskList_TaskListIdOrderBySortOrderAscTaskIdAsc(taskList6.getTaskListId());
         assertThat(found).hasSize(2);
-        assertThat(found).extracting(Task::getTitle).contains("Task1", "Task2");
+        assertThat(found).extracting(Task::getTitle).containsExactly("Task2", "Task1");
     }
 
     // CUSTOM QUERY: FIND BY DEADLINE
