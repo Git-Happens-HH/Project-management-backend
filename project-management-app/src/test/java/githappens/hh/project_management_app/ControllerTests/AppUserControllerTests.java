@@ -125,8 +125,8 @@ public class AppUserControllerTests {
 
         mockMvc.perform(get("/api/users/1/projects"))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$[0].title").value("Project 1"))
-       .andExpect(jsonPath("$[1].title").value("Project 2"));
+        .andExpect(jsonPath("$[0].project.title").value("Project 1"))
+       .andExpect(jsonPath("$[1].project.title").value("Project 2"));
         
     }
 
