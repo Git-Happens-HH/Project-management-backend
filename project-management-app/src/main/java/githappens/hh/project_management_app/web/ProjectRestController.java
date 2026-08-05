@@ -29,12 +29,14 @@ public class ProjectRestController {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final CurrentUserService currentUserService;
+    private final ProjectWebSocketController projectWebSocketController;
 
     public ProjectRestController(ProjectRepository projectRepository, UserProjectRepository userProjectRepository,
-            CurrentUserService currentUserService) {
+            CurrentUserService currentUserService, ProjectWebSocketController projectWebSocketController) {
         this.projectRepository = projectRepository;
         this.userProjectRepository = userProjectRepository;
         this.currentUserService = currentUserService;
+        this.projectWebSocketController = projectWebSocketController;
     }
 
 
@@ -64,6 +66,9 @@ public class ProjectRestController {
         ownerMembership.setJoinedAt(LocalDateTime.now());
         userProjectRepository.save(ownerMembership);
 
+        projectRepository.flush();
+        //projectWebSocketController.broadcast
+
         return savedProject;
     }
 
@@ -79,6 +84,40 @@ public class ProjectRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the project owner can delete the project");
         }
     }
+
+    // EDIT project
+
+
+     // SAVE edited task
+    // @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
+    // public Task saveEditedTask(
+    //         @PathVariable Long projectId,
+    //         @PathVariable Long taskListId,
+    //         @PathVariable Long taskId,
+    //         @RequestBody Task task) {
+
+    //     Task existingTask = taskRepository.findById(taskId).orElse(null);
+
+    //     TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
+
+    //     // update only editable fields
+    //     existingTask.setTitle(task.getTitle());
+    //     existingTask.setDescription(task.getDescription());
+    //     existingTask.setDeadline(task.getDeadline());
+    //     // existingTask.setAssignedUser(task.getAssignedUser());
+
+    //     existingTask.setTaskList(taskList);
+
+    //     Task saved = taskRepository.save(existingTask);
+    //     taskRepository.flush();
+
+    //     realtimeService.broadcastTaskLists(projectId);
+
+    //     return saved;
+    // }
+
+
+    
 
 // __________________________________________________________________________________________
 
