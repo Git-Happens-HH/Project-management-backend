@@ -103,4 +103,25 @@ public class ProjectRestController {
                     m.getRole()))
             .toList();
     }
+
+    // List<UserProject> findByProject_ProjectId(Long projectId);
+
+    // Long appUserId,
+    // String username,
+    // EnumProjectRole role
+
+    // GET ALL MEMBERS OF A PROJECT
+    
+    @GetMapping("/api/projects/{projectId}/members")
+    public List<MemberResponse> getMembers(@PathVariable Long projectId) {
+
+        List<UserProject> members = userProjectRepository.findByProject_ProjectId(projectId);
+
+        return members.stream()
+            .map(m -> new MemberResponse(
+                m.getAppUser().getAppUserId(),
+                m.getAppUser().getUsername(), 
+                m.getRole()))
+            .toList();
+    }
 }
