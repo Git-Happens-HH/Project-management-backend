@@ -29,12 +29,4 @@ public class ProjectRealtimeService {
         messagingTemplate.convertAndSend("/topic/project/" + projectId, taskLists);
     }
 
-    // Onko oikein? Tehty toistaiseksi mututuntumalla, ei testattu
-    // ja saako topicin nimi olla myös project? vai eri topic nimi?
-
-    public void broadcastProjects(long appUserId){
-        var userProjects = userProjectRepository.findByAppUser_AppUserId(appUserId);
-        var projects = userProjects.stream().map(userProject -> userProject.getProject()).toList();
-        messagingTemplate.convertAndSend("/topic/projectlist/" + appUserId, projects);
-    }
 }

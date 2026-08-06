@@ -87,37 +87,24 @@ public class ProjectRestController {
 
     // EDIT project
 
+    @PostMapping("api/projects/{projectId}")
+    public Project saveEditedProject(
+            @PathVariable Long projectId,
+            @RequestBody Project project) {
 
-     // SAVE edited task
-    // @PostMapping("/api/projects/{projectId}/tasklists/{taskListId}/tasks/{taskId}")
-    // public Task saveEditedTask(
-    //         @PathVariable Long projectId,
-    //         @PathVariable Long taskListId,
-    //         @PathVariable Long taskId,
-    //         @RequestBody Task task) {
+        Project existingProject = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found"));
 
-    //     Task existingTask = taskRepository.findById(taskId).orElse(null);
+        // update only editable fields
+        existingProject.setTitle(project.getTitle());
+        existingProject.setDescription(project.getDescription());
 
-    //     TaskList taskList = taskListRepository.findById(taskListId).orElse(null);
+        Project saved = projectRepository.save(existingProject);
 
-    //     // update only editable fields
-    //     existingTask.setTitle(task.getTitle());
-    //     existingTask.setDescription(task.getDescription());
-    //     existingTask.setDeadline(task.getDeadline());
-    //     // existingTask.setAssignedUser(task.getAssignedUser());
+        return saved;
 
-    //     existingTask.setTaskList(taskList);
+    }
 
-    //     Task saved = taskRepository.save(existingTask);
-    //     taskRepository.flush();
-
-    //     realtimeService.broadcastTaskLists(projectId);
-
-    //     return saved;
-    // }
-
-
-    
 
 // __________________________________________________________________________________________
 
@@ -142,12 +129,6 @@ public class ProjectRestController {
                     m.getRole()))
             .toList();
     }
-
-    // List<UserProject> findByProject_ProjectId(Long projectId);
-
-    // Long appUserId,
-    // String username,
-    // EnumProjectRole role
 
     // GET ALL MEMBERS OF A PROJECT
     

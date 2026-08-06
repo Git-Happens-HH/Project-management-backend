@@ -30,7 +30,4 @@ public class ProjectWebSocketController {
         );
     }
 
-    // Pitäisikö tähän tehdä uusi kontrollerimetodi joka kuuntelee etusivun projektien päivitystä?
-    // ja saako topicin nimi olla myös project? vai eri topic nimi?
-   
 }
