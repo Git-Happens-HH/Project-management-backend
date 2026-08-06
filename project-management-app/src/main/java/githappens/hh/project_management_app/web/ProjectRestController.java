@@ -120,7 +120,10 @@ public class ProjectRestController {
         return members.stream()
             .map(m -> new MemberResponse(
                 m.getAppUser().getAppUserId(),
-                m.getAppUser().getUsername(), 
+                m.getAppUser().getUsername(),
+                m.getAppUser().getFirstName(),
+                m.getAppUser().getLastName(),
+                m.getAppUser().getEmail(),
                 m.getRole()))
             .toList();
     }
