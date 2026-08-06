@@ -29,12 +29,14 @@ public class ProjectRestController {
     private final ProjectRepository projectRepository;
     private final UserProjectRepository userProjectRepository;
     private final CurrentUserService currentUserService;
+    private final ProjectWebSocketController projectWebSocketController;
 
     public ProjectRestController(ProjectRepository projectRepository, UserProjectRepository userProjectRepository,
-            CurrentUserService currentUserService) {
+            CurrentUserService currentUserService, ProjectWebSocketController projectWebSocketController) {
         this.projectRepository = projectRepository;
         this.userProjectRepository = userProjectRepository;
         this.currentUserService = currentUserService;
+        this.projectWebSocketController = projectWebSocketController;
     }
 
 
@@ -64,6 +66,9 @@ public class ProjectRestController {
         ownerMembership.setJoinedAt(LocalDateTime.now());
         userProjectRepository.save(ownerMembership);
 
+        projectRepository.flush();
+        //projectWebSocketController.broadcast
+
         return savedProject;
     }
 
@@ -79,6 +84,27 @@ public class ProjectRestController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the project owner can delete the project");
         }
     }
+
+    // EDIT project
+
+    @PostMapping("api/projects/{projectId}")
+    public Project saveEditedProject(
+            @PathVariable Long projectId,
+            @RequestBody Project project) {
+
+        Project existingProject = projectRepository.findById(projectId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "project not found"));
+
+        // update only editable fields
+        existingProject.setTitle(project.getTitle());
+        existingProject.setDescription(project.getDescription());
+
+        Project saved = projectRepository.save(existingProject);
+
+        return saved;
+
+    }
+
 
 // __________________________________________________________________________________________
 
@@ -103,12 +129,6 @@ public class ProjectRestController {
                     m.getRole()))
             .toList();
     }
-
-    // List<UserProject> findByProject_ProjectId(Long projectId);
-
-    // Long appUserId,
-    // String username,
-    // EnumProjectRole role
 
     // GET ALL MEMBERS OF A PROJECT
     
