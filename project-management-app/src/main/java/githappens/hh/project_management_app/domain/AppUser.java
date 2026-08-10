@@ -39,7 +39,8 @@ public class AppUser {
     private Long appUserId;
 
     // username
-    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique                                                                               // be changed
+    @Column(name = "user_name", nullable = false, unique = true, updatable = false) // usernames must be unique // be
+                                                                                    // changed
     @NotBlank(message = "A unique username is required")
     private String username;
 
@@ -61,7 +62,7 @@ public class AppUser {
     // passwordHash
     @Column(name = "password_hash", nullable = false)
     @Size(min = 8, message = "Password must be at least 8 characters")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$", message = "Password must contain an uppercase letter, a number, and a special character")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$", message = "Password must be at least 8 characters long and must contain: an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&)")
     @NotBlank(message = "Password is required")
     @JsonProperty(access = Access.WRITE_ONLY)
     private String passwordHash;
@@ -73,11 +74,11 @@ public class AppUser {
 
     // LISTS OF PROJECTS, TASKS AND COMMENTS
 
-    
     // projects
 
     // many-to-many relatonship requires a new join table
-    // @JoinTable(name = "user_project", joinColumns = @JoinColumn(name = "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
+    // @JoinTable(name = "user_project", joinColumns = @JoinColumn(name =
+    // "app_user_id"), inverseJoinColumns = @JoinColumn(name = "project_id"))
     @OneToMany(mappedBy = "appUser", cascade = CascadeType.ALL)
     @JsonIgnore
     private List<UserProject> projects = new ArrayList<>();
@@ -95,18 +96,24 @@ public class AppUser {
     // comments
     @OneToMany(mappedBy = "commenter", cascade = CascadeType.ALL)
     @JsonIgnore
-    private List<Comment> comments = new ArrayList<>(); 
+    private List<Comment> comments = new ArrayList<>();
 
-// CONSTRUCTORS
+    // CONSTRUCTORS
 
     public AppUser() {
     }
 
-    public AppUser(@NotBlank(message = "A unique username is required") String username,
+    public AppUser(
+            @NotBlank(message = "A unique username is required") String username,
+
             @NotBlank(message = "First name required") String firstName,
+
             @NotBlank(message = "Last name required") String lastName,
+
             @NotBlank(message = "Email required") String email,
-            @Size(min = 8, message = "Password must be at least 8 characters") @Pattern(regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&]).+$", message = "Password must contain an uppercase letter, a number, and a special character") @NotBlank(message = "Password is required") String passwordHash,
+
+            @Size(min = 8, message = "Password must be at least 8 characters") @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$", message = "Password must be at least 8 characters long and must contain: an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&)") @NotBlank(message = "Password is required") String passwordHash,
+
             LocalDateTime registeredAt) {
         this.username = username;
         this.firstName = firstName;
@@ -116,8 +123,7 @@ public class AppUser {
         this.registeredAt = registeredAt;
     }
 
-
-// GETTERS AND SETTERS
+    // GETTERS AND SETTERS
 
     public Long getAppUserId() {
         return appUserId;
@@ -207,14 +213,13 @@ public class AppUser {
     public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
-    
-// TO STRING
+
+    // TO STRING
 
     @Override
     public String toString() {
         return "AppUser [username=" + username + ", firstName=" + firstName + ", lastName=" + lastName + ", email="
                 + email + ", passwordHash=" + passwordHash + ", registeredAt=" + registeredAt + "]";
     }
-    
 
 }
