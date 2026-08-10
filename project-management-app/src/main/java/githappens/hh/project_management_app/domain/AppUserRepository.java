@@ -18,4 +18,6 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     // check whether username already exists
     boolean existsByUsername(String username);
+
+    List<AppUser> findByEmailContainingIgnoreCaseOrUsernameContainingIgnoreCase(String email, String username);
 }

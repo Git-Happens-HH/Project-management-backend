@@ -5,6 +5,9 @@ import githappens.hh.project_management_app.domain.EnumProjectRole;
 public record MemberResponse(
     Long appUserId,
     String username,
+    String firstName,
+    String lastName,
+    String email,
     EnumProjectRole role
 ) {}
 
