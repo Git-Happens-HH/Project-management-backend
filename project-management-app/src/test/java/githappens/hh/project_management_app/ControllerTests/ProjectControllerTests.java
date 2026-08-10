@@ -35,6 +35,7 @@ import githappens.hh.project_management_app.security.JwtUtil;
 import githappens.hh.project_management_app.web.AppUserDetailsServiceImpl;
 import githappens.hh.project_management_app.web.CurrentUserService;
 import githappens.hh.project_management_app.web.ProjectRestController;
+import githappens.hh.project_management_app.web.ProjectWebSocketController;
 
 @WebMvcTest(ProjectRestController.class)
 @AutoConfigureMockMvc(addFilters = false)
@@ -49,6 +50,9 @@ public class ProjectControllerTests {
         private Project project;
 
         private AppUser appUser;
+
+        @MockitoBean
+        private ProjectWebSocketController projectWebSocketController;
 
         @Autowired
         private ObjectMapper objectMapper;
