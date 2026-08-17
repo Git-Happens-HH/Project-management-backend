@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -107,6 +108,36 @@ public class UserProjectController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND,
                 "This user cannot be removed from the project because they are not a member");
         }
+    }
+
+    
+    // PROMOTE a member to owner
+    
+    @PutMapping("/api/projects/{projectId}/members/{userId}/promote-to-owner")
+    public void promoteUserToOwner(@PathVariable Long projectId, 
+                                   @PathVariable Long userId) {
+
+        Long requesterUserId = currentUserService.getRequesterUserId();
+        EnumProjectRole requesterUserRole = getRequesterUserRole(projectId, requesterUserId);
+
+        if (requesterUserRole != EnumProjectRole.owner) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Only the project owner can promote members to owner");
+        }
+
+        UserProject userProject = userProjectRepository.findUserProjectByUserIdAndProjectId(userId, projectId);
+        if (userProject == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "This user is not a member of the project");
+        }
+        if (userProject.getRole() == EnumProjectRole.owner) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User is already an owner of this project");
+        }
+        
+        userProject.setRole(EnumProjectRole.owner);
+        userProjectRepository.save(userProject);
+        
+        UserProject requesterUserProject = userProjectRepository.findUserProjectByUserIdAndProjectId(requesterUserId, projectId);
+        requesterUserProject.setRole(EnumProjectRole.member);
+        userProjectRepository.save(requesterUserProject);
     }
         
 }
