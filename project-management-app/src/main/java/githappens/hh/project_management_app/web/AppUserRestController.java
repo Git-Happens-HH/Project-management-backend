@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 public class AppUserRestController {
@@ -61,4 +63,13 @@ public class AppUserRestController {
     public void deleteUser(@PathVariable Long userId) {
         appUserRepository.deleteById(userId);
     }
+
+    // List<AppUser> findByEmailContainingIgnoreCaseOrUsernameContainingIgnoreCase(String email, String username);
+
+    // SEARCH USER
+    @GetMapping("/api/users/search/{keyword}")
+    public List<AppUser> searchUserByEmailOrUserName(@PathVariable String keyword) {
+        return appUserRepository.findByUsernameContainingIgnoreCase(keyword);
+    }
+    
 }
