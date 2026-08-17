@@ -34,13 +34,15 @@ public class ProjectManagementAppApplication {
 	// username: sa
 	// password: password
 
-	 EnumProjectRole roleOwner = EnumProjectRole.owner;
-	 EnumProjectRole roleMember = EnumProjectRole.member;
-	 LocalDateTime now = LocalDateTime.now();
+	 // EnumProjectRole roleOwner = EnumProjectRole.owner;
+	 // EnumProjectRole roleMember = EnumProjectRole.member;
+	 // LocalDateTime now = LocalDateTime.now();
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectManagementAppApplication.class, args);
 	}
+
+/*  
 
 	 @Bean
 	 public CommandLineRunner loadTestData(
@@ -198,3 +200,4 @@ public class ProjectManagementAppApplication {
 	 }
 
 }
+*/ 
